@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="jacketzc"><meta name="renderer" content="webkit"><meta name="copyright" content="jacketzc"><meta name="keywords" content="jacketzc的blog"><meta name="description" content="java，分布式，vue，idea，多线程开发，mybatis，spring，ssm，SpringMVC"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>15.泛型 · jacketzc's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.0.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">jacketzc</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">Longlongyu</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">jacketzc's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">15.泛型</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2019-09-14</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">1.6k</span> | Reading time: <span class="post-count">6</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><h1>15.泛型</h1>
+<span><div><font style="font-size: 14pt;">为了实现多态，引入了继承的概念，为了进一步将这种优势扩大，又引入了接口的概念。但还是不够，我想让一个方法的参数可以接受一个未知的类型（不仅仅是基类或者接口），从而又有了泛型的概念</font></div><div><font style="font-size: 14pt;">//早期java中，使用Object来代替一个未知的类型</font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;">通常情况而言，容器只会存储一种类型的对象，泛型的主要目的之一就是用来指定容器要持有什么类型的对象，尽管这个类型暂时是未知的--《java编程思想》</font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;"><span style="color: rgb(255, 0, 0);">泛型的目的</span>（总结）：</font></div><div><font style="font-size: 14pt;">写出泛化的代码，并且不需要手动向下转型（早期使用Object经常需要向下转型）</font></div><div><font style="font-size: 14pt;">与此同时产生了一个副作用：</font></div><div><font style="font-size: 14pt;">愚蠢的类型安全检查（说他愚蠢是因为很多时候它检查不出来）</font></div><div><span style="color: rgb(0, 204, 255);"><font style="font-size: 14pt;">所以泛型往往在类和方法的边界处显得有效，而在方法或者类的内部显得无用</font></span></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;">一个典型的泛型类：</font></div><div><font style="font-size: 14pt;">public class Apple&lt;T&gt;{</font></div><div><font style="font-size: 14pt;">    //这个T就是类型参数，它是未知的类型，但它也是一个需要被确切指定的类型</font></div><div><font style="font-size: 14pt;">    //也就是说，这个T我可以随意的指定为int之类，但指定之后，该对象持有的T就是确定的int了</font></div><div><font style="font-size: 14pt;">    private T a；</font></div><div><font style="font-size: 14pt;">    public apple（T a）{</font></div><div><font style="font-size: 14pt;">        this.a=a；</font></div><div><font style="font-size: 14pt;">     }</font></div><div><font style="font-size: 14pt;">    public T banana（）{return a；}</font></div><div><font style="font-size: 14pt;">}</font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;">泛型方法</font></div><div><font style="font-size: 14pt;">泛型方法独立于泛型类，因为他可以指定自己的泛型</font></div><div><font style="font-size: 14pt;">//设计思想中，能用泛型方法，就不用泛型类</font></div><div><font style="font-size: 14pt;">public &lt;T&gt; void T banana(T t){}</font></div><div><font style="font-size: 14pt;">//泛型方法和泛型类不同，泛型方法<span style="color: rgb(255, 0, 0);">不需要指定具体的类型</span>，这种理念类似于自动重载机制，传入的任何参数（比如int），该泛型参数T会自动的转化为int</font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;">泛型构造方法</font></div><div><font style="font-size: 14pt;">public &lt;T&gt;  Apple(){}</font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;">可变参数列表</font></div><div><font style="font-size: 14pt;">我一直以为这个是为了方便书写的伪代码，其实这是正确的代码</font></div><div><font style="font-size: 14pt;">public &lt;T&gt; List&lt;T&gt; banana(<span style="color: rgb(0, 204, 255);">T...</span> args){</font></div><div><font style="font-size: 14pt;">//可变参数前面可以有其他参数，但是它必须放在最后，而且只能有一个，可变参数的原理来自数组</font></div><div><font style="font-size: 14pt;">    List&lt;T&gt; result=new ArrayList()；</font></div><div><font style="font-size: 14pt;">    for(T items:args)</font></div><div><font style="font-size: 14pt;">         result.add(item)；</font></div><div><font style="font-size: 14pt;">    return result；</font></div><div><font style="font-size: 14pt;">}</font></div><div><font style="font-size: 14pt;">//这里List&lt;T&gt;使用的泛型参数来自这个方法定义的T（并不是List&lt;T&gt;接口中定义的），事实上，所有在方法/类中使用的泛型参数，都来自这个方法/类</font></div><div><font style="font-size: 14pt;">调用此函数可以传递*个参数，可也以直接传递一个数组</font></div><div><font style="font-size: 14pt;">banana(&quot;aab&quot;)；</font></div><div><font style="font-size: 14pt;">banana(&quot;aab&quot;,&quot;bbc&quot;)；</font></div><div><font style="font-size: 14pt;">banana(new String[]{&quot;aab&quot;,&quot;bbc&quot;})；</font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;">泛型匿名类</font></div><div><font style="font-size: 14pt;">public Interator&lt;String&gt; banana(){</font></div><div><font style="font-size: 14pt;">    return new Interator&lt;String&gt;（）{</font></div><div><font style="font-size: 14pt;">    ……</font></div><div><font style="font-size: 14pt;">     }</font></div><div><font style="font-size: 14pt;">}</font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;">指定<span style="color: rgb(0, 204, 255);">边界</span>的泛型：</font></div><div><font style="font-size: 14pt;">//边界是一个独立的词</font></div><div><font style="font-size: 14pt;">public &lt;T extends Apple&gt; void banana(T t){}</font></div><div><font style="font-size: 14pt;">//该泛型被指定为Apple或者其子类</font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><span style="color: rgb(255, 0, 0);"><font style="font-size: 14pt;">不可以创建泛型数组</font></span></div><div><font style="font-size: 14pt;">//理想中的泛型数组：T[] x=new (T[])Array.newInstance(Class&lt;T&gt;，length)</font></div><div><font style="font-size: 14pt;">//数组是根据实际类型来new一个对象的，泛型的类型只存在于编译器，所以不行</font></div><div><font style="font-size: 14pt;">//<span style="color: rgb(255, 0, 0);">不可以使用new T[]()</span></font></div><div><font style="font-size: 14pt;">建议使用容器来作为泛型数组的补充方案</font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><span style="color: rgb(0, 204, 255);"><font style="font-size: 14pt;">类型擦除</font></span></div><div><span style="color: rgb(255, 0, 0);"><font style="font-size: 14pt;">泛型代码内部不包含任何的类型信息！</font></span></div><div><span style="color: rgb(0, 0, 0);"><font style="font-size: 14pt;">泛型内部通过类型擦除来实现的，当编译器确定后，泛型对象就会被擦除为非泛型上界（如List&lt;String&gt;会被擦出为List，普通的类型变量会被擦除为Object）</font></span></div><div><span style="color: rgb(0, 0, 0);"><font style="font-size: 14pt;">//泛型类型只会在静态类型检查期间发挥效果，在此之后任何的类型都会被擦除</font></span></div><div><span style="color: rgb(0, 0, 0);"><font style="font-size: 14pt;">//@SuppressWarnings(&quot;unchecked&quot;)注释将取消编译器的泛型警告（比如说没有传入泛型实参）（将String赋值给&lt;Integer&gt;仍然是不可以的）</font></span></div><div><span style="color: rgb(0, 0, 0);"><font style="font-size: 14pt;">类型擦除是一种妥协的做法，因为从SE5才真正引入泛型，为了以往代码的兼容性不得已如此</font></span></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;">类型擦除使得任何需要确切类型的操作都无效</font></div><div><font style="font-size: 14pt;">如：</font></div><div><font style="font-size: 14pt;">instanceof关键字</font></div><div><font style="font-size: 14pt;">new T();</font></div><div><font style="font-size: 14pt;">//c++就可以这么做，这两种语言的逻辑不同，c++只需要确保在编译时整个代码没有错误，而java需要每个步骤在写的时候都正确</font></div><div><font style="font-size: 14pt;">new T[]();</font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;">自限定泛型</font></div><div><font style="font-size: 14pt;">//该处为扩展知识</font></div><div><font style="font-size: 14pt;">1.古怪的循环</font></div><div><font style="font-size: 14pt;">class Fruit&lt;T&gt;{}</font></div><div><font style="font-size: 14pt;">class Apple extends Fruit&lt;Apple&gt;{}</font></div><div><font style="font-size: 14pt;">不知道讲的什么跳、跳、跳，跳过</font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;">协变返回类型（Java5引入）</font></div><div><font style="font-size: 14pt;">所谓……就是子类的重写方法允许返回基类方法返回类型的子类型</font></div><div><font style="font-size: 14pt;">class A{}</font></div><div><font style="font-size: 14pt;">class B extends A{}</font></div><div><font style="font-size: 14pt;">class C{</font></div><div><font style="font-size: 14pt;">    A f(){return new A()}</font></div><div><font style="font-size: 14pt;">}</font></div><div><font style="font-size: 14pt;">class D extends C{</font></div><div><font style="font-size: 14pt;">    B f(){return new B()}</font></div><div><font style="font-size: 14pt;">}</font></div><div><font style="font-size: 14pt;">//之所以叫新引入，因为重写要求参数和返回值不变</font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;">动态类型安全</font></div><div><font style="font-size: 14pt;">java编译器的检查能力实在有限，当泛型使用不在一个方法中时，泛型检查就变得无能为力</font></div><div><font style="font-size: 14pt;">public void test12(List list) {</font></div><div><font style="font-size: 14pt;">list.add(new B());</font></div><div><font style="font-size: 14pt;">}</font></div><div><font style="font-size: 14pt;">@Test</font></div><div><font style="font-size: 14pt;">public void test13() {</font></div><div><font style="font-size: 14pt;">List&lt;A&gt; list=new ArrayList&lt;&gt;();</font></div><div><font style="font-size: 14pt;">test12(list);</font></div><div><font style="font-size: 14pt;">}</font></div><div><font style="font-size: 14pt;">//上面的程序可以正常运行，也就是说List&lt;A&gt;中可以add一个B</font></div><div><font style="font-size: 14pt;">为了避免这种情况，可以使用动态类型安全视图：</font></div><div><font style="font-size: 14pt;">List&lt;A&gt; list=Collections.checkedList(new ArrayList&lt;A&gt;(),A.class)</font></div><div><font style="font-size: 14pt;">//这样传递给方法12的list就不能添加B</font></div><div><font style="font-size: 14pt;">//因为泛型只能编译器审核，如果编译器疏忽了，那么这个错误可以运行，使用动态安全容器将审核交给jvm，在执行过程中时刻审核着容器的正确类型</font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;">混型</font></div><div><font style="font-size: 14pt;">混型的价值在于将特性和行为一致地应用于同一个类上</font></div><div><font style="font-size: 14pt;">c++用泛型即可实现</font></div><div><font style="font-size: 14pt;">java因为擦除，只能用接口实现</font></div><div><font style="font-size: 14pt;">//这是一种思想，即使用一个接口定义某些类的特性</font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;">潜在类型机制（我的理解）</font></div><div><font style="font-size: 14pt;">泛型的目的就是加强代码的复用性，达到“一次编辑，多次使用的目的”</font></div><div><font style="font-size: 14pt;">而潜在类型机制表明不需要实现完整的接口，只需要实现其中的部分方法</font></div><div><font style="font-size: 14pt;">这种机制可以越过继承限制，调用某个不属于公共接口的方法</font></div><div><font style="font-size: 14pt;">//java并不支持这种机制，但java有补偿方法：</font></div><div><font style="font-size: 14pt;">//反射</font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;">以下的内容过于理论化，为了提升我的实际能力，我决定跳过这些内容</font></div></span>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://yoursite.com">jacketzc</a></p><p> <span>Link:  </span><a href="http://yoursite.com/2019/09/14/15.%E6%B3%9B%E5%9E%8B/">http://yoursite.com/2019/09/14/15.%E6%B3%9B%E5%9E%8B/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2019/09/14/15.1%E5%85%83%E7%BB%84/" title="15.1元组"><span>< PreviousPost</span><br><span class="prevTitle">15.1元组</span></a><a class="nextSlogan" href="/2019/09/12/14.1%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/" title="14.1动态代理"><span>NextPost ></span><br><span class="nextTitle">14.1动态代理</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">15.泛型</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

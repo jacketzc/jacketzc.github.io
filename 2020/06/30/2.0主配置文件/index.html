@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="jacketzc"><meta name="renderer" content="webkit"><meta name="copyright" content="jacketzc"><meta name="keywords" content="jacketzc的blog"><meta name="description" content="java，分布式，vue，idea，多线程开发，mybatis，spring，ssm，SpringMVC"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>2.0主配置文件 · jacketzc's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.0.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">jacketzc</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">Longlongyu</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">jacketzc's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">2.0主配置文件</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2020-06-30</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="mybatis"> mybatis</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">613</span> | Reading time: <span class="post-count">2</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><h1>2.0主配置文件</h1>
+<span><div><div><span style="font-size: 18.6667px;">！配置标签的顺序是固定的</span></div><div><span style="font-size: 18.6667px;"><br/></span></div><div><span style="font-size: 18.6667px;">&lt;configuration&gt;</span></div><div><span style="font-size: 18.6667px;">所有配置标签的根标签</span></div><div><span style="font-size: 18.6667px;"><br/></span></div><div><span style="font-size: 18.6667px;">&lt;properties&gt;</span></div><div><span style="font-size: 18.6667px;">指定属性（一般情况下用于指定外部的资源文件）</span></div><ul><li><div><span style="font-size: 18.6667px;">指定单个属性</span><br/></div></li></ul><div><span style="font-size: 18.6667px;"><span>    </span>&lt;property name=&quot;user&quot; value=&quot;jac&quot;&gt;</span></div><div><span style="font-size: 18.6667px;"><span>    </span>//之后使用${user}这种表达式即可访问到该属性的value</span></div><ul><li><div><span style="font-size: 18.6667px;">指定外部属性</span><br/></div></li></ul><div style="margin-left: 40px;"><span style="font-size: 14pt;">&lt;properties resource=&quot;db.properties&quot;/&gt;</span></div><div style="margin-left: 40px;"><span style="font-size: 14pt;">//db.properties中的属性需要固定格式（</span><span style="font-size: 14pt;">driverClassName=com.mysql.jdbc.Driver</span><span style="font-size: 14pt;">）</span></div><div style="margin-left: 40px;"><span style="font-size: 14pt;">//“=”前相当于name，之后相当于value</span></div><div style="margin-left: 40px;"><span style="font-size: 14pt;">//如果指定外部属性后，在</span><span style="font-size: 18.6667px;">&lt;properties&gt;中添加额外的属性，外部属性的优先级更高</span></div><div><span style="font-size: 18.6667px;"><br/></span></div><div><span style="font-size: 14pt;">&lt;settings&gt;</span></div><div><span style="font-size: 14pt;">mybatis运行时行为设置</span></div><ul><li><div><span style="font-size: 14pt;">&lt;setting name=&quot;m</span><span style="font-size: 14pt;">apUnderscoreToCamelCase&quot; value=&quot;true</span><span style="font-size: 14pt;">&gt;</span><br/></div></li></ul><div style="margin-left: 40px;"><span style="font-size: 14pt;">//开启驼峰命名自动映射，即从经典数据库列名A_COLUMN映射到Java属性名aColumn</span></div><div style="margin-left: 40px;"><span style="font-size: 14pt;">//前提是严格遵守驼峰命名规则</span></div><div><span style="font-size: 14pt;"><br/></span></div><div><span style="font-size: 14pt;"><br/></span></div><div><span style="font-size: 14pt;">&lt;typeAliases&gt;</span></div><div><span style="font-size: 18.6667px;">指定别名，所有的别名都不区分大小写</span></div><ul><li><div><span style="font-size: 18.6667px;"> &lt;typeAliase type=&quot;com.jac.bean.User&quot; alias=&quot;User&quot;&gt;</span><br/></div></li></ul><div style="margin-left: 40px;"><span style="font-size: 14pt;">//给某个实体类取别名，type为实体类的全类名，alias我别名</span></div><div style="margin-left: 40px;"><span style="font-size: 14pt;">//指定别名后在xml映射文件中可以直接使用别名代替全类名</span></div><div style="margin-left: 40px;"><span style="font-size: 14pt;">//</span><span style="font-size: 14pt; color: rgb(255, 70, 53);">不建议使用</span><span style="font-size: 14pt;">（实体类过多会导致配置冗余）</span></div><ul><li><div><span style="font-size: 14pt;">&lt;package name=&quot;com.jac.beans&gt;</span><br/></div></li></ul><div style="margin-left: 40px;"><span style="font-size: 14pt;">//为指定的包（包括子包）下所有的类取别名，默认为类名</span></div><div style="margin-left: 40px;"><span style="font-size: 14pt;">//如果子包中出现重名的类，可以去其中一个实体类中使用@Alias(&quot;&quot;)指定额外的别名</span></div><div style="margin-left: 40px;"><span style="font-size: 14pt;">//只有在指定&lt;package&gt;后才能使用@Alias添加额外注解</span></div><div><span style="font-size: 14pt;"><br/></span></div><div><span style="font-size: 14pt;">&lt;environments&gt;</span></div><div><span style="font-size: 18.6667px;">数据库环境配置</span></div><ul><li><div><span style="font-size: 18.6667px;">mybatis支持多个配置环境，通过default指定具体使用环境</span></div></li><li><div><span style="font-size: 14pt;">&lt;transactionManager&gt;：事务配置，一般交给spring处理</span></div></li><li><div><span style="font-size: 14pt;">&lt;dataSource&gt;：连接池配置，一般交给spring处理</span></div></li></ul><div><span style="font-size: 14pt;"><br/></span></div><div><span style="font-size: 14pt;"><br/></span></div><div><span style="font-size: 14pt;">&lt;mappers&gt;</span></div><div><span style="font-size: 18.6667px;">指定mapper资源的位置</span></div><ul><li><div><span style="font-size: 14pt;">&lt;mapper resource=&quot;路径&quot;&gt;</span></div></li><ul><li><div><span style="font-size: 18.6667px;">此方法指定单个映射文件</span></div></li><li><div><span style="font-size: 18.6667px;">例：</span><span style="font-size: 14pt;">&lt;mapper resource=&quot;mapper\UserMapper.xml&quot;/&gt;</span></div></li></ul><li><div><span style="font-size: 14pt;">&lt;package name=&quot;包全名&quot;&gt;</span></div></li><ul><li><div><span style="font-size: 18.6667px;">此方法将某个包下的接口全部映射</span></div></li><li><div><span style="font-size: 18.6667px;">例：</span><span style="font-size: 14pt;">&lt;package name=&quot;com.jac.mapper&quot;/&gt;</span></div></li><li><div><span style="font-size: 18.6667px;">此方式要求映射的接口以及对应的.xml文件<span style="font-size: 18.6667px; color: rgb(255, 70, 53);">同名同路径</span></span></div></li></ul></ul><div>                <span style="font-size: 14pt;">//可以在resources目录中建立和接口包一样的路径存放mapper.xml，这样打包的时候就会在一个路径中</span></div><ul><li><div><span style="font-size: 18.6667px;"><span style="font-size: 18.6667px; color: rgb(255, 70, 53);">注意两种路径写法！</span></span></div></li></ul><div><span style="font-size: 14pt;"><br/></span></div><div><span style="font-size: 18.6667px;">基本的mybatis配置文件：</span></div><div><span style="font-size: 14pt;"><a href="2.0主配置文件_files/mybatis-config.xml"><img src="2.0主配置文件_files/ae55d4d12cf7fa3a166d20a3714ac4f3.png" alt="mybatis-config.xml"></a></span></div><div><span style="font-size: 14pt;"><br/></span></div><div><span style="font-size: 14pt;"><br/></span></div><div><font style="font-size: 14pt;"><br/></font></div></div><div><br/></div></span>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://yoursite.com">jacketzc</a></p><p> <span>Link:  </span><a href="http://yoursite.com/2020/06/30/2.0%E4%B8%BB%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/">http://yoursite.com/2020/06/30/2.0%E4%B8%BB%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2020/07/02/2.1%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C%EF%BC%88%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5%EF%BC%89/" title="2.1基本操作（增删改查）"><span>< PreviousPost</span><br><span class="prevTitle">2.1基本操作（增删改查）</span></a><a class="nextSlogan" href="/2020/06/30/1.2mapper%E7%BB%91%E5%AE%9A%E6%8E%A5%E5%8F%A3%E5%BC%80%E5%8F%91/" title="1.2mapper绑定接口开发"><span>NextPost ></span><br><span class="nextTitle">1.2mapper绑定接口开发</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">2.0主配置文件</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

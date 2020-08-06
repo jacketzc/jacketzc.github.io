@@ -1,0 +1,110 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="jacketzc"><meta name="renderer" content="webkit"><meta name="copyright" content="jacketzc"><meta name="keywords" content="jacketzc的blog"><meta name="description" content="java，分布式，vue，idea，多线程开发，mybatis，spring，ssm，SpringMVC"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>jacketzc's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.0.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">jacketzc</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">Longlongyu</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">jacketzc's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1>jacketzc's Blog</h1><h5>Welcome to my Blog!</h5><div class="intro-social"><a class="fa fa-envelope" href="mailto://jacketzc@outlook.com" title="email"></a><a class="fa fa-github" href="//github.com/jacketzc" target="_blank" title="github"></a><a class="fa fa-twitter" href="//twitter.com/jacketzc" target="_blank" title="twitter"></a></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><section id="recent-posts"><div class="recent-post-item"><div class="post-title"><a href="/2019/10/31/20.2%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/">20.2线程安全</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2019-10-31T01:21:00.000Z">2019-10-31</time></div><div class="recent-post-content">20.2线程安全
+当多个线程访问了共享数据时，就会产生线程安全问题//可能出现的问题：1.重复访问同一个时刻的值 2.访问了不存在的值出现的原因：1.多个线程同时访问同一个对象并且还没有来得及进行修改（重复的值）2.当前线程修改对象后满足条件已经退出，但是别的线程才刚刚访问该变量（不存在的值）线程同步机制//该机制主要提供两种功能//1.使得被同步的区域同一时间只能一个线程执行//2.提供锁机制﻿//上面的两种功能是独立的，有时候并没有访问冲突，只是需要锁机制来实现线程通信在使用线程同步时，需要先考虑有没有使用的必要？解决方式：1.同步代码块格式：    synchronized（锁对象）{  ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2019/10/31/20.2%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2019/10/30/20.1%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/">20.1多线程基本概念</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2019-10-30T09:14:00.000Z">2019-10-30</time></div><div class="recent-post-content">20.1多线程基本概念
+并发：同一时段执行（cpu在两个任务之间交替进行）并行：同时执行（两个不同的cpu同时执行两个不同的任务）进程：进入到内存中的程序叫进程线程：进程中的执行单元，一个进程可以有多个线程java单线程程序：从main方法开始，自上而下执行创建线程的两种方式：1.创建thread对象（通常情况下是创建一个子类对象）Thread thread = new Thread(){@Overridepublic void run(){}};2.实现Runnable接口Runnable仅有一个方法：run()，并且该接口并没有什么特殊意义//由于此接口中没有start()方法，所以想创建 ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2019/10/30/20.1%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2019/10/30/19.13%E6%89%93%E5%8D%B0%E6%B5%81/">19.13打印流</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2019-10-30T00:57:00.000Z">2019-10-30</time></div><div class="recent-post-content">19.13打印流
+一个最常见的打印流就是System.out//打印流不会抛出IO异常class PrintStream extends FileOutputStream构造方法：PrintStream(File)PrintStream(String fileName)PrintStream(OutputStream)//以上的构造方法都可以额外指定一个String参数以标明需要提供的编码方式特殊方法：print(T...)//打印对象//与开始的认知不同，print方法的默认输出位置不是控制台，而是一个文件//该方法的输出是原样输出，（输出97，不会变成a）println(T...)//打印 ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2019/10/30/19.13%E6%89%93%E5%8D%B0%E6%B5%81/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2019/10/28/19.12%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81/">19.12序列化流</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2019-10-28T13:01:00.000Z">2019-10-28</time></div><div class="recent-post-content">19.12序列化流
+ObjectOutputStream//序列化流，将对象以流的形式写入文件//该流使用的是字节输入ObjectInputStream//反序列化流，从文件中读取对象（使用Object接受）序列化标记接口interface Serializable//任何没有实现该接口的类都无法序列化！//为实现该接口又要进行相关序列化操作将抛出NotSerializableException异常//该接口没有任何方法ObjectOutputStream构造方法：ObjectOutputStream(OutputStream)特殊方法：void writerObject(Object)//将 ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2019/10/28/19.12%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2019/10/28/13.2%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8/">13.2正则表达式的实际使用</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2019-10-28T01:47:00.000Z">2019-10-28</time></div><div class="recent-post-content">13.2正则表达式的实际使用
+1.截取两个字符串之间的字符串regex=(?&lt;=A)(.*?)(?=B)//A、B是两个字符串//此匹配方式将去只保留AB之间的串实际应用：&quot;Awww.baidu.comB&quot;对此串执行.find()方法后，使用.group()方法将得到“www.baidu.com”补充：额外保留A：regex=A(.*?)(?=B)额外保留B：regex=(?&lt;=A)(.*?)B2.将捕获的内容替换str=&quot;hello , world&quot;regex=(\\w+)(\\s)([.,])实际应用：str.replaceAll(reg ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2019/10/28/13.2%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2019/10/27/19.11%E8%BD%AC%E6%8D%A2%E6%B5%81/">19.11转换流</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2019-10-27T08:50:00.000Z">2019-10-27</time></div><div class="recent-post-content">19.11转换流
+FileReader只能读取IDE默认的编码格式，当读取一个系统默认编码（GBK）的文件时，就会产生乱码//FileReader在底层实现上使用的还是FileInputStreamInputStreamReader extends Reader//转换输入流，在读取字节后，可以指定任意的解码方式OutputStreamWriter extends Writer//转换输出流，在写入字节时，可以指定任意的编码方式//以上两种流是字符流与字节流之间的桥梁//它可以把一个字节流转化成字符流OutputStreamWriter构造方法：OutputStreamWriter（Outpu ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2019/10/27/19.11%E8%BD%AC%E6%8D%A2%E6%B5%81/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2019/10/27/19.10%E7%BC%96%E7%A0%81%E5%92%8C%E8%A7%A3%E7%A0%81/">19.10编码和解码</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2019-10-27T08:30:00.000Z">2019-10-27</time></div><div class="recent-post-content">19.10编码和解码
+编码：将输入内容（人类语言，如汉字、标点）按照某种规则存储在计算机中的过程//字符（人类语言）-&gt;字节（机器语言）解码：与编码相反//当编码方式和解码方式相同的话，就能显示正确的内容字符编码：一套自然语言字符 与二进制数之间的对应规则字符集：也称编码表，一套字符集至少有一套字符编码常见字符集：1.ASCII字符集----ASCII编码//7位表示一个字符，扩展的ASCII为8位（添加了负号），用于显示欧洲文字//任何编码表都兼容ASCII2.GBxx字符集----GBK编码、GB2312、GB18030//中文字符集，字符&lt;127时表示的是ASCII，之后两个 ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2019/10/27/19.10%E7%BC%96%E7%A0%81%E5%92%8C%E8%A7%A3%E7%A0%81/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2019/10/24/19.09%E7%BC%93%E5%86%B2%E6%B5%81/">19.09缓冲流</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2019-10-24T00:00:00.000Z">2019-10-24</time></div><div class="recent-post-content">19.09缓冲流
+缓冲流为输入输出流提供一个临时缓冲数组，减少系统IO次数，使得读写更加高效//使用该类还因为该类具有一个非常独特的方法：readLine()字节流：BufferedInputStreamBufferedOutputStream字符流：BufferedReaderBufferedWriter//输入流全部继承自InputStream//输出流全部继承自OutputStream//以上类的构造方法全部都是对应的输入、输出流//也可以附加一个int值用于指定缓冲区大小，不添加则使用默认大小 BufferedOutputStream使用流程：1.创建FileOutputStream对 ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2019/10/24/19.09%E7%BC%93%E5%86%B2%E6%B5%81/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2019/10/23/19.08Properties%E9%9B%86%E5%90%88/">19.08Properties集合</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2019-10-23T10:43:00.000Z">2019-10-23</time></div><div class="recent-post-content">19.08Properties集合
+IO系统中持久化的集合class Properties extends Hashtable//该双列集合的key和value默认都是字符串//创建对象时不需要指定泛型读写方法：void load（InputStream）void load（Reader）//从流中读取集合void store（OutputStream，String comments）void store（Writer，String comments）//将缓冲区的集合写入流//comments为附加内容特殊方法setProperties（String，String）//相当于Map的set（ ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2019/10/23/19.08Properties%E9%9B%86%E5%90%88/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2019/10/22/19.07IO%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E8%A7%84%E8%8C%83/">19.07IO异常处理规范</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2019-10-22T01:52:00.000Z">2019-10-22</time></div><div class="recent-post-content">19.07IO异常处理规范
+JDK1.7之前：FileWriter fileWriter=null;try {fileWriter= new FileWriter(&quot;test\\d.txt&quot;,true);fileWriter.write(&quot;你好，世界&quot;+&quot;\r\n&quot;);// fileWriter.flush();}catch (IOException e){System.out.println(e);}finally {if(fileWriter!=null) {try {fileWriter.close();} catch (IOE ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2019/10/22/19.07IO%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E8%A7%84%E8%8C%83/#more">ReadMore</a></div><hr></div></section><nav class="cxo-page-nav"><a class="extend prev" rel="prev" href="/page/14/">&lt; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><span class="page-number current">15</span><a class="page-number" href="/page/16/">16</a><a class="page-number" href="/page/17/">17</a><a class="page-number" href="/page/18/">18</a><a class="extend next" rel="next" href="/page/16/">下一页 &gt;</a></nav></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="jacketzc"><meta name="renderer" content="webkit"><meta name="copyright" content="jacketzc"><meta name="keywords" content="jacketzc的blog"><meta name="description" content="java，分布式，vue，idea，多线程开发，mybatis，spring，ssm，SpringMVC"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>3.0远程仓库使用 · jacketzc's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.0.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">jacketzc</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">Longlongyu</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">jacketzc's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">3.0远程仓库使用</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2019-09-19</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="git"> git</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">611</span> | Reading time: <span class="post-count">2</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><h1>3.0远程仓库使用</h1>
+<span><div><font style="font-size: 14pt;">使用git推送需要配对SSH密钥</font></div><div><font style="font-size: 14pt;">//如果只是用https拷贝，则不需要使用密钥</font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;">进入主目录下的./ssh目录（没有则建一个）</font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;">生成密钥：</font></div><div><font style="font-size: 14pt;">ssh-keygen -t rsa -C “邮箱地址”</font></div><div><font style="font-size: 14pt;">//有提示连按三个回车</font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;">将密钥添加到GitHub：</font></div><div><font style="font-size: 14pt;">打开GitHub-setting-ssh</font></div><div><font style="font-size: 14pt;">//添加的是id_rsa.pub</font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;">将GitHub下的密钥添加到本地：</font></div><div><font style="font-size: 14pt;">ssh <a href="mailto:git@github.com" shape="rect" target="_blank">git@github.com</a></font></div><div><font style="font-size: 14pt;">//出现提示填yes</font></div><div><font style="font-size: 14pt;">//此命令也可以检查是否认证成功</font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;">与GitHub仓库建立关联：</font></div><div><font style="font-size: 14pt;">git remote add origin <a href="mailto:git@github.com:%E9%A1%B9%E7%9B%AE" shape="rect" target="_blank">git@github.com:</a>用户名/项目名.git</font></div><div><font style="font-size: 14pt;">//origin为远程仓库的名字，可以是任意的名字</font></div><div><font style="font-size: 14pt;">//如果已经有项目时需要创建一个远程仓库的话，<span style="color: rgb(255, 0, 0);">务必创建一个空的仓库</span></font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;">查看所有已关联的远程仓库：</font></div><div><font style="font-size: 14pt;">git remote -v</font></div><div><font style="font-size: 14pt;">//-v参数将额外显示远程仓库的url</font></div><div><span style="font-size: 18.6667px;">查看具体关联的某一个仓库</span></div><div><span style="font-size: 18.6667px;">git remote show &lt;remote-name&gt;</span></div><div><span style="font-size: 14pt;">//可以查看到本地分支与远程分支的绑定信息，在绑定的分支中可以使用pull或者push进行快速操作</span></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;">删除远程仓库的关联：</font></div><div><font style="font-size: 14pt;">git remote remove &lt;remote-name&gt;</font></div><div><span style="font-size: 18.6667px;">重命名远程仓库</span></div><div><span style="font-size: 18.6667px;">git remote rename &lt;old&gt; &lt;new&gt;</span></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><span style="font-size: 18.6667px;">获取远程仓库中的数据（远程有但是本地没有）</span></div><div><span style="font-size: 14pt;">git fetch origin</span></div><div><span style="font-size: 14pt;">//将获取远程仓库<font style="color: rgb(255, 70, 53);">所有的</font>分支，在本地使用origin/分支名标记</span></div><div><span style="font-size: 14pt;">//此操作并没有合并分支到本地仓库</span></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;">从远程仓库克隆：</font></div><div><font style="font-size: 14pt;">git clone  <a href="mailto:git@github.com:%E7%94%A8%E6%88%B7" shape="rect" target="_blank">git@github.com:</a>用户名/项目名.git</font></div><div><font style="font-size: 14pt;">//如果是一台新电脑，必须先连接配对密钥，才能克隆</font></div><div><font style="font-size: 14pt;">//clone时自带一个仓库，所以如果电脑上已经有其他仓库时，不需要为了使用这个命令新建一个文件夹，在需要的地方clone仓库即可</font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;">推送本地文件：</font></div><div><font style="font-size: 14pt;">git push  origin master</font></div><div><font style="font-size: 14pt;">//将本地版本库推送到origin仓库的master分支</font></div><div><span style="font-size: 14pt;">//如果远程仓库在上次拉取后被别人修改过，那么必须先合并别人的工作才能继续推送</span></div><div><font style="font-size: 14pt;">//-u参数将本地master与远程master相关联，可以简化以后的操作</font></div><div><font style="font-size: 14pt;">//之后再推送就输入git push即可</font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;">从远程仓库拉取文件</font></div><div><font style="font-size: 14pt;">git pull origin master</font></div><div><font style="font-size: 14pt;">//将本地的版本库更新为服务器上的版本</font></div><div><font style="font-size: 14pt;">//每一次推送前建议先拉取（服务器版本领先本地将不能推送）</font></div></span>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://yoursite.com">jacketzc</a></p><p> <span>Link:  </span><a href="http://yoursite.com/2019/09/19/3.0%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93%E4%BD%BF%E7%94%A8/">http://yoursite.com/2019/09/19/3.0%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93%E4%BD%BF%E7%94%A8/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2019/09/19/4.0%E5%88%86%E6%94%AF%E7%AE%A1%E7%90%86/" title="4.0分支管理"><span>< PreviousPost</span><br><span class="prevTitle">4.0分支管理</span></a><a class="nextSlogan" href="/2019/09/18/10.%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" title="10.常用命令"><span>NextPost ></span><br><span class="nextTitle">10.常用命令</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">3.0远程仓库使用</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

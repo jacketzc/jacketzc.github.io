@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="jacketzc"><meta name="renderer" content="webkit"><meta name="copyright" content="jacketzc"><meta name="keywords" content="jacketzc的blog"><meta name="description" content="java，分布式，vue，idea，多线程开发，mybatis，spring，ssm，SpringMVC"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>2.1spring事务处理 · jacketzc's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.0.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">jacketzc</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">Longlongyu</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">jacketzc's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">2.1spring事务处理</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2020-07-13</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="spring"> spring</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">781</span> | Reading time: <span class="post-count">3</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><h1>2.1spring事务处理</h1>
+<span><div><div><div><span style="font-size: 14pt;">#spring自带的轻量级持久层框架（未开启事务）</span></div><ul><li><div><span style="font-size: 18.6667px;">需要引入的依赖：</span></div></li></ul><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 12pt;">&lt;dependency&gt;</font></div><div><font style="font-size: 12pt;">  &lt;groupId&gt;org.springframework&lt;/groupId&gt;</font></div><div><font style="font-size: 12pt;">  &lt;artifactId&gt;spring-jdbc&lt;/artifactId&gt;</font></div><div><font style="font-size: 12pt;">  &lt;version&gt;${spring_version}&lt;/version&gt;</font></div><div><font style="font-size: 12pt;">&lt;/dependency&gt;</font></div><div><font style="font-size: 12pt;">&lt;dependency&gt;</font></div><div><font style="font-size: 12pt;">  &lt;groupId&gt;org.springframework&lt;/groupId&gt;</font></div><div><font style="font-size: 12pt;">  &lt;artifactId&gt;spring-tx&lt;/artifactId&gt;</font></div><div><font style="font-size: 12pt;">  &lt;version&gt;${spring_version}&lt;/version&gt;</font></div><div><font style="font-size: 12pt;">&lt;/dependency&gt;</font></div></div><ul><li><div><span style="font-size: 18.6667px;">配置连接池</span></div></li><li><div><span style="font-size: 18.6667px;">配置jdbcTemplate</span></div></li></ul><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 12pt;">&lt;!--spring自带的持久层框架--&gt;</font></div><div><font style="font-size: 12pt;">    &lt;bean id=&quot;jdbcTemplate&quot; class=&quot;org.springframework.jdbc.core.JdbcTemplate&quot;&gt;</font></div><div><font style="font-size: 12pt;">        &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;/&gt;</font></div><div><font style="font-size: 12pt;">    &lt;/bean&gt;</font></div></div><ul><li><div><span style="font-size: 18.6667px;">创建</span><span style="font-size: 14pt;">JdbcTemplate、执行SQL</span></div></li></ul><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 12pt;">//查询</font></div><div><font style="font-size: 12pt;">String sql = &quot;select price from book where isbn = ?&quot;;</font></div><div><font style="font-size: 12pt;">return jdbcTemplate.queryForObject(sql,Integer.class,bookId);</font></div><div><font style="font-size: 12pt;">//更新</font></div><div><font style="font-size: 12pt;">sql = &quot;update book_stock set stock = stock -1 where isbn = ?&quot;;</font></div><div><font style="font-size: 12pt;">jdbcTemplate.update(sql, bookId);</font></div></div><div><span style="font-size: 14pt;"><br/></span></div><div><span style="font-size: 14pt;">#spring使用注解进行事务处理：</span></div><ul><li><div><span style="font-size: 18.6667px;">配置事务管理器以及开启事务注解</span></div></li></ul><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 12pt;">&lt;!--    配置spring的事务管理器--&gt;</font></div><div><font style="font-size: 12pt;">    &lt;bean id=&quot;dataSourceTransactionManager&quot; class=&quot;org.springframework.jdbc.datasource.DataSourceTransactionManager&quot;&gt;</font></div><div><font style="font-size: 12pt;">        &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;/&gt;</font></div><div><font style="font-size: 12pt;">    &lt;/bean&gt;</font></div><div><font style="font-size: 12pt;">&lt;!--    开启事务注解--&gt;</font></div><div><font style="font-size: 12pt;">    &lt;tx:annotation-driven transaction-manager=&quot;dataSourceTransactionManager&quot;/&gt;</font></div></div><ul><li><div><span style="font-size: 18.6667px;">在需要使用事务控制的方法或者类处添加事务注解@</span><span style="font-size: 14pt;">Transactional</span></div></li></ul><div style="margin-left: 40px;"><span style="font-size: 14pt;">//此注解建议对方法进行配置</span></div><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 12pt;">@Transactional</font></div><div><font style="font-size: 12pt;">public void cartCheckOut(String userName, List&lt;String&gt; bookIds</font></div></div><div><span style="font-size: 14pt;"><br/></span></div><div><span style="font-size: 14pt;">#事务的传播行为（</span><span style="font-size: 14pt;">propagation</span><span style="font-size: 14pt;">）</span></div><div><span style="font-size: 14pt;">事务传播行为用来描述由某一个事务传播行为修饰的方法被嵌套进另一个方法的时事务如何传播</span></div><div><span style="font-size: 14pt;">//传播行为针对子方法</span></div><div><span style="font-size: 18.6667px;">现在有A、B两个方法，A调用B</span></div><ul><li><div><span style="font-size: 14pt;">REQUIRED  </span></div></li></ul><div style="margin-left: 40px;"><span style="font-size: 14pt;">//spring默认的传播机制，A没有事务，B有事务，B自己执行事务，那么B事务加入A执行（一起回滚：即使B已经提交，A发生回滚，B也回滚）</span></div><ul><li><div><span style="font-size: 14pt;">REQUIRES_NEW</span></div></li></ul><div style="margin-left: 40px;"><span style="font-size: 14pt;">//A有事务，A中执行的B方法也有事务，那么运行到B时，将A事务挂起，B事务开始</span></div><ul><li><div><span style="font-size: 18.6667px;">不常用</span></div></li><ul><li><div><span style="font-size: 14pt;">SUPPORTS：A无事务，B就以非事务方式执行</span></div></li><li><div><span style="font-size: 14pt;">MANDATORY：A无事务，抛出异常</span></div></li><li><div><span style="font-size: 14pt;">NOT_SUPPORTED：A有事务，A就挂起</span></div></li><li><div><span style="font-size: 14pt;">NEVER：A有事务，抛出异常</span></div></li></ul></ul><div><span style="font-size: 14pt;"><br/></span></div><div><span style="font-size: 14pt;"><br/></span></div><div><span style="font-size: 14pt;">#事务隔离级别（</span><span style="font-size: 14pt;">isolation</span><span style="font-size: 14pt;">）</span></div><div><span style="font-size: 18.6667px;">事务的并发问题：</span></div><ul><li><div><span style="font-size: 18.6667px;">脏读：A读到了B未提交的数据</span></div></li></ul><div style="margin-left: 40px;"><span style="font-size: 14pt;">//默认情况下，数据库不允许脏读</span></div><ul><li><div><span style="font-size: 18.6667px;">不可重复读：A读取，B修改并提交，A再读取发现两次不一致</span></div></li><li><div><span style="font-size: 18.6667px;">幻读：A读取，B插入并提交，A在读取发现两次不一致</span></div></li></ul><div style="margin-left: 40px;"><span style="font-size: 14pt;">//不可重复读以及幻读都是正常现象</span></div><div><span style="font-size: 18.6667px;">事务隔离级别：</span></div></div><ul><li><div><span style="font-size: 14pt;">READ UNCOMMITTED（</span><span style="font-size: 18.6667px;">读未提交</span><span style="font-size: 14pt;">）</span><span style="font-size: 18.6667px;">：可以读未提交的数据（可以脏读）</span></div></li><li><div><span style="font-size: 14pt;">READ COMMITTED（</span><span style="font-size: 18.6667px;">读已提交</span><span style="font-size: 14pt;">）</span><span style="font-size: 18.6667px;">：解决脏读，不能解决“不可重复读”以及“幻读”（Oracle默认）</span></div></li><li><div><span style="font-size: 14pt;">REPEATABLE READ（</span><span style="font-size: 18.6667px;">可重复读</span><span style="font-size: 14pt;">）</span><span style="font-size: 18.6667px;">：A在读取期间不允许B修改（可幻读，mysql默认）</span></div></li><li><div><span style="font-size: 14pt;">SERIALIZABLE（</span><span style="font-size: 18.6667px;">串行化</span><span style="font-size: 14pt;">）</span><span style="font-size: 18.6667px;">：所有事务排队执行</span></div></li></ul><div><span style="font-size: 14pt;"><br/></span></div><div><span style="font-size: 14pt;">#事务的回滚、超时和只读属性</span></div><ul><li><div><span style="font-size: 18.6667px;">noRollBackFor={</span><span style="font-size: 18.6667px;">xxxException.class</span><span style="font-size: 18.6667px;">}</span></div></li></ul><div style="margin-left: 40px;"><span style="font-size: 14pt;">//对某些异常不回滚</span></div><div style="margin-left: 40px;"><span style="font-size: 14pt;">//spring默认对所有的异常进行回滚</span></div><ul><li><div><span style="font-size: 18.6667px;">timeout=2（秒）-如果事务处理超时预设的秒数，则回滚</span></div></li><li><div><span style="font-size: 18.6667px;">readOnly-只读属性（默认false），如果设置为true，那么事务管理将不允许进行数据库写入操作</span></div></li></ul><div><span style="font-size: 14pt;"><br/></span></div><div><span style="font-size: 14pt;"><br/></span></div><div><span style="font-size: 14pt;"><br/></span></div></div><div><br/></div></span>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://yoursite.com">jacketzc</a></p><p> <span>Link:  </span><a href="http://yoursite.com/2020/07/13/2.1spring%E4%BA%8B%E5%8A%A1%E5%A4%84%E7%90%86/">http://yoursite.com/2020/07/13/2.1spring%E4%BA%8B%E5%8A%A1%E5%A4%84%E7%90%86/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2020/07/14/1.1%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B/" title="1.1基本流程"><span>< PreviousPost</span><br><span class="prevTitle">1.1基本流程</span></a><a class="nextSlogan" href="/2020/07/10/2.0Aspectj%E8%87%AA%E5%8A%A8AOP%E6%B3%A8%E5%85%A5/" title="2.0Aspectj自动AOP注入"><span>NextPost ></span><br><span class="nextTitle">2.0Aspectj自动AOP注入</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">2.1spring事务处理</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

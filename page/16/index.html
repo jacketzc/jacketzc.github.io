@@ -1,0 +1,111 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="jacketzc"><meta name="renderer" content="webkit"><meta name="copyright" content="jacketzc"><meta name="keywords" content="jacketzc的blog"><meta name="description" content="java，分布式，vue，idea，多线程开发，mybatis，spring，ssm，SpringMVC"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>jacketzc's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.0.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">jacketzc</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">Longlongyu</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">jacketzc's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1>jacketzc's Blog</h1><h5>Welcome to my Blog!</h5><div class="intro-social"><a class="fa fa-envelope" href="mailto://jacketzc@outlook.com" title="email"></a><a class="fa fa-github" href="//github.com/jacketzc" target="_blank" title="github"></a><a class="fa fa-twitter" href="//twitter.com/jacketzc" target="_blank" title="twitter"></a></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><section id="recent-posts"><div class="recent-post-item"><div class="post-title"><a href="/2019/10/22/19.06%E5%AD%97%E7%AC%A6%E8%BE%93%E5%87%BA%E6%B5%81/">19.06字符输出流</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2019-10-22T01:20:00.000Z">2019-10-22</time></div><div class="recent-post-content">19.06字符输出流
+abstract Wirter//字符输出流常用方法：void write(int c)//写入单个字符write(char[])//写入多个字符write(char[],int off,int len)//部分写入字符数组write(String)//写入字符串write(String,int off,int len)//部分写入字符串void flush()//刷新流的缓冲close()//关闭流（需要先刷新）构造函数：FileWriter(String path)FileWrter(File file)FileWriter(String path，bool)File ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2019/10/22/19.06%E5%AD%97%E7%AC%A6%E8%BE%93%E5%87%BA%E6%B5%81/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2019/10/22/19.05%E5%AD%97%E7%AC%A6%E8%BE%93%E5%85%A5%E6%B5%81/">19.05字符输入流</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2019-10-22T00:45:00.000Z">2019-10-22</time></div><div class="recent-post-content">19.05字符输入流
+字节流在读取中文字符的时候，读是没有问题，但是想正确输出在控制台上，很有问题//UTF-8编码下三个字节组成一个汉字，不论是使用char转型还是创建String，编译器都无法做出正确判断abstract class Reader//字符输入流常用方法：int reader()//读取一个字符int reader(char[])//读取多个字符void close//关闭流class FileReader extends InputStreamReader//把文件以字符形式读取到内存中构造方法：FileReader(String path)FileReader(File  ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2019/10/22/19.05%E5%AD%97%E7%AC%A6%E8%BE%93%E5%85%A5%E6%B5%81/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2019/10/21/19.04%E5%AD%97%E8%8A%82%E8%BE%93%E5%85%A5%E6%B5%81/">19.04字节输入流</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2019-10-21T08:47:00.000Z">2019-10-21</time></div><div class="recent-post-content">19.04字节输入流
+InputStream常用方法：int read（）//从输入流读取下一个字节，并向上转型为int类型//如果读取的结果为‘-1’，表明已经读取结束int read（byte[]）//从输入流读取字节数组//此int返回值表示读取到的字节数//传入的byte[]容量为读取字节数的最大容量//当所有的字节被读取完毕时，byte[]的剩余空间会被闲置//如果一个字节都没有读取到（已经读取完毕时继续读取），则返回-1FileInputStream extends InputStream//从硬盘中读取数据到内存中的输入流构造方法：FileInputStream（String n ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2019/10/21/19.04%E5%AD%97%E8%8A%82%E8%BE%93%E5%85%A5%E6%B5%81/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2019/10/21/19.03%E5%AD%97%E8%8A%82%E8%BE%93%E5%87%BA%E6%B5%81/">19.03字节输出流</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2019-10-21T01:28:00.000Z">2019-10-21</time></div><div class="recent-post-content">19.03字节输出流
+所有的文件都以字节保存，字节流可以读取任意文件Abstract class OutputStream{}//字节输出流常用方法：.close()//关闭此输出流相关的资源.flash()//刷新流.write(...)//将此输出流写入文件class FileOutputStream extends OutputStream{}//文件字节输出流构造方法：FileOutputStream（String pathname）{}//以文件路径方式构建此流FileOutputStream（File file）{}//以文件方式构建此流//创建输出流的同时会在本地创建文件（如果文 ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2019/10/21/19.03%E5%AD%97%E8%8A%82%E8%BE%93%E5%87%BA%E6%B5%81/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2019/10/21/19.02IO%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/">19.02IO基本概念</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2019-10-21T01:19:00.000Z">2019-10-21</time></div><div class="recent-post-content">19.02IO基本概念
+I：input（读取）//从硬盘读取到内存O：output（写入）//从内存写入到硬盘流：字符=2字节；字节=8位字节流：InputStream（输入流）OutputStream（输出流）字符流：Reader（输入流）Writer（输出流）
+</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2019/10/21/19.02IO%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2019/10/21/19.01%E8%BF%87%E6%BB%A4%E5%99%A8/">19.01过滤器</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2019-10-20T23:39:00.000Z">2019-10-21</time></div><div class="recent-post-content">19.01过滤器
+一共两种过滤器：1.文件过滤器2.文件名过滤器1.文件过滤器interface FileFilter//该接口有唯一方法boolean accept(File pathname)//该接口没有任何的实现类，所以必须自定义实现类//该接口可以作为方法.listFiles(FileFilter)的一个参数，调用该方法的File对象会在获取子目录时调用accept方法 //如果accept方法返回true则表示通过重写实例：@Overrideboolean accept(File pathname){     if(pathname.isDirectory)          re ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2019/10/21/19.01%E8%BF%87%E6%BB%A4%E5%99%A8/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2019/10/20/19.00File%E7%B1%BB/">19.00File类</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2019-10-20T00:55:00.000Z">2019-10-20</time></div><div class="recent-post-content">19.00File类
+文件和目录路径名的抽象表示形式//该类可以应用于任何的系统成员变量（全部都是静态的）//这是java为跨平台做出的设计，以后用到分隔符的地方尽量使用该成员变量string pathSeparator//路径分隔符 windows（；） linux（：）string sepatator//名称分隔符 windows（\） linux（/）绝对路径和相对路径绝对：从盘符或者根目录开始相对：以当前目录为基准//当前目录为c:\user，那么该目录下的文件夹可以直接写作123.txt注意：java使用两个‘\’代表一个普通的反斜杠构造方法File(String filename) ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2019/10/20/19.00File%E7%B1%BB/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2019/10/14/18.%E5%B8%B8%E7%94%A8API/">18.常用API</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2019-10-14T08:14:00.000Z">2019-10-14</time></div><div class="recent-post-content">18.常用API
+这一部分为视频学习的补充内容Scanner类：一个简单的文本扫描器，可以使用正则表达式解析原始类型和字符串//可以实现键盘输入到程序中基本实例：Scanner scanner=new Scanner(System.in);int a=scanner.nextInt()其他方法：.next()查找并返回此扫描仪的下一个完整令牌//输入一个字符串//在idea中使用junit测试时，该方法貌似不可用匿名对象只使用new关键字创造一个对象，不将它赋值给一个引用//适合只使用一次该对象的场景基本实例：int a=new Scanner(System.in).nextInt();//后 ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2019/10/14/18.%E5%B8%B8%E7%94%A8API/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2019/09/22/17.%E5%AE%B9%E5%99%A8%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/">17.容器深入研究</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2019-09-22T00:06:00.000Z">2019-09-22</time></div><div class="recent-post-content">17.容器深入研究
+集合的基本操作：add（）remove（）contains（）size（）forEach装填容器：//这个章节一直在致力于研究各种装填容器的方法（包括使用Abstract容器来自定义容器的装填，我认为和目标偏差的有点远，所以跳过）List&lt;T&gt;  Collections.nCopies(n,T)//返回指定类型T对象的n个副本的列表Collections.fill(List&lt;T&gt;,T)//使用指定类型对象填充列表（列表的长度决定了填充的个数）Collection的功能方法//除了Map类的容器都属于Collectionbool add(T)//填充具 ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2019/09/22/17.%E5%AE%B9%E5%99%A8%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2019/09/20/16.%E6%95%B0%E7%BB%84/">16.数组</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2019-09-20T01:47:00.000Z">2019-09-20</time></div><div class="recent-post-content">16.数组
+大多数时候，创建组装一个数组，通过整型索引范围，它的尺寸不可改变，以上就是数组需要了解的内容数组的重要操作方法：Arrays静态类中包含操作数组的很多方法（转化成容器，转化为字符）数组是一个效率最高的存储和随机访问对象的方式。缺点就是生命周期中不可更改。数组是一个对象（虽然他看起来像一种设计方法），数组标识符是一个引用，指向在堆中创建的对象，这意味着数组也需要初始化后才能使用。一次通常的初始化：String[] array=new String[5]//数组的.length方法只能显示数组的长度（定长），而不能显示其中的元素个数//数组中所有的引用都被初始化为null，基本类型被初 ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2019/09/20/16.%E6%95%B0%E7%BB%84/#more">ReadMore</a></div><hr></div></section><nav class="cxo-page-nav"><a class="extend prev" rel="prev" href="/page/15/">&lt; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="page-number" href="/page/15/">15</a><span class="page-number current">16</span><a class="page-number" href="/page/17/">17</a><a class="page-number" href="/page/18/">18</a><a class="extend next" rel="next" href="/page/17/">下一页 &gt;</a></nav></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

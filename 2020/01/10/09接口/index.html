@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="jacketzc"><meta name="renderer" content="webkit"><meta name="copyright" content="jacketzc"><meta name="keywords" content="jacketzc的blog"><meta name="description" content="java，分布式，vue，idea，多线程开发，mybatis，spring，ssm，SpringMVC"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>09接口 · jacketzc's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.0.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">jacketzc</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">Longlongyu</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">jacketzc's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">09接口</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2020-01-10</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">563</span> | Reading time: <span class="post-count">1</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><h1>09接口</h1>
+<span><div><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;">只提供方法，没有提供任何实现（默认方法例外）</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;">与抽象类的区别：</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;">抽象类始终是一个类，它虽然不可以实例化对象，但是仍然可以实现方法</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;"><span>//</span><span>接口的使用优先高于抽象类，目的在于解除“耦合”</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;"><span>//</span><span>接口相较于基类的优势在于：任何实现类可以自行适配方法而不是继承方法</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;"> </p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;"><span>关键字：</span><span>interface</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;"><span>接口默认具有包访问权限，添加</span><span>public</span><span>使其对外可用</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;"><span>接口中的方法默认为</span><span>public</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;"> </p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;">实现接口</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;"><span>关键字：</span><span>implement</span><span>s</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;"><span>java</span><span>允许一个类实现多个接口</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;"><span>//implements interface1</span><span>，</span><span>interface2</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;"><span>//</span><span>不允许继承多个类</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;"><span>//“</span><span>多实现”又称为接口的“多继承”</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;">接口的多实现使得对象可以向上转型为多个接口</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;"><span>//</span><span>一个接口引用也可以像抽象类那样接收派生类的对象</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;"> </p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;">接口也可以继承接口</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;"><span>//</span><span>接口中的方法应该避免使用相同的方法名，否则在实现多继承时会产生混乱</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;"> </p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;"> </p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;"><span>接口中的域都是常量（final和</span><span>static</span><span>）</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;"><span>在</span><span>jdk1.5</span><span>之前接口可以当作枚举使用</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;"><span>//</span><span>接口中的域不是接口的一部分，它们的值被存储在该接口的静态存储区</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;"> </p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;">内部接口（嵌套接口）</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;">内部接口允许被定义为private</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;"><span>//</span><span>被定义为private的内部接口中的方法不允许添加类型信息（接口中的方法不允许向上转型）</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;"><span>//public</span><span>方法若返回private</span><span> interface</span><span>，则只有内部方法能够接收返回的</span><span style="background: yellow;">对象</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;"><span>//</span><span style="background: yellow;">方法的返回类型可以是一个接口，返回的是接口的一个实现对象</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;"> </p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;"> </p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;">默认方法：</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;"><span>接口中被指定为</span><span>default</span><span>的方法为默认方法</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;"><span>//default</span><span>方法仅能在接口中使用</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;">例：</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;"><span>default void print</span><span>（）</span><span>{</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;"><span>syso</span><span>（）；</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;">}</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;">此方法可以在实现该接口的类中直接使用（重写当然是可以的）</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;"><span>//</span><span>类同时实现的</span><span>A</span><span>与</span><span>B</span><span>接口中有相同的</span><span>default</span><span>方法，此时必须重写该方法</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;"><span>//</span><span>类继承</span> <span>的父类</span><span>A</span><span>与接口</span><span>B</span><span>中有相同的</span><span>default</span><span>方法（类中不会被指定</span><span>default</span><span>），则优先使用父类中的方法</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;"><span>//default</span><span>方法</span><span style="background: yellow;">支持重载</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 12.0pt;"> </p><br clear="none"/></div></span>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://yoursite.com">jacketzc</a></p><p> <span>Link:  </span><a href="http://yoursite.com/2020/01/10/09%E6%8E%A5%E5%8F%A3/">http://yoursite.com/2020/01/10/09%E6%8E%A5%E5%8F%A3/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2020/01/10/10%E5%86%85%E9%83%A8%E7%B1%BB/" title="10内部类"><span>< PreviousPost</span><br><span class="prevTitle">10内部类</span></a><a class="nextSlogan" href="/2020/01/10/08%E5%A4%9A%E6%80%81/" title="08多态"><span>NextPost ></span><br><span class="nextTitle">08多态</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">09接口</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

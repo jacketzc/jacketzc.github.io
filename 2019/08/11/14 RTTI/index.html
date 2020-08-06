@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="jacketzc"><meta name="renderer" content="webkit"><meta name="copyright" content="jacketzc"><meta name="keywords" content="jacketzc的blog"><meta name="description" content="java，分布式，vue，idea，多线程开发，mybatis，spring，ssm，SpringMVC"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>14 RTTI · jacketzc's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.0.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">jacketzc</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">Longlongyu</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">jacketzc's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">14 RTTI</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2019-08-11</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">1.6k</span> | Reading time: <span class="post-count">5</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><h1>14 RTTI</h1>
+<span><div><span style="font-size: 14pt;">运行时类型信息，在运行时，识别一个对象的类型</span></div><div><span style="font-size: 14pt;">RTTI并非一种方法，而是一个判断的过程</span></div><div><span style="font-size: 14pt;">1.传统的类型转化如（Integer），RTTI将保证此转化的正确性，否则将会抛出一个异常</span></div><div><span style="font-size: 14pt;">2.Class对象可以获取RTTI</span></div><div><span style="font-size: 14pt;">3.使用类型判断时，如isInstance（）方法或者instanceof关键字也使用到了RTTI</span></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><span style="font-size: 14pt;">java程序在程序开始时并非完全加载，每个部分在必须的时候才被加载</span></div><div><span style="font-size: 14pt;">//java的类都是在初次使用的时候才会从.class中加载出来</span></div><div><span style="font-size: 14pt;">使用一个类之前的步骤：</span></div><div><span style="font-size: 14pt;">1.加载：类加载器查找字节码，并生成一个Class对象</span></div><div><span style="font-size: 14pt;">2.链接：验证类中的字节码，为静态域分配存储空间</span></div><div><span style="font-size: 14pt;">3.初始化：初始化超类（如果有的话），执行静态初始化器和静态初始化块</span></div><div><span style="font-size: 14pt;">//使用“类名.class”的方法不会自动的初始化该Class对象，直到对静态方法（包括构造函数）或者非常数静态域的首次引用才发生</span></div><div><span style="font-size: 14pt;">//使用“Class.forName（）”的方法会立即初始化该Class对象</span></div><div><span style="font-size: 14pt;">//若一个变量被同时声明static和final，即使没有初始化，也能读取到该变量</span></div><div><span style="font-size: 14pt;">//一个正常的域读取它之前必须被“链接”和“初始化”</span></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><span style="font-size: 14pt;">获取RTTI</span></div><div><span style="font-size: 14pt;">获取Class对象引用：</span></div><div><span style="font-size: 14pt;">简单介绍：</span></div><div><span style="font-size: 14pt;">Class类表示正在运行的Java应用程序中的类和接口</span></div><div><span style="font-size: 14pt;">Class Class&lt;T&gt;：String.class就是Class&lt;String&gt;</span></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><span style="font-size: 14pt; color: rgb(0, 0, 0);">1.static Class&lt;?&gt; forName（String）：根据类名查找并返回该类的Class对象</span></div><div><span style="font-size: 14pt; color: rgb(0, 0, 0);">//类名一定要使用全称</span></div><div><span style="font-size: 14pt; color: rgb(0, 0, 0);">//此方法发生在运行时，需要添加“ClassNotFound”异常警告</span></div><div><span style="font-size: 14pt; color: rgb(0, 0, 0);">//</span><span style="font-size: 14pt; color: rgb(255, 0, 0);">此方法Class引用的泛型只能指定为&lt;?&gt;</span></div><div><span style="font-size: 14pt; color: rgb(0, 0, 0);">//</span><span style="font-size: 14pt; color: rgb(0, 204, 255);">这个方法的好处在于不需要导包</span></div><div><span style="font-size: 14pt; color: rgb(0, 0, 0);">2.Class&lt;?&gt; getClass()：通过对象获取RTTI</span></div><div><span style="font-size: 14pt; color: rgb(0, 0, 0);">//此方法源自Object类</span></div><div><span style="font-size: 14pt; color: rgb(0, 0, 0);">//该方法也发生在运行时</span></div><div><span style="font-size: 14pt; color: rgb(0, 0, 0);">//</span><span style="font-size: 14pt; color: rgb(255, 0, 0);">不论是否产生向上转型，始终获取到的是该对象的类</span></div><div><span style="font-size: 14pt; color: rgb(0, 0, 0);">//</span><span style="font-size: 14pt; color: rgb(255, 0, 0);">此方法Class引用的泛型只建议指定为&lt;? extends Object&gt;（Object代指父类）</span></div><div><span style="font-size: 14pt; color: rgb(0, 0, 0);">3.Class&lt;?&gt; 类名.class：通过类名获取RTTI</span></div><div><span style="font-size: 14pt; color: rgb(0, 0, 0);">//此方法又叫类字面常量，在编译时就受到检查，更加地安全</span></div><div><span style="font-size: 14pt; color: rgb(0, 0, 0);">//此方法还可以对接口、接口、基本的数据类型使用</span></div><div><span style="font-size: 14pt; color: rgb(0, 0, 0);">//使用此方法的类即使是派生类，Class引用的泛型还可以指定为&lt;Object&gt;(即这个类本身)</span></div><div><span style="font-size: 14pt; color: rgb(0, 255, 255);">Tips：</span></div><div><span style="font-size: 14pt;">尽量使用泛型来替代单纯地申明一个Class引用</span></div><div><span style="font-size: 14pt;">//即使Class&lt;?&gt; class和Class class是等价的</span></div><div><span style="font-size: 14pt;">//它不会引起</span><span style="font-size: 14pt; color: rgb(0, 204, 255);">编译器</span><span style="font-size: 14pt;">警告，这表明并非因为疏忽而创建了一个非具体类的引用</span></div><div><span style="font-size: 14pt;">//添加泛型仅仅是为了让编译器进行类型检查</span></div><div><span style="font-size: 14pt; color: rgb(255, 0, 0);">此引用不接受向上转型的对象</span><span style="font-size: 14pt; color: rgb(0, 0, 0);">：Class &lt;Number&gt; c=Integer.class是错误的（Number类型的Class对象和Integer类型的没有继承关系）</span></div><div><span style="font-size: 14pt;">//可以使用“？”与“extends”来放宽这种限制：Class &lt;? extends Number&gt; c=int.class</span></div><div><span style="font-size: 14pt;">//类似的还有&lt;? super Integer&gt;，该泛型将接受Integer的父类参数</span></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><span style="font-size: 14pt; color: rgb(0, 0, 0);">使用RTTI创建对象：（原理是反射，详见SSM框架反射机制）</span></div><div><span style="font-size: 14pt; color: rgb(0, 0, 0);">方法：.newInstance（）</span></div><div><span style="font-size: 14pt; color: rgb(0, 0, 0);">该方法将返回一个确切类型的对象，如果没有确切类型，将返回Object对象</span></div><div><span style="font-size: 14pt; color: rgb(0, 0, 0);">//</span><span style="font-size: 14pt; color: rgb(0, 204, 255);">该确切类型由编译器来确认</span></div><div><span style="font-size: 14pt; color: rgb(0, 0, 0);">1.若该引用是诸如Class&lt;String&gt;或者&lt;? extends Object&gt;的，返回一个确切的对象，可以用对应的类或者父类引用接受</span></div><div><span style="font-size: 14pt; color: rgb(0, 0, 0);">2.若该引用像&lt;?&gt;的，则编译器认为没有确切类型，一致返回一个Object对象（不指定泛型也算这种情况）</span></div><div><span style="font-size: 14pt; color: rgb(0, 0, 0);">//该对象可以使用强制类型转化为相应对象</span></div><div><span style="font-size: 14pt;">//使用Class.forName（）创造的Class引用只能返回Object对象，因为它的Class引用的泛型一定会被指定为“？”</span></div><div><span style="font-size: 14pt; color: rgb(0, 0, 0);">其他详情见SSM框架“</span> <a href="evernote:///view/24898631/s23/93a7a42f-707c-4440-bfc4-8ccf0f89de0a/93a7a42f-707c-4440-bfc4-8ccf0f89de0a/" style="font-size: 14pt; color: rgb(0, 0, 0);">2.1反射技术</a><span style="font-size: 14pt; color: rgb(0, 0, 0);">”</span></div><div><br/></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><span style="font-size: 14pt; color: rgb(0, 0, 0);">使用RTTI进行向下转型：</span></div><div><span style="font-size: 14pt; color: rgb(0, 0, 0);">方法：.cast（superObject）</span></div><div><span style="font-size: 14pt; color: rgb(0, 0, 0);">例：</span></div><div><span style="font-size: 14pt; color: rgb(0, 0, 0);">List&lt;?&gt; list=new ArrayList&lt;&gt;()；</span></div><div><span style="font-size: 14pt; color: rgb(0, 0, 0);">Class class1=ArrayList.class； </span></div><div><span style="font-size: 14pt; color: rgb(0, 0, 0);">ArrayList&lt;?&gt;=class1.cast（list）</span></div><div><span style="font-size: 14pt; color: rgb(0, 0, 0);">//cast将一个父级对象向下转型为一个子类对象</span></div><div><font style="font-size: 14pt;"><span style="font-size: 14pt; color: rgb(0, 0, 0);">//此方法等同于(ArrayList</span><span style="font-size: 14pt; color: rgb(0, 204, 255);">&lt;?&gt;</span><span style="font-size: 14pt; color: rgb(0, 0, 0);">)list，但是在某些场合下显得有效</span></font></div><div><span style="font-size: 14pt; color: rgb(0, 0, 0);">//</span><span style="font-size: 14pt; color: rgb(0, 204, 255);">泛型信息可以被保留</span></div><div><span style="font-size: 14pt;">向下转型时必须确认类型信息，若没有直接的信息，可以使用“isInstance（）”方法或者“instanceof”关键字来确认：</span></div><div><span style="font-size: 14pt;">if（a.isInstance(int)）</span></div><div><span style="font-size: 14pt;">//或者if（a instanceof int）</span></div><div><span style="font-size: 14pt;">……</span></div><div><span style="font-size: 14pt;">//.isAssignableFrom（）方法用于对超类的检查</span></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><span style="font-size: 14pt;">instanceof运算符：</span></div><div><span style="font-size: 14pt;">这是个二元运算符，前面放置对象，后面放一个类，检查后面的类是否能接受前面对象的引用（这就意味着父类以及接口的结果都是true）</span></div><div><span style="font-size: 14pt;">后面的类如果是子类，则返回false</span></div><div><span style="font-size: 14pt;">//后面的类和前面的对象没有关系，编译器会报错</span></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><span style="font-size: 14pt;">isInterface（）方法</span></div><div><span style="font-size: 14pt;">该方法属于Class&lt;T&gt;类，这意味着操作它的对象也是一个Class引用</span></div><div><span style="font-size: 14pt;">此方法用于检查该Class对象是否是一个接口（只有Interface.class的结果是true，使用new创建出的对象，哪怕使用接口接受引用，结果还是false）</span></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><span style="font-size: 14pt;">isInstance（Object）</span></div><div><span style="font-size: 14pt;">该方法同样来自Class&lt;T&gt;类</span></div><div><span style="font-size: 14pt;">此方法等价于instanceof关键字，用于检查Object是否来自该class所表示的类/接口的引用</span></div><div><span style="font-size: 14pt;">//和instanceof的不同在于它不会在编译时检查两个对象的关系</span></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><span style="font-size: 14pt;">RTTI的局限：</span></div><div><span style="font-size: 14pt;">RTTI无法获取泛型信息，该类的泛型信息会被擦除</span></div><div><span style="font-size: 14pt;">如：</span></div><div><span style="font-size: 14pt;">ArrayList&lt;</span><span style="font-size: 14pt; color: rgb(255, 0, 0);">String</span><span style="font-size: 14pt;">&gt; list=new ArrayList&lt;&gt;();</span></div><div><span style="font-size: 14pt;">Class&lt;? extends List&gt; class1= list.getClass();</span></div><div><span style="font-size: 14pt;">List&lt;</span><span style="font-size: 14pt; color: rgb(255, 0, 0);">Integer</span><span style="font-size: 14pt;">&gt; list2=class1.newInstance();</span></div><div><span style="font-size: 14pt;">list2.add(123);</span></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><span style="font-size: 14pt;">RTTI与接口</span></div><div><span style="font-size: 14pt;">interface关键字用于打包可用的方法，从而降低程序的耦合</span></div><div><span style="font-size: 14pt;">但是，实现接口的类中可以定义不属于接口的方法，此举增加了耦合但是完全可行</span></div><div><span style="font-size: 14pt;">现代程序设计思想要求“客户端”仅能使用接口中的方法，类中的方法应该只能由“服务端”调用</span></div><div><span style="font-size: 14pt;">因此赋予类中的方法以包访问权限：“protect”</span></div></span>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://yoursite.com">jacketzc</a></p><p> <span>Link:  </span><a href="http://yoursite.com/2019/08/11/14%20RTTI/">http://yoursite.com/2019/08/11/14%20RTTI/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2019/09/12/14.1%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/" title="14.1动态代理"><span>< PreviousPost</span><br><span class="prevTitle">14.1动态代理</span></a><a class="nextSlogan" href="/2019/08/09/13.1%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" title="13.1正则表达式"><span>NextPost ></span><br><span class="nextTitle">13.1正则表达式</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">14 RTTI</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

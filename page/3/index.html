@@ -1,0 +1,110 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="jacketzc"><meta name="renderer" content="webkit"><meta name="copyright" content="jacketzc"><meta name="keywords" content="jacketzc的blog"><meta name="description" content="java，分布式，vue，idea，多线程开发，mybatis，spring，ssm，SpringMVC"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>jacketzc's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.0.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">jacketzc</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">Longlongyu</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">jacketzc's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1>jacketzc's Blog</h1><h5>Welcome to my Blog!</h5><div class="intro-social"><a class="fa fa-envelope" href="mailto://jacketzc@outlook.com" title="email"></a><a class="fa fa-github" href="//github.com/jacketzc" target="_blank" title="github"></a><a class="fa fa-twitter" href="//twitter.com/jacketzc" target="_blank" title="twitter"></a></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><section id="recent-posts"><div class="recent-post-item"><div class="post-title"><a href="/2020/07/15/1.1%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B%EF%BC%88%E6%BC%94%E7%A4%BA%EF%BC%89/">1.1基本流程（演示）</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-07-15T07:11:00.000Z">2020-07-15</time></div><div class="recent-post-content">1.1基本流程（演示）
+Elasticsearch和非关系型数据库类似，存数据的时候不需要表，也不需要管理这些表#索引（名词）相当于一个数据库#索引（动词）索引一个文档，就是存储一个文档到一个索引（名词）//相当于insert以下操作全部使用省略格式（省略主机名等，只保留请求路径以及参数）#插入（PUT）//更新也可以使用它PUT /megacorp/employee/1{    &quot;first_name&quot; : &quot;John&quot;,    &quot;last_name&quot; :  &quot;Smith&quot;,    &quot;age&quot; ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="Elasticsearch"> Elasticsearch</a></div><div class="read-more"><a class="more" href="/2020/07/15/1.1%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B%EF%BC%88%E6%BC%94%E7%A4%BA%EF%BC%89/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/07/15/1.0%E5%85%A5%E9%97%A8/">1.0入门</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-07-15T06:26:00.000Z">2020-07-15</time></div><div class="recent-post-content">1.0入门
+#安装与使用参考：https://www.elastic.co/guide/cn/elasticsearch/guide/current/running-elasticsearch.html下载压缩包，解压，进入/bin目录，使用./elasticsearch.bat命令启动服务发送第一个请求：http://localhost:9200/?pretty可以得到下列响应：{  &quot;name&quot;: &quot;DESKTOP-46EUGQ0&quot;,  &quot;cluster_name&quot;: &quot;elasticsearch&quot;,  &qu ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="Elasticsearch"> Elasticsearch</a></div><div class="read-more"><a class="more" href="/2020/07/15/1.0%E5%85%A5%E9%97%A8/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/07/15/1.6SpringMVC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">1.6SpringMVC工作原理</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-07-15T04:21:00.000Z">2020-07-15</time></div><div class="recent-post-content">1.6SpringMVC工作原理
+SpringMVC工作原理PretenderJava大数据学习者SpringMVC工作原理图：SpringMVC流程1、 用户发送请求至前端控制器DispatcherServlet。2、 DispatcherServlet收到请求调用HandlerMapping处理器映射器。3、 处理器映射器找到具体的处理器(可以根据xml配置、注解进行查找)，生成处理器对象及处理器拦截器(如果有则生成)一并返回给DispatcherServlet。4、 DispatcherServlet调用HandlerAdapter处理器适配器。5、 HandlerAdapter经过适配 ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="SpringMVC"> SpringMVC</a></div><div class="read-more"><a class="more" href="/2020/07/15/1.6SpringMVC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/07/15/1.5%E8%A7%86%E5%9B%BE%E5%92%8C%E8%A7%86%E5%9B%BE%E8%A7%A3%E6%9E%90%E5%99%A8/">1.5视图和视图解析器</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-07-15T03:59:00.000Z">2020-07-15</time></div><div class="recent-post-content">1.5视图和视图解析器
+#视图解析器（Interface ViewResolver）唯一作用就是逻辑视图解析为一个具体的视图对象//controller装填数据后，return给视图解析器，视图解析器解析出请求的视图路径以及视图//SpringMVC 为逻辑视图名的解析提供了不同的策略，可 以在 Spring WEB 上下文中配置一种或多种解析策略，并 指定他们之间的先后顺序。每一种映射策略对应一个具体 的视图解析器实现类常见视图解析器（实现类）：InternalResourceViewResolver将视图名解析为一个URL文件、一般使用该视图解析器将视图名映射为一个保存在WEB-INF目录 ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="SpringMVC"> SpringMVC</a></div><div class="read-more"><a class="more" href="/2020/07/15/1.5%E8%A7%86%E5%9B%BE%E5%92%8C%E8%A7%86%E5%9B%BE%E8%A7%A3%E6%9E%90%E5%99%A8/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/07/15/1.4ModelAndView/">1.4ModelAndView</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-07-15T01:08:00.000Z">2020-07-15</time></div><div class="recent-post-content">1.4ModelAndView
+此章节的所有类都没有request中的attribute方法//也就是说入参的Model这些对象不能直接捕获浏览器中发送过来的数据#ModelAndView设置控制器的返回类型为ModelAndView，可以将数据发送给转发的页面（类似request.setAttribute）//底层实现确实是使用servlet的请求转发addObject(String,Object)设置转发的数据setViewName设置转发的视图（页面）名称@RequestMapping(&quot;testMAV&quot;)    public ModelAndView testMod ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="SpringMVC"> SpringMVC</a></div><div class="read-more"><a class="more" href="/2020/07/15/1.4ModelAndView/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/07/14/1.2%E9%85%8D%E7%BD%AEREST%E9%A3%8E%E6%A0%BC%E8%BF%87%E6%BB%A4%E5%99%A8@RequestMap%E5%85%B6%E4%BB%96%E5%A4%84%E7%90%86/">1.2配置REST风格过滤器@RequestMap其他处理</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-07-14T03:37:00.000Z">2020-07-14</time></div><div class="recent-post-content">1.2配置REST风格过滤器||@RequestMap其他处理
+同一个value的请求，根据请求方法的不同，对应不同的处理//同样对/user进行请求，发送get就执行查询、发送post就执行添加。。。#请求方法//@RequestMapping的method参数RequestMethod.GET（查询）RequestMethod.POST（添加）RequestMethod.PUT（修改）RequestMethod.DELETE（删除）#为静态页面开启rest风格转换//HTML以及jsp无法直接发送rest风格的请求，所以需要配置一个过滤器来对POST进行转换配置REST风格过滤器（web. ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="SpringMVC"> SpringMVC</a></div><div class="read-more"><a class="more" href="/2020/07/14/1.2%E9%85%8D%E7%BD%AEREST%E9%A3%8E%E6%A0%BC%E8%BF%87%E6%BB%A4%E5%99%A8@RequestMap%E5%85%B6%E4%BB%96%E5%A4%84%E7%90%86/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/07/14/0.0spring%E7%9A%84%E4%BE%9D%E8%B5%96/">0.0spring的依赖</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-07-14T02:47:00.000Z">2020-07-14</time></div><div class="recent-post-content">0.0spring的依赖
+&lt;dependency&gt;  &lt;groupId&gt;org.springframework&lt;/groupId&gt;  &lt;artifactId&gt;spring-context&lt;/artifactId&gt;  &lt;version&gt;${spring_version}&lt;/version&gt;&lt;/dependency&gt;&lt;dependency&gt;  &lt;groupId&gt;org.springframework&lt;/groupId&gt;  &lt;artifactId&gt;sprin ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="spring"> spring</a></div><div class="read-more"><a class="more" href="/2020/07/14/0.0spring%E7%9A%84%E4%BE%9D%E8%B5%96/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/07/14/1.1%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B/">1.1基本流程</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-07-14T00:48:00.000Z">2020-07-14</time></div><div class="recent-post-content">1.1基本流程
+添加额外的依赖：&lt;dependency&gt;  &lt;groupId&gt;org.springframework&lt;/groupId&gt;  &lt;artifactId&gt;spring-webmvc&lt;/artifactId&gt;  &lt;version&gt;${spring_version}&lt;/version&gt;&lt;/dependency&gt;&lt;dependency&gt;  &lt;groupId&gt;org.springframework&lt;/groupId&gt;  &lt;artifactId&gt;spr ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="SpringMVC"> SpringMVC</a></div><div class="read-more"><a class="more" href="/2020/07/14/1.1%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/07/13/2.1spring%E4%BA%8B%E5%8A%A1%E5%A4%84%E7%90%86/">2.1spring事务处理</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-07-13T01:02:00.000Z">2020-07-13</time></div><div class="recent-post-content">2.1spring事务处理
+#spring自带的轻量级持久层框架（未开启事务）需要引入的依赖：&lt;dependency&gt;  &lt;groupId&gt;org.springframework&lt;/groupId&gt;  &lt;artifactId&gt;spring-jdbc&lt;/artifactId&gt;  &lt;version&gt;${spring_version}&lt;/version&gt;&lt;/dependency&gt;&lt;dependency&gt;  &lt;groupId&gt;org.springframework&lt;/group ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="spring"> spring</a></div><div class="read-more"><a class="more" href="/2020/07/13/2.1spring%E4%BA%8B%E5%8A%A1%E5%A4%84%E7%90%86/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/07/10/2.0Aspectj%E8%87%AA%E5%8A%A8AOP%E6%B3%A8%E5%85%A5/">2.0Aspectj自动AOP注入</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-07-10T05:47:00.000Z">2020-07-10</time></div><div class="recent-post-content">2.0Aspectj自动AOP注入
+AOP：面向切面编程说人话就是在核心业务代码前后添加一些业务处理，然后把这些业务处理分离导入新的依赖&lt;dependency&gt;  &lt;groupId&gt;org.aspectj&lt;/groupId&gt;  &lt;artifactId&gt;aspectjweaver&lt;/artifactId&gt;  &lt;version&gt;1.9.5&lt;/version&gt;&lt;/dependency&gt;//下方依赖已经包括了cglib的依赖&lt;dependency&gt;  &lt;groupId&gt;org.spr ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="spring"> spring</a></div><div class="read-more"><a class="more" href="/2020/07/10/2.0Aspectj%E8%87%AA%E5%8A%A8AOP%E6%B3%A8%E5%85%A5/#more">ReadMore</a></div><hr></div></section><nav class="cxo-page-nav"><a class="extend prev" rel="prev" href="/page/2/">&lt; 上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><a class="extend next" rel="next" href="/page/4/">下一页 &gt;</a></nav></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

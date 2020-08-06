@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="jacketzc"><meta name="renderer" content="webkit"><meta name="copyright" content="jacketzc"><meta name="keywords" content="jacketzc的blog"><meta name="description" content="java，分布式，vue，idea，多线程开发，mybatis，spring，ssm，SpringMVC"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>05.1websocket通信（浏览器端） · jacketzc's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.0.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">jacketzc</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">Longlongyu</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">jacketzc's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">05.1websocket通信（浏览器端）</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2020-07-23</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="WEB"> WEB</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">356</span> | Reading time: <span class="post-count">1</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><h1>05.1websocket通信（浏览器端）</h1>
+<span><div><div>传统的bs通信有个明显的缺点，那就是浏览器向服务器发送请求后，服务器才能返回信息</div><div>服务器没法主动向浏览器发送信息</div><div><br/></div><div>基本思路：</div><ul><li><div>每创建一个连接，就会创建该连接的websocket</div></li><li><div>该连接两头（浏览器和服务器）的操作是对等的，它们可以互相发消息</div></li><li><div>websocket在本质上<font style="color: rgb(255, 70, 53);">只能支持一个连接的的相互通信</font>（浏览器中发消息只能发给自己的websocket），如果想要实现给其他用户发消息，必须自定义方法</div></li></ul><div><br/></div><div><br/></div><div>JavaScript支持websocket</div><div>通信步骤：</div><ul><li><div>判断浏览器是否支持，若支持则创建websocket对象</div></li></ul><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 12pt;">var websocket = null;</font></div><div><font style="font-size: 12pt;">//判断当前浏览器是否支持WebSocket</font></div><div><font style="font-size: 12pt;">if ('WebSocket' in window) {</font></div><div><font style="font-size: 12pt;">    websocket = new WebSocket(&quot;ws://localhost:8080/STU_SSM/websocket&quot;);</font></div><div><font style="font-size: 12pt;">}</font></div><div><font style="font-size: 12pt;">else {</font></div><div><font style="font-size: 12pt;">    alert('当前浏览器 Not support websocket')</font></div><div><font style="font-size: 12pt;">}</font></div></div><ul><li><div>连接成功的回调方法</div></li></ul><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 12pt;">websocket.onopen = function () {</font></div><div><font style="font-size: 12pt;">    console.info(&quot;WebSocket连接成功&quot;);</font></div><div><font style="font-size: 12pt;">}</font></div></div><ul><li><div>连接错误的回调方法</div></li></ul><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 12pt;">websocket.onmessage = function (event) {</font></div><div><font style="font-size: 12pt;">    //do someting</font></div><div><font style="font-size: 12pt;">}</font></div></div><ul><li><div>接收到消息的回调方法</div></li></ul><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 12pt;">websocket.onmessage = function (event) {</font></div><div><font style="font-size: 12pt;">    //do something</font></div><div><font style="font-size: 12pt;">}</font></div></div><ul><li><div>连接关闭的回调方法</div></li></ul><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 12pt;">websocket.onclose = function () {</font></div><div><font style="font-size: 12pt;">    console.info(&quot;WebSocket连接关闭&quot;);</font></div><div><font style="font-size: 12pt;">}</font></div></div><ul><li><div>监听窗口关闭事件（主动去关闭websocket连接，防止连接还没断开就关闭窗口）</div></li></ul><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 12pt;">window.onbeforeunload = function () {</font></div><div><font style="font-size: 12pt;">    closeWebSocket();</font></div><div><font style="font-size: 12pt;">}</font></div></div><ul><li><div>关闭连接（可选）</div></li></ul><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 12pt;">window.onbeforeunload = function () {</font></div><div><font style="font-size: 12pt;">    closeWebSocket();</font></div><div><font style="font-size: 12pt;">}</font></div></div><ul><li><div>发送消息</div></li></ul><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 12pt;">window.onbeforeunload = function () {</font></div><div><font style="font-size: 12pt;">    closeWebSocket();</font></div><div><font style="font-size: 12pt;">}</font></div></div><div><br/></div><div>一次完整的示范：</div><div><a href="05.1websocket通信（浏览器端）_files/HelloChat.html"><img src="05.1websocket通信（浏览器端）_files/31b4400819fd3e755c17b681bc9c758d.png" alt="HelloChat.html"></a></div><div><br/></div></div><div><br/></div></span>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://yoursite.com">jacketzc</a></p><p> <span>Link:  </span><a href="http://yoursite.com/2020/07/23/05.1websocket%E9%80%9A%E4%BF%A1%EF%BC%88%E6%B5%8F%E8%A7%88%E5%99%A8%E7%AB%AF%EF%BC%89/">http://yoursite.com/2020/07/23/05.1websocket%E9%80%9A%E4%BF%A1%EF%BC%88%E6%B5%8F%E8%A7%88%E5%99%A8%E7%AB%AF%EF%BC%89/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2020/07/23/05.2websocket%E9%80%9A%E4%BF%A1%EF%BC%88%E6%9C%8D%E5%8A%A1%E7%AB%AF%EF%BC%89/" title="05.2websocket通信（服务端）"><span>< PreviousPost</span><br><span class="prevTitle">05.2websocket通信（服务端）</span></a><a class="nextSlogan" href="/2020/07/22/2.2javaAPI%E6%93%8D%E4%BD%9C%EF%BC%88%E6%9E%84%E5%BB%BA%E6%9F%A5%E8%AF%A2%E6%9D%A1%E4%BB%B6%EF%BC%89/" title="2.2javaAPI操作（构建查询条件）"><span>NextPost ></span><br><span class="nextTitle">2.2javaAPI操作（构建查询条件）</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">05.1websocket通信（浏览器端）</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

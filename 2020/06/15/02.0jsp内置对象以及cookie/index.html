@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="jacketzc"><meta name="renderer" content="webkit"><meta name="copyright" content="jacketzc"><meta name="keywords" content="jacketzc的blog"><meta name="description" content="java，分布式，vue，idea，多线程开发，mybatis，spring，ssm，SpringMVC"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>02.0jsp内置对象以及cookie · jacketzc's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.0.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">jacketzc</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">Longlongyu</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">jacketzc's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">02.0jsp内置对象以及cookie</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2020-06-15</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="WEB"> WEB</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">831</span> | Reading time: <span class="post-count">3</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><h1>02.0jsp内置对象以及cookie</h1>
+<span><div><span style="font-size: 14pt;">#request</span></div><div><span style="font-size: 14pt;">请求对象，用于页面向服务器请求</span></div><div><span style="font-size: 14pt;">//类型为HttpServletRequest</span></div><div><span style="font-size: 14pt;">//在获取到该对象时，request中的内容已经被封装好了</span></div><div><span style="font-size: 14pt;">String getParameter(String)</span></div><div><span style="font-size: 14pt;">//获取浏览器发送的参数（一般对应表单的name）</span></div><div><span style="font-size: 14pt;">//每次取一个参数</span></div><div><span style="font-size: 14pt;">一次经典的登录请求：</span></div><div><span style="font-size: 14pt;">##发送方：</span></div><div><span style="color: rgb(167, 69, 0); font-size: 14pt;">    &lt;form action=&quot;doLogin.jsp&quot; method=&quot;get&quot;&gt;</span></div><div><span style="color: rgb(167, 69, 0); font-size: 14pt;">        &lt;table align=&quot;center&quot; border=&quot;1px&quot; width=&quot;30%&quot;&gt;</span></div><div><span style="color: rgb(167, 69, 0); font-size: 14pt;">            &lt;tr&gt;</span></div><div><span style="color: rgb(167, 69, 0); font-size: 14pt;">                &lt;td&gt;用户名&lt;/td&gt;</span></div><div><span style="color: rgb(167, 69, 0); font-size: 14pt;">                &lt;td&gt;</span></div><div><span style="color: rgb(167, 69, 0); font-size: 14pt;">                    &lt;input type=&quot;text&quot; name=&quot;name&quot;&gt;</span></div><div><span style="color: rgb(167, 69, 0); font-size: 14pt;">                &lt;/td&gt;</span></div><div><span style="color: rgb(167, 69, 0); font-size: 14pt;">            &lt;/tr&gt;</span></div><div><span style="color: rgb(167, 69, 0); font-size: 14pt;">            &lt;tr&gt;</span></div><div><span style="color: rgb(167, 69, 0); font-size: 14pt;">                &lt;td&gt;密码&lt;/td&gt;</span></div><div><span style="color: rgb(167, 69, 0); font-size: 14pt;">                &lt;td&gt;</span></div><div><span style="color: rgb(167, 69, 0); font-size: 14pt;">                    &lt;input type=&quot;password&quot; name=&quot;password&quot;&gt;</span></div><div><span style="color: rgb(167, 69, 0); font-size: 14pt;">                &lt;/td&gt;</span></div><div><span style="color: rgb(167, 69, 0); font-size: 14pt;">            &lt;/tr&gt;</span></div><div><span style="color: rgb(167, 69, 0); font-size: 14pt;">            &lt;tr&gt;</span></div><div><span style="color: rgb(167, 69, 0); font-size: 14pt;">                &lt;td colspan=&quot;2&quot;&gt;</span></div><div><span style="color: rgb(167, 69, 0); font-size: 14pt;">                    &lt;input type=&quot;submit&quot; value=&quot;登录&quot;&gt;</span></div><div><span style="color: rgb(167, 69, 0); font-size: 14pt;">                    &lt;input type=&quot;reset&quot; value=&quot;重置&quot;&gt;</span></div><div><span style="color: rgb(167, 69, 0); font-size: 14pt;">                &lt;/td&gt;</span></div><div><span style="color: rgb(167, 69, 0); font-size: 14pt;">&lt;%--                &lt;td&gt;&lt;/td&gt;--%&gt;</span></div><div><span style="color: rgb(167, 69, 0); font-size: 14pt;">            &lt;/tr&gt;</span></div><div><span style="color: rgb(167, 69, 0); font-size: 14pt;">        &lt;/table&gt;</span></div><div><span style="color: rgb(167, 69, 0); font-size: 14pt;">    &lt;/form&gt;</span></div><div><span style="font-size: 14pt;">##接受方：</span></div><div><span style="color: rgb(167, 69, 0); font-size: 14pt;">&lt;%</span></div><div><span style="color: rgb(167, 69, 0); font-size: 14pt;">    String name = request.getParameter(&quot;name&quot;);</span></div><div><span style="color: rgb(167, 69, 0); font-size: 14pt;">    String password = request.getParameter(&quot;password&quot;);</span></div><div><span style="color: rgb(167, 69, 0); font-size: 14pt;">%&gt;</span></div><div><span style="color: rgb(167, 69, 0); font-size: 14pt;">登录信息：</span></div><div><span style="color: rgb(167, 69, 0); font-size: 14pt;">用户名：&lt;%=name%&gt;</span></div><div><span style="color: rgb(167, 69, 0); font-size: 14pt;">密码：&lt;%=password%&gt;</span></div><div><span style="font-size: 14pt;">String[] getParameterValues(String)</span></div><div><span style="font-size: 14pt;">//获取同名的多个参数</span></div><div><span style="font-size: 14pt;">void setAttribute(String ,Object)</span></div><div><span style="font-size: 14pt;">//手动往请求中赋值</span></div><div><span style="font-size: 14pt;">Object getAttribute(String)</span></div><div><span style="font-size: 14pt;">//获取请求中的赋值</span></div><div><font style="font-size: 14pt;"><br/></font></div><div><span style="font-size: 14pt;">#session</span></div><div><span style="font-size: 14pt;">浏览器与服务器之间的会话对象（只要会话不挂断，session在所有页面共享）</span></div><div><span style="font-size: 14pt;">//session的内部实现是session-cookie（存放在浏览器内存），第一次访问页面时，创建session的cookie并且设置过期时间为会话关闭（浏览器进程退出、服务器退出）</span></div><div><span style="font-size: 14pt;">//说人话就是没有session就建一个，有就用原来的</span></div><div><span style="font-size: 14pt;">//服务器的session默认生效时间为30min</span></div><div><span style="font-size: 14pt;">.setAttribiute(key,value)</span></div><div><span style="font-size: 14pt;">.getAttribute(key,value)</span></div><div><span style="font-size: 14pt;">//设置session中的属性</span></div><div><span style="font-size: 14pt;">##session清理</span></div><div><span style="font-size: 14pt;">1.服务器清除过期session</span></div><div><span style="font-size: 14pt;">//会话时长可以在web.xml的&lt;session-config&gt;中配置</span></div><div><span style="font-size: 14pt;">//也可以通过setMaxInactiveInterval(int 秒)指定session过期时间</span></div><div><span style="font-size: 14pt;">2.手动清除session</span></div><div><span style="font-size: 14pt;">    -.invaildate()</span></div><div><span style="font-size: 14pt;">    //执行该方法后，服务器会立即清除session</span></div><div><span style="font-size: 14pt;">    -.removeAttribute(key)</span></div><div><span style="font-size: 14pt;">    //删除session中的部分属性</span></div><div><font style="font-size: 14pt;"><br/></font></div><div><span style="font-size: 14pt;">#cookie</span></div><div><span style="color: rgb(255, 0, 0); font-size: 14pt;">！非内置对象</span></div><div><span style="font-size: 14pt;">1.内存cookie（如session，浏览器关闭就无了）</span></div><div><span style="font-size: 14pt;">Cookie cookie = new Cookie(&quot;name&quot;,&quot;admin&quot;)</span></div><div><span style="font-size: 14pt;">response.addCookie(Cookie)</span></div><div><span style="font-size: 14pt;">//添加cookie到浏览器内存（默认行为）</span></div><div><span style="font-size: 14pt;">//</span><span style="font-size: 14pt; color: rgb(255, 0, 0);">cookie只有一个带参数的构造函数！</span></div><div><span style="font-size: 14pt;">2.磁盘cookie</span></div><div><span style="font-size: 14pt;">cookie.setMaxAge(int 秒)</span></div><div><span style="font-size: 14pt;">//设置cookie失效时间，如果定时为0则不保存cookie，如果为负数，则保存到内存中</span></div><div><span style="font-size: 14pt;">//设置失效时间后，再调用.addCookie将存储到磁盘</span></div><div><span style="font-size: 14pt;">//cookie对象和内置对象不同，一条cookie只能存储一个值</span></div><div><span style="font-size: 14pt;">##取出cookie</span></div><div><span style="font-size: 14pt;">Cookie[] cookies = request.getCookies();</span></div><div><span style="font-size: 14pt;">//取出的cookie是没有标记的，不能通过类似getAttribute()的方法来获取</span></div><div><span style="font-size: 14pt;">##免登陆实现思路</span></div><div><span style="font-size: 14pt;">1.利用cookie中存储的账号密码来登录</span></div><div><span style="font-size: 14pt;">2.只要cooke中存储了相关的用户，该用户就免登陆</span></div><div><span style="font-size: 14pt;">##清理cookie</span></div><div><span style="font-size: 18.6667px;">生成一个name相同、value相同、maxAge=0的cookie即可</span></div><div><font style="font-size: 14pt;"><br/></font></div><div><span style="font-size: 14pt;">#application</span></div><div><span style="font-size: 14pt;">服务器实例对象，所有页面共享该实例的数据，项目不停止则一直可用</span></div><div><font style="font-size: 14pt;"><br/></font></div><div><span style="font-size: 14pt;">#pageContext</span></div><div><span style="font-size: 14pt;">页面上下文对象，只有当前页面有效</span></div><div><font style="font-size: 14pt;"><br/></font></div><div><font style="font-size: 14pt;"><br/></font></div><div><span style="font-size: 14pt;">#response</span></div><div><span style="font-size: 14pt;">浏览器响应对象</span></div><div><font style="font-size: 14pt;"><br/></font></div><div><font style="font-size: 14pt;"><br/></font></div><div><font style="font-size: 14pt;"><br/></font></div><div><span style="font-size: 14pt;">#exception</span></div><div><span style="font-size: 14pt;">用于处理异常</span></div><div><span style="font-size: 14pt;">//在错误页面使用&lt;%=exception.getMessage() %&gt;可以在页面打印发生的异常</span></div><div><font style="font-size: 14pt;"><br/></font></div><div><font style="font-size: 14pt;"><br/></font></div><div><span style="font-size: 14pt;">#out</span></div><div><span style="font-size: 14pt;">用于在页面输出</span></div><div><span style="font-size: 14pt;">//out.print()</span></div><div><span style="font-size: 14pt;">//不建议使用</span></div><div><font style="font-size: 14pt;"><br/></font></div><div><span style="font-size: 14pt;">#page</span></div><div><span style="font-size: 14pt;">相当于this</span></div><div><span style="font-size: 14pt;">//很少使用</span></div><div><font style="font-size: 14pt;"><br/></font></div><div><span style="font-size: 14pt;">#config</span></div><div><span style="font-size: 14pt;">//很少使用</span></div><div><span style="font-size: 12pt;"><br/></span></div></span>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://yoursite.com">jacketzc</a></p><p> <span>Link:  </span><a href="http://yoursite.com/2020/06/15/02.0jsp%E5%86%85%E7%BD%AE%E5%AF%B9%E8%B1%A1%E4%BB%A5%E5%8F%8Acookie/">http://yoursite.com/2020/06/15/02.0jsp%E5%86%85%E7%BD%AE%E5%AF%B9%E8%B1%A1%E4%BB%A5%E5%8F%8Acookie/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2020/06/16/02.1%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3/" title="02.1中文乱码解决"><span>< PreviousPost</span><br><span class="prevTitle">02.1中文乱码解决</span></a><a class="nextSlogan" href="/2020/06/15/01jsp%E9%A1%B5%E9%9D%A2/" title="01jsp页面"><span>NextPost ></span><br><span class="nextTitle">01jsp页面</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">02.0jsp内置对象以及cookie</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

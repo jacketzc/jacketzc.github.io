@@ -1,0 +1,112 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="jacketzc"><meta name="renderer" content="webkit"><meta name="copyright" content="jacketzc"><meta name="keywords" content="jacketzc的blog"><meta name="description" content="java，分布式，vue，idea，多线程开发，mybatis，spring，ssm，SpringMVC"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>jacketzc's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.0.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">jacketzc</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">Longlongyu</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">jacketzc's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1>jacketzc's Blog</h1><h5>Welcome to my Blog!</h5><div class="intro-social"><a class="fa fa-envelope" href="mailto://jacketzc@outlook.com" title="email"></a><a class="fa fa-github" href="//github.com/jacketzc" target="_blank" title="github"></a><a class="fa fa-twitter" href="//twitter.com/jacketzc" target="_blank" title="twitter"></a></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><section id="recent-posts"><div class="recent-post-item"><div class="post-title"><a href="/2020/03/27/2.1%E6%B7%BB%E5%8A%A0jar%E5%92%8C%E4%BE%9D%E8%B5%96/">2.1添加jar和依赖</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-03-27T11:27:00.000Z">2020-03-27</time></div><div class="recent-post-content">2.1添加jar和依赖
+在pom.xml中添加依赖标签一组jar/依赖使用&lt;dependencies&gt;包裹单个jar/依赖使用&lt;dependency&gt;包裹&lt;dependencies&gt;         &lt;dependency&gt;                  &lt;groupId&gt;junit&lt;/groupId&gt;        //依赖所在的组                  &lt;artifactId&gt;junit&lt;/artifactId&gt;        //依赖的项目                  & ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="maven"> maven</a></div><div class="read-more"><a class="more" href="/2020/03/27/2.1%E6%B7%BB%E5%8A%A0jar%E5%92%8C%E4%BE%9D%E8%B5%96/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/03/27/1.0%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/">1.0安装与配置</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-03-27T11:26:00.000Z">2020-03-27</time></div><div class="recent-post-content">1.0安装与配置
+下载Maven组件//运行需要jdk网站：http://maven.apache.org/download.cgi版本：    win：apache-maven-3.6.3-bin.zip    linux：apache-maven-3.6.3-bin.tar.gz    解压，并且配置环境变量新建系统变量MAVEN_HOME，地址填解压目录//如D:\Jacketzc\apache-maven-3.6.3在path中添加：%MAVEN_HOME%\bin
+</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="maven"> maven</a></div><div class="read-more"><a class="more" href="/2020/03/27/1.0%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/03/27/1.1%E4%BB%93%E5%BA%93%E6%A6%82%E5%BF%B5/">1.1仓库概念</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-03-27T11:26:00.000Z">2020-03-27</time></div><div class="recent-post-content">1.1仓库概念
+仓库就是存放jar的仓库使用maven引入jar包时，会先从本地仓库引入，如果没有，则从网上的仓库获取//提高了jar包的复用率，不需要创建一个项目就重新复制一份jar默认位置：C:\Users\jacke\.m2\repository//用户根目录开始修改默认镜像为阿里云：在setting.xml中添加&lt;mirror&gt;    &lt;id&gt;alimaven&lt;/id&gt;    &lt;name&gt;aliyun maven&lt;/name&gt;    &lt;url&gt;http://maven.aliyun.com/nexus/conten ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="maven"> maven</a></div><div class="read-more"><a class="more" href="/2020/03/27/1.1%E4%BB%93%E5%BA%93%E6%A6%82%E5%BF%B5/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/03/17/11.1equals()%E4%B8%8Ehashcode()/">11.1equals()与hashcode()</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-03-17T02:27:00.000Z">2020-03-17</time></div><div class="recent-post-content">11.1equals()与hashcode()
+java比较两个对象可以使用“==”：用于比较两个对象的内存地址，即“是否是同一个对象”.equals()：用于比较两个对象的内容是否相等    1.先使用“==”运算符，如果是同一个对象，那么对象内容自然相等    2.如果equals()被重写，那么根据重写方法中的规则比较两个对象是否值相等.hashcode()：根据一定规则获取对象的散列码此方法仅与散列容器有关//散列容器如“hashmap”散列容器认为，如果两个对象的hashcode()不一致，那么这两个对象就值不同实际上，如果存放的是自定义对象，并且该对象重写了equals()方法，那 ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2020/03/17/11.1equals()%E4%B8%8Ehashcode()/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/02/16/0.3idea%E4%BD%BF%E7%94%A8maven%E6%9E%84%E5%BB%BAweb%E9%A1%B9%E7%9B%AE/">0.3idea使用maven构建web项目</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-02-16T13:40:00.000Z">2020-02-16</time></div><div class="recent-post-content">0.3idea使用maven构建web项目
+使用maven中现有的archetype（原型）可以快速构建web项目//构建不光生成web项目专属的工作目录，还可以生成一个特有的pom.xml文件，包括打包方式//web核心的jar并没有导入，需要手动导入开始！创建项目：新建-maven-勾选create from archetype-选中maven-archetype-web构建src路径：点开project structure选中modules-sources在src-main目录下新建文件夹，命名为java并标记为sources//如果需要test文件夹，也可以在src目录新建一个，同时为 ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="WEB"> WEB</a></div><div class="read-more"><a class="more" href="/2020/02/16/0.3idea%E4%BD%BF%E7%94%A8maven%E6%9E%84%E5%BB%BAweb%E9%A1%B9%E7%9B%AE/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/01/11/13.3%E6%8D%95%E8%8E%B7%E7%BB%84%E7%90%86%E8%A7%A3/">13.3捕获组理解</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-01-11T10:11:00.000Z">2020-01-11</time></div><div class="recent-post-content">13.3捕获组理解
+正则式的目的在于匹配，调用.match()方法以验证是否完全匹配，而捕获组的出现可以将部分匹配的结果取出来例：String line = &quot;This order was placed for QT3000! OK?&quot;;          String pattern = &quot;(\\d+)(\\D*)(.*)&quot;;          Pattern r = Pattern.compile(pattern);          Matcher m = r.matcher(line);          if (m.find( )) {     ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2020/01/11/13.3%E6%8D%95%E8%8E%B7%E7%BB%84%E7%90%86%E8%A7%A3/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/01/11/00%E7%AE%80%E4%BB%8B/">00简介</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-01-11T02:35:00.000Z">2020-01-11</time></div><div class="recent-post-content">00简介
+对象：基本类型存在于栈中（基本类型不是对象），基本类型拥有默认值//boolean、char、byte、short、int、long、double、float、void//所有对象拥有默认初始值null 任何对象的创建都包含‘引用’和‘关联’两步String s；//此步骤创建了一个引用s=“Hello world！”//此步骤将具体的字符串关联给了s，也就创建了一个对象，引用‘s’指向该对象//任何对象的创建必须使用new的方式来初始化对象在内存中存在于堆中，编译器不知道它的存活时间（封装类型亦是如此）高精度计算类：BigInteger（支持任意精度的整数）、BigDecimal（ ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2020/01/11/00%E7%AE%80%E4%BB%8B/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/01/11/12%E5%BC%82%E5%B8%B8/">12异常</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-01-11T02:33:00.000Z">2020-01-11</time></div><div class="recent-post-content">12异常
+
+</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2020/01/11/12%E5%BC%82%E5%B8%B8/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/01/11/11%E5%AE%B9%E5%99%A8/">11容器</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-01-11T01:23:00.000Z">2020-01-11</time></div><div class="recent-post-content">11容器
+java从根本上有两种容器（都是接口）1.Collection：一个独立元素的序列，这些元素服从一条或者多条规则//AbstractCollection为该接口的默认实现//Iterable接口为所有序列接口的父接口//这意味着Iterable接口会被强制实现//Collection主要分为“List”和“Set”两类2.Map：一组成对的“键值对”对象，允许使用键来查找值//AbstractMap为该接口的默认实现 有必要了解：带hash的容器将优化查找速度带linked的容器将优化中途插入、删除的功能java中的容器存放的都是对象引用，不能使用基本类型作为泛型（内存位置不同） 打 ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2020/01/11/11%E5%AE%B9%E5%99%A8/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/01/10/10.2%E9%97%AD%E5%8C%85/">10.2闭包</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-01-10T02:35:00.000Z">2020-01-10</time></div><div class="recent-post-content">10.2闭包
+定义：外部环境持有内部函数所依赖的自由变量，由此对内部函数形成了闭包//自由变量：在方法作用域之外的变量//java只是隐式支持了闭包，并不是完整支持 java中的类就是闭包（面向对象语言习惯上不称呼闭包）class A{int i=0;void print(){syso(i);}}//方法print调用了外部环境中的自由变量i，由此类A对方法orint构成闭包//java的内部类更是典型的闭包，因为它包含了指向外部类的指针 闭包的含义：闭包表明，方法的执行依赖于外部环境的实例，依赖于自由变量“this”（变量i本质上是this.i） 闭包的两种实现形式：1.capture-by ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2020/01/10/10.2%E9%97%AD%E5%8C%85/#more">ReadMore</a></div><hr></div></section><nav class="cxo-page-nav"><a class="extend prev" rel="prev" href="/page/11/">&lt; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><a class="extend next" rel="next" href="/page/13/">下一页 &gt;</a></nav></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

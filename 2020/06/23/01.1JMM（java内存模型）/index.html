@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="jacketzc"><meta name="renderer" content="webkit"><meta name="copyright" content="jacketzc"><meta name="keywords" content="jacketzc的blog"><meta name="description" content="java，分布式，vue，idea，多线程开发，mybatis，spring，ssm，SpringMVC"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>01.1JMM（java内存模型） · jacketzc's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.0.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">jacketzc</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">Longlongyu</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">jacketzc's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">01.1JMM（java内存模型）</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2020-06-23</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="多线程"> 多线程</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">583</span> | Reading time: <span class="post-count">2</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><h1>01.1JMM（java内存模型）</h1>
+<span><div><span style="font-size: 18.6667px;">规定一个线程如何/何时可以看到其他线程修改过的变量的值，以及在必须的时候，如何同步访问共享的变量</span></div><div><span style="font-size: 18.6667px;">#内存堆</span></div><div><span style="font-size: 18.6667px;">运行时数据区，由垃圾回收机制控制，可以在运行时动态划分内存大小，生存期不必事先告知编译器，速度较慢</span></div><div><span style="font-size: 18.6667px;">//主要存对象</span></div><div><span style="font-size: 18.6667px;">#内存栈</span></div><div><span style="font-size: 18.6667px;">共享数据区，有确定的数据生存期，速度很快</span></div><div><span style="font-size: 18.6667px;">//主要存放基本类型的变量、对象的引用</span></div><div><span style="font-size: 14pt;"><br/></span></div><div><span style="font-size: 14pt;"><br/></span></div><div><span style="font-size: 14pt;">#java内存模型</span></div><div><span style="font-size: 14pt;">1.主内存：所有线程共享的内存区</span></div><div><span style="font-size: 14pt;">2.工作内存：单个线程使用的内存</span></div><div><span style="font-size: 18.6667px;">当线程访问到一个对象时，并不是直接操作堆中的对象，而是</span><span style="font-size: 18.6667px; color: rgb(255, 0, 0);">copy</span><span style="font-size: 18.6667px;">该对象到栈中执行</span></div><div><span style="font-size: 18.6667px;">//多个线程访问同一个对象时，这些线程都会持有一份该对象的拷贝（这些拷贝都是私有的）</span></div><div><span style="font-size: 14pt;"><br/></span></div><div><span style="font-size: 18.6667px;">#同步的八种操作</span></div><div><span style="font-size: 18.6667px;">lock（锁定）：把一个变量标识为一条线程独占状态</span></div><div><span style="font-size: 18.6667px;">//作用于主内存的变量</span></div><div><span style="font-size: 18.6667px;">unlock（解锁）：把一个处于锁定的变量释放（释放后，其他线程才能够锁定）</span></div><div><span style="font-size: 18.6667px;">//</span><span style="font-size: 18.6667px;">作用于主内存的变量</span></div><div><span style="font-size: 18.6667px;">read（读取）：把一个变量从主内存读取到一个线程的工作内存中</span></div><div><span style="font-size: 18.6667px;">load（载入）：把read操作从主内存中得到的主放入工作内存的变量副本中</span></div><div><span style="font-size: 18.6667px;">use（使用）：把工作内存中的一个变量值传递给执行引擎</span></div><div><span style="font-size: 18.6667px;">assign（赋值）：把从执行引擎收到的值赋值给工作内存的变量</span></div><div><span style="font-size: 18.6667px;">store（存储）：把工作内存中的变量值传递给主内存</span></div><div><span style="font-size: 18.6667px;">write（写入）：把store操作中传递的值写入主内存的变量中</span></div><div><span style="font-size: 18.6667px;"><br/></span></div><div><span style="font-size: 18.6667px;">#同步规则：</span></div><div><span style="font-size: 18.6667px;">1.如果一个线程没有对变量进行assign操作，那么不允许将变量从工作内存同步到主内存</span></div><div><span style="font-size: 18.6667px;">2.变量（对象）只能在主内存中诞生，并且在初始化之前，不允许执行use</span></div><div><span style="font-size: 18.6667px;">//经典空指针异常原因</span></div><div><span style="font-size: 18.6667px;">3.一个变量只在同一时刻只允许被一个线程锁定，lock以及unlock只能成对出现</span></div><div><span style="font-size: 18.6667px;">4.对一个变量执行lock操作时，会清空工作内存中变量的值</span></div><div><span style="font-size: 18.6667px;"><br/></span></div><div><span style="font-size: 18.6667px;"><br/></span></div><div><span style="font-size: 18.6667px;"><br/></span></div></span>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://yoursite.com">jacketzc</a></p><p> <span>Link:  </span><a href="http://yoursite.com/2020/06/23/01.1JMM%EF%BC%88java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%EF%BC%89/">http://yoursite.com/2020/06/23/01.1JMM%EF%BC%88java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%EF%BC%89/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2020/06/23/02.0%E5%B9%B6%E5%8F%91%E6%A8%A1%E6%8B%9F1%EF%BC%88postman%EF%BC%89/" title="02.0并发模拟1（postman）"><span>< PreviousPost</span><br><span class="prevTitle">02.0并发模拟1（postman）</span></a><a class="nextSlogan" href="/2020/06/23/01.0cpu%E7%9A%84%E7%BC%93%E5%AD%98%E7%AD%96%E7%95%A5/" title="01.0cpu的缓存策略"><span>NextPost ></span><br><span class="nextTitle">01.0cpu的缓存策略</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">01.1JMM（java内存模型）</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

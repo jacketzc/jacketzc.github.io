@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="jacketzc"><meta name="renderer" content="webkit"><meta name="copyright" content="jacketzc"><meta name="keywords" content="jacketzc的blog"><meta name="description" content="java，分布式，vue，idea，多线程开发，mybatis，spring，ssm，SpringMVC"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>13.1正则表达式 · jacketzc's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.0.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">jacketzc</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">Longlongyu</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">jacketzc's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">13.1正则表达式</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2019-08-09</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">1.3k</span> | Reading time: <span class="post-count">5</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><h1>13.1正则表达式</h1>
+<span><div><span style="font-size: 14pt;">字符串方法：</span></div><div><span style="font-size: 14pt;">.matchs(String regex)</span></div><div><span style="font-size: 14pt;">//匹配模式为完整匹配</span></div><div><span style="font-size: 14pt;"><br clear="none"/></span></div><div><span style="font-size: 14pt;">规则（以下均为regex字符串）：</span></div><div><span style="font-size: 14pt;">1.1：某位置上有确切的某个字符</span></div><div><span style="font-size: 14pt;">    -123</span></div><div><span style="font-size: 14pt;">    //该位置上是123</span></div><div><span style="font-size: 14pt;">1.2：某位置上有确切范围内的字符</span></div><div><span style="font-size: 14pt;">    -[1|2|3]（等效于：-[123]）</span></div><div><span style="font-size: 14pt;">    //该位置上有一个确切的“-”以及可能的“1”或‘2’或‘3’</span></div><div><span style="font-size: 14pt;">    //例：-1（该位置上仅有一个数字）</span></div><div><span style="font-size: 14pt;">1.3：某位置上没有指定的字符</span></div><div><span style="font-size: 14pt;">    [^123]</span></div><div><span style="font-size: 14pt;">    //该位置上不会出现‘1’或‘2’或‘3’</span></div><div><span style="font-size: 14pt;">    //注：<span style="color: #00ccff;">正则式都是字符</span>，数字12被看做两个字符</span></div><div><span style="font-size: 14pt;">1.4：某位置上有指定范围的字符</span></div><div><span style="font-size: 14pt;">    [a-z]</span></div><div><span style="font-size: 14pt;">    //该位置上会出现a-z中的任意一个字符</span></div><div><span style="font-size: 14pt;">    [a-zA-Z]</span></div><div><span style="font-size: 14pt;">    //该位置上会出现任意字母</span></div><div><span style="font-size: 14pt;">    [abc[1-3]]</span></div><div><span style="font-size: 14pt;">    //该位置上会出现abc或者123（<span style="color: #00ccff;">仅有一个字符</span>）</span></div><div><span style="font-size: 14pt;">    //[]内嵌套[]的目的在于让调理清晰</span></div><div><span style="font-size: 14pt;">    //<span style="color: #00ff00;">一个[]肯定只有一个字符</span></span></div><div><span style="color: #00ff00;"><span style="font-size: 14pt;">     <span style="color: #000000;">[[]&amp;&amp;[]]</span></span></span></div><div><span style="color: #000000;"><span style="font-size: 14pt;">    //取两个[]中的交集</span></span></div><div><span style="color: #000000;"><span style="font-size: 14pt;">2.1：字符类</span></span></div><div><span style="color: #000000;"><span style="font-size: 14pt;">    ‘.’：任意一个字符</span></span></div><div><span style="color: #000000;"><span style="font-size: 14pt;">    \s：空白符（空格、tab、换行、换页、回车）</span></span></div><div><span style="color: #000000;"><span style="font-size: 14pt;">    \S：非空白符</span></span></div><div><span style="color: #000000;"><span style="font-size: 14pt;">    \d：数字</span></span></div><div><span style="font-size: 14pt;">    \D：非数字</span></div><div><span style="font-size: 14pt;">    \w：词字符（a-z，A-Z，1-9，下划线）（标点符号统统不算）</span></div><div><span style="font-size: 14pt;">    \W：非词字符</span></div><div><span style="font-size: 14pt;">2.2：特殊字符</span></div><div><span style="font-size: 14pt;">    \t：制表符tab</span></div><div><span style="font-size: 14pt;">    \n：换行</span></div><div><span style="font-size: 14pt;">    \r：回车</span></div><div><span style="font-size: 14pt;">    \f：换页</span></div><div><span style="font-size: 14pt;">    \e：转义</span></div><div><span style="font-size: 14pt;">2.3：注意事项</span></div><div><span style="font-size: 14pt;">    <span style="color: #00ccff;">任何字符类都需要转义使用（‘.’除外，特殊字符除外）</span></span></div><div><span style="font-size: 14pt;">    例：表达一个数字：\\d</span></div><div><span style="font-size: 14pt;">    //这一点和其他语言的正则式有明显区别</span></div><div><span style="font-size: 14pt;">    //其他语言中“\\”表示一个‘\’，而java中表示一个转义的‘\’</span></div><div><span style="font-size: 14pt;">    //java若想表示‘\’，则需要使用“\\\\”</span></div><div><span style="font-size: 14pt;">3：量词</span></div><div><span style="font-size: 14pt;">    ‘？’：一个或0个</span></div><div><span style="font-size: 14pt;">    //&quot;-？&quot;表示此处可能出现一个‘？’</span></div><div><span style="font-size: 14pt;">    ‘+’：一个或多个</span></div><div><span style="font-size: 14pt;">    //&quot;\\d+&quot;表示此处有一个或多个数字</span></div><div><span style="font-size: 14pt;">    ‘*’：0个或多个</span></div><div><span style="font-size: 14pt;">    //&quot;\\d*&quot;表示此处有0个或多个数字</span></div><div><span style="font-size: 14pt;">    ‘{n}’：刚好有n个</span></div><div><span style="font-size: 14pt;">    “\\d{10}”表示此处有10个数字</span></div><div><span style="font-size: 14pt;">    ‘{n,}’：至少有n个</span></div><div><span style="font-size: 14pt;">    ‘{n，m}’：数量在n和m之间</span></div><div><span style="font-size: 14pt;">    //量词操作还分为“贪婪型”、“勉强型”、“占有型”，默认为贪婪型，即尽可能多匹配，其他还不是很理解</span></div><div><span style="font-size: 14pt;">4.1逻辑操作符（前面已经提及过了，补充说明）</span></div><div><span style="font-size: 14pt;">    XY：Y在X后面</span></div><div><span style="font-size: 14pt;">    X|Y：X或者Y</span></div><div><span style="font-size: 14pt;">    X&amp;&amp;Y：X且Y</span></div><div><span style="font-size: 14pt;">    （X）：捕获组</span></div><div><span style="font-size: 14pt;">    //把多个字符当做一个单位处理（该位置上有多个字符）</span></div><div><span style="font-size: 14pt;">4.2：边界匹配符</span></div><div><span style="font-size: 14pt;">    ^：一行的开始</span></div><div><span style="font-size: 14pt;">    $：一行的结束</span></div><div><span style="font-size: 14pt;">    \b：词的边界</span></div><div><span style="font-size: 14pt;">    \B：非词的边界</span></div><div><span style="font-size: 14pt;">    \G：前一个匹配的结束</span></div><div><span style="font-size: 14pt;"><br clear="none"/></span></div><div><span style="font-size: 14pt; color: #00ccff;">补充：</span></div><div><span style="font-size: 14pt;">分组操作：</span><span style="font-size: 18px;">使用（）对待匹配对象进行分组</span></div><div><span style="font-size: 14pt;">//分组表示每次匹配多个位置（相对于上面的一个位置）</span></div><div><span style="font-size: 14pt;">分组有两种形式：捕获组和非捕获组</span></div><div><span style="font-size: 14pt;"><span style="color: #00ccff;">捕获组</span>：<span style="color: #ff0000;">每一个“(”代表一个捕获组<span><span style="color: #000000;">﻿，没有被放置在括号中的，表示固定匹配，不能算在分组中</span></span></span></span></div><div><span style="font-size: 14pt;">//捕获组将捕获匹配到的文本（<span style="color: #00ccff;">和匹配一个位置的原理是一样的</span>）</span></div><div><span style="font-size: 18.6667px;">//捕获组反应在调用.group(int)方法的返回值</span></div><div><span style="font-size: 18.6667px;">((A)(B(C)))有4个捕获组</span></div><div><span style="font-size: 18.6667px;">//整体</span></div><div><span style="font-size: 18.6667px;">//(A)</span></div><div><span style="font-size: 18.6667px;">//(B(C))</span></div><div><span style="font-size: 18.6667px;">//(C)</span></div><div><span style="font-size: 14pt;"><span style="color: #00ccff;">非捕获组</span>：以(?)开头的捕获组为非捕获组</span></div><div><span style="font-size: 14pt;">//非捕获组将不捕获文本</span></div><div><span style="font-size: 18.6667px;">//非捕获组可以和捕获组一起匹配，返回的结果中只有捕获组中出现的文本</span></div><div><span style="font-size: 18.6667px;">左侧匹配：（假定需要捕获的文本为X）</span></div><div><span style="font-size: 18.6667px;">(?&lt;=A)(X)</span></div><div><span style="font-size: 18.6667px;">左侧否定：</span></div><div><span style="font-size: 18.6667px;"><span>(?&lt;!A)(X)</span></span></div><div><span style="font-size: 18.6667px;"><span>右侧匹配：</span></span></div><div><span style="font-size: 18.6667px;">(X)(?=B)</span></div><div><span style="font-size: 18.6667px;">右侧否定：</span></div><div><span style="font-size: 18.6667px;">(X)(?!=B)</span></div><div><span style="font-size: 18.6667px;">//非捕获组实例详见13.2例1</span></div><div><span style="font-size: 18.6667px;"><span><br clear="none"/></span></span></div><div><span style="font-size: 14pt;">正则表达对象</span></div><div><span style="font-size: 14pt;">Pattern：表示编译后的正则表达式</span></div><div><span style="font-size: 18.6667px;">Matches：匹配验证</span></div><div><span style="font-size: 18.6667px;"><br clear="none"/></span></div><div><span style="font-size: 18.6667px;">完整匹配的一般流程：</span></div><div><span style="font-size: 18.6667px;">Pattern p=Pattern.compile(String regex)</span></div><div><span style="font-size: 18.6667px;">//将给定的正则表达式编译为模式</span></div><div><span style="font-size: 18.6667px;">Matcher m=p.matcher(CharSequence str)</span></div><div><span style="font-size: 18.6667px;">//创建一个匹配器，匹配给定的输入与模式</span></div><div><span style="font-size: 18.6667px;">//CharSequence是char值的可读写序列（Interface，String实现了该接口）</span></div><div><span style="font-size: 18.6667px;">boolean b=m.matches()</span></div><div><span style="font-size: 18.6667px;">//尝试将整个区域与模式进行匹配</span></div><div><span style="font-size: 18.6667px;"><br clear="none"/></span></div><div><span style="font-size: 18.6667px;">简便的使用方式：</span></div><div><span style="font-size: 18.6667px;">boolean b=Pattern.matches（String regex，CharSequence）</span></div><div><span style="font-size: 18.6667px;"><br clear="none"/></span></div><div><span style="font-size: 18.6667px;">Matchers方法：</span></div><div><span style="font-size: 18.6667px;">//以下方法都是部分匹配的结果</span></div><div><span style="font-size: 18.6667px;">bool find（）：尝试找到匹配模式的输入序列的下一个子序列</span></div><div><span style="font-size: 18.6667px;">//如果regex（模式）为“abc”，那么对序列“abcabcabc”使用该方法，将匹配到第一个“abc”，并返回true，再执行一次将匹配到第二个“abc”</span></div><div><span style="font-size: 18.6667px;">String group（）：返回匹配成功的子序列</span></div><div><span style="font-size: 18.6667px;">//一定要执行一次find才能使用这个方法</span></div><div><span style="font-size: 18.6667px;">//上一个案例中，返回的子序列为“abc”</span></div><div><span style="font-size: 18.6667px;">int start（）：返回匹配成功的起始索引</span></div><div><span style="font-size: 18.6667px;">int end（）：返回匹配成功的结束索引的偏移量</span></div><div><span style="font-size: 18.6667px;">//该量为结束位置的后一位</span></div><div><span style="font-size: 18.6667px;">String group（int）：返回由指定捕获组捕获的子序列</span></div><div><span style="font-size: 18.6667px;">//(1)(2)(3)有三个捕获组，0代表整体，1代表捕获组1，以此类推</span></div><div><span style="font-size: 18.6667px;">bool lookingAt（）：尝试部分匹配</span></div><div><span style="font-size: 18.6667px;">//和find（）不同在于只匹配一次，匹配成功后可以使用group（）、start（）、end（）方法</span></div><div><span style="font-size: 18.6667px;">String replaceAll(String)：将正则匹配到的部分使用String代替</span></div><div><span style="font-size: 18.6667px;">//Pattern.compile（“\\w+\\.”）.matcher（String）.replaceAll（“”）方法可以将方法中所有的诸如“java.util.”这种的包名信息去除</span></div><div><span style="font-size: 18.6667px;">//此方法将直接返回替换好的整个字符串（和String中的<span>replaceAll()方法一致</span>）</span></div><div><span style="font-size: 18.6667px;">//此方法中的“$n”，代表第n个捕获组，详见13.2例2</span></div></span>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://yoursite.com">jacketzc</a></p><p> <span>Link:  </span><a href="http://yoursite.com/2019/08/09/13.1%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">http://yoursite.com/2019/08/09/13.1%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2019/08/11/14%20RTTI/" title="14 RTTI"><span>< PreviousPost</span><br><span class="prevTitle">14 RTTI</span></a><a class="nextSlogan" href="/2019/08/08/13%E5%AD%97%E7%AC%A6%E4%B8%B2/" title="13字符串"><span>NextPost ></span><br><span class="nextTitle">13字符串</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">13.1正则表达式</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

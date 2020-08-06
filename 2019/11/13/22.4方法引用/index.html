@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="jacketzc"><meta name="renderer" content="webkit"><meta name="copyright" content="jacketzc"><meta name="keywords" content="jacketzc的blog"><meta name="description" content="java，分布式，vue，idea，多线程开发，mybatis，spring，ssm，SpringMVC"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>22.4方法引用 · jacketzc's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.0.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">jacketzc</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">Longlongyu</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">jacketzc's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">22.4方法引用</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2019-11-13</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">576</span> | Reading time: <span class="post-count">2</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><h1>22.4方法引用</h1>
+<span><div><font style="font-size: 14pt;">引用运算符：“::”</font></div><div><font style="font-size: 14pt;">格式：调用方法的类::调用的方法</font></div><div><font style="font-size: 14pt;">引用是为了简化lambda而设计的</font></div><div><font style="font-size: 14pt;">//lambda必定会传递某种参数（或者空参），然后用这个参数作为某个现成方法的参数</font></div><div><font style="font-size: 14pt;">//方法引用一步到位，引用某个最终被使用的方法替代lambda</font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;">示范：</font></div><div><font style="font-size: 14pt;">这是一个lambda</font></div><div><font style="font-size: 14pt;">(str)-&gt;System.out.print(str)</font></div><div><font style="font-size: 14pt;">其中，调用方法的System.out对象是已知的，该对象的print()方法也是已知的，所以可以使用引用来简化写法：</font></div><div><font style="font-size: 14pt;">System.out::print</font></div><div><font style="font-size: 14pt;">//引用了“System.out”对象的“print”方法处理了参数</font></div><div><font style="font-size: 14pt;">//<span style="color: rgb(255, 0, 0);">引用的方法必须可以处理参数的类型</span>（不能把一个String参数传递给只能接受int类型参数的方法）</font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><font style="font-size: 14pt;">使用方法引用的前提：</font></div><div><font style="font-size: 14pt;">1.lambda中调用方法的对象是已经存在的</font></div><div><font style="font-size: 14pt;">2.lambda调用的方法是已经存在的</font></div><div><font style="font-size: 14pt;">3.lambda中只用到了一个对象的一种方法</font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><span style="color: rgb(0, 204, 255);"><font style="font-size: 14pt;">总结：</font></span></div><div><font style="font-size: 14pt;">所有的情况都是第一种的衍生类型</font></div><div><font style="font-size: 14pt;">1.根据对象名引用方法</font></div><div><font style="font-size: 14pt;">原lambda：</font></div><div><div><font style="font-size: 14pt;">print(&quot;hello&quot;,(str)-&gt;{</font></div><div><font style="font-size: 14pt;">Upper upper = new Upper();</font></div><div><font style="font-size: 14pt;">upper.toUpper(str);</font></div><font style="font-size: 14pt;">});</font></div><div><font style="font-size: 14pt;">方法引用：</font></div><div><font style="font-size: 14pt;">print(&quot;yes&quot;,new Upper()::toUpper);</font></div><div><font style="font-size: 14pt;">//print(String,lambda)方法是某种传递函数式接口并打印字符串的方法</font></div><div><font style="font-size: 14pt;">2.通过类名引用静态方法</font></div><div><font style="font-size: 14pt;">原lambda：</font></div><div><font style="font-size: 14pt;">print(&quot;WORLD&quot;,(str)-&gt;Upper.toLower(str));</font></div><div><font style="font-size: 14pt;">方法引用：</font></div><div><font style="font-size: 14pt;">print(&quot;WORLD&quot;,Upper::toLower);</font></div><div><span style="font-family: gotham, helvetica, sans-serif;"><font style="font-size: 14pt;">3.通过super引用父类方法</font></span></div><div><span style="font-family: gotham, helvetica, sans-serif;"><font style="font-size: 14pt;">//这一条拥有额外的附加条件，那就是super关键字能出现的地方：</font></span></div><div><span style="font-family: gotham, helvetica, sans-serif;"><font style="font-size: 14pt;">//子类的某个非静态方法中</font></span></div><div><span style="font-family: gotham, helvetica, sans-serif;"><font style="font-size: 14pt;">//其实和第一种是一样的</font></span></div><div><span style="font-family: gotham, helvetica, sans-serif;"><font style="font-size: 14pt;">原lambda：</font></span></div><div><span style="font-family: gotham, helvetica, sans-serif;"><font style="font-size: 14pt;">show(()-&gt;{</font></span></div><div><span style="font-family: gotham, helvetica, sans-serif;"><font style="font-size: 14pt;">     super.show();</font></span></div><div><span style="font-family: gotham, helvetica, sans-serif;"><font style="font-size: 14pt;">})</font></span></div><div><span style="font-family: gotham, helvetica, sans-serif;"><font style="font-size: 14pt;">方法引用：</font></span></div><div><span style="font-family: gotham, helvetica, sans-serif;"><font style="font-size: 14pt;">show(super::show())</font></span></div><div><span style="font-family: gotham, helvetica, sans-serif;"><font style="font-size: 14pt;">4.通过this引用当前类方法</font></span></div><div><span style="font-family: gotham, helvetica, sans-serif;"><font style="font-size: 14pt;">//这一条有额外附加条件，那就是this关键字能出现的地方：</font></span></div><div><span style="font-family: gotham, helvetica, sans-serif;"><font style="font-size: 14pt;">//当前类的某个非静态方法中</font></span></div><div><span style="font-family: gotham, helvetica, sans-serif;"><font style="font-size: 14pt;">原lambda：</font></span></div><div><font style="font-size: 14pt;">show(()-&gt;this.test1());</font></div><div><font style="font-size: 14pt;">方法引用：</font></div><div><font style="font-size: 14pt;">show(this::test1);</font></div><div><font style="font-size: 14pt;">5.通过new引用构造方法</font></div><div><font style="font-size: 14pt;">//当lambda中的那一条语句只是为了创建并返回一个对象时，就可以这么做</font></div><div><font style="font-size: 14pt;">原lambda：</font></div><div><font style="font-size: 14pt;">create(()-&gt;new Person())</font></div><div><font style="font-size: 14pt;">方法引用：</font></div><div><font style="font-size: 14pt;">create(Person::new)</font></div><div><font style="font-size: 14pt;">6.通过new创造数组</font></div><div><font style="font-size: 14pt;">//前提同上，不过对象是数组</font></div><div><font style="font-size: 14pt;">原lambda：</font></div><div><font style="font-size: 14pt;">create((len)-&gt;new int[len])</font></div><div><font style="font-size: 14pt;">方法引用：</font></div><div><font style="font-size: 14pt;">create(int[]::new)</font></div></span>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://yoursite.com">jacketzc</a></p><p> <span>Link:  </span><a href="http://yoursite.com/2019/11/13/22.4%E6%96%B9%E6%B3%95%E5%BC%95%E7%94%A8/">http://yoursite.com/2019/11/13/22.4%E6%96%B9%E6%B3%95%E5%BC%95%E7%94%A8/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2019/11/27/0.1Idea%E9%83%A8%E7%BD%B2tomcat%E5%8E%9F%E7%90%86/" title="0.1Idea部署tomcat原理"><span>< PreviousPost</span><br><span class="prevTitle">0.1Idea部署tomcat原理</span></a><a class="nextSlogan" href="/2019/11/13/22.3Stream%E6%B5%81%E8%AF%A6%E8%A7%A3/" title="22.3Stream流详解"><span>NextPost ></span><br><span class="nextTitle">22.3Stream流详解</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">22.4方法引用</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

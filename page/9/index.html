@@ -1,0 +1,113 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="jacketzc"><meta name="renderer" content="webkit"><meta name="copyright" content="jacketzc"><meta name="keywords" content="jacketzc的blog"><meta name="description" content="java，分布式，vue，idea，多线程开发，mybatis，spring，ssm，SpringMVC"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>jacketzc's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.0.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">jacketzc</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">Longlongyu</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">jacketzc's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1>jacketzc's Blog</h1><h5>Welcome to my Blog!</h5><div class="intro-social"><a class="fa fa-envelope" href="mailto://jacketzc@outlook.com" title="email"></a><a class="fa fa-github" href="//github.com/jacketzc" target="_blank" title="github"></a><a class="fa fa-twitter" href="//twitter.com/jacketzc" target="_blank" title="twitter"></a></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><section id="recent-posts"><div class="recent-post-item"><div class="post-title"><a href="/2020/06/16/02.1%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3/">02.1中文乱码解决</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-06-16T00:40:00.000Z">2020-06-16</time></div><div class="recent-post-content">02.1中文乱码解决
+tomcat请求与回复的默认编码：iso-8859-1（不支持中文）#解决post请求的中文乱码：request.setCharacterEncoding(&quot;utf-8&quot;)//对get请求无效#解决get请求乱码（字符转码）new String(userName.getBytes(&quot;iso-8895-1&quot;,&quot;utf-8&quot;)//面对大量请求比较无力#解决get请求出现的乱码（设置tomcat配置server.xml）URIEncoding=“utf-8”//设置uri的编码为u8useBodyEncodingFor ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="WEB"> WEB</a></div><div class="read-more"><a class="more" href="/2020/06/16/02.1%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/06/15/02.0jsp%E5%86%85%E7%BD%AE%E5%AF%B9%E8%B1%A1%E4%BB%A5%E5%8F%8Acookie/">02.0jsp内置对象以及cookie</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-06-15T03:25:00.000Z">2020-06-15</time></div><div class="recent-post-content">02.0jsp内置对象以及cookie
+#request请求对象，用于页面向服务器请求//类型为HttpServletRequest//在获取到该对象时，request中的内容已经被封装好了String getParameter(String)//获取浏览器发送的参数（一般对应表单的name）//每次取一个参数一次经典的登录请求：##发送方：    &lt;form action=&quot;doLogin.jsp&quot; method=&quot;get&quot;&gt;        &lt;table align=&quot;center&quot; border=&quot;1p ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="WEB"> WEB</a></div><div class="read-more"><a class="more" href="/2020/06/15/02.0jsp%E5%86%85%E7%BD%AE%E5%AF%B9%E8%B1%A1%E4%BB%A5%E5%8F%8Acookie/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/06/15/01jsp%E9%A1%B5%E9%9D%A2/">01jsp页面</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-06-15T01:48:00.000Z">2020-06-15</time></div><div class="recent-post-content">01jsp页面
+！在jsp编辑器中使用java脚本需要tomcat的运行前环境//在maven中添加tomcat-catalina的依赖//普通的web项目需要在构建项目时选中tomcat环境jsp页面的本质是servlet#在&lt;%%&gt;中使用java脚本//该区域只能写java，不能写HTML&lt;%Date date = new Date();System.out.println(date);%&gt;//该方法仅仅往控制台输出#使用&lt;%=var%&gt;向页面输出变量&lt;%=date%&gt;//只能输出，不能写其他代码，不能在结尾写“；”//内置对象out与之等效 ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="WEB"> WEB</a></div><div class="read-more"><a class="more" href="/2020/06/15/01jsp%E9%A1%B5%E9%9D%A2/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/06/14/01%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/">01配置环境变量</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-06-14T03:25:00.000Z">2020-06-14</time></div><div class="recent-post-content">01配置环境变量
+如果是使用安装包安装的jdk，那么默认已经指定jre的环境变量现在配置java编译的环境（javac）1.系统变量中新增变量JAVA_HOME，目录指向jdk安装的根目录2.在path变量中新增行：%JAVA_HOME%\bin//这个路径中就有javac命令3.在CLASSPATH变量（没有就创建）中新增行：.（就是一个点）
+</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2020/06/14/01%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/06/11/15.6%E5%88%86%E5%B1%82%E6%80%9D%E6%83%B3/">15.6分层思想</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-06-11T03:19:00.000Z">2020-06-11</time></div><div class="recent-post-content">15.6分层思想
+有三个类JDBCUtil、Exam_dao、Exam#Exam这个类叫模型类，对应数据库中的一张表//模型中有各种属性，flowID、type等，对应着数据表中的相应字段为什么要模型类？1.面向对象的思想，把各种属性的一个包装看做一个对象，此处的Exam就相当于一个考生的对象2.为了数据在各个方法中的运转方便，你想想看，把数据封装成一个对象传输方便，还是每次传入所有数据方便（flowID、type等）？#JDBCUtil这个类负责直接与数据库交互包括：1.建立与数据库的连接2.执行sql3.返回需要的数据#Exam_dao这个类封装了各种提炼出来的、非常直观的方法，可以在测试 ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2020/06/11/15.6%E5%88%86%E5%B1%82%E6%80%9D%E6%83%B3/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/06/11/12count%E5%87%BD%E6%95%B0%E7%9A%84%E7%90%86%E8%A7%A3/">12count函数的理解</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-06-11T01:51:00.000Z">2020-06-11</time></div><div class="recent-post-content">12count函数的理解
+count（1）在查询到一条记录时，本身的计数就会+1最简单的情况：select count（1） from students如果有条件的话，那么查询到满足条件的记录：select count（1）from students where age&gt;18如果要与某个列并列时，那么count必须搭配group by函数使用：select job ，count（1） from emp group by job//此时的count记录查询到的列的条数//简单的说，就是统计该列在查询结果中出现的次数（每查询到一次符合该列的记录，该列的count就会+1）可以单独计算某个列的 ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="mysql"> mysql</a></div><div class="read-more"><a class="more" href="/2020/06/11/12count%E5%87%BD%E6%95%B0%E7%9A%84%E7%90%86%E8%A7%A3/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/06/08/08JDBC%E6%93%8D%E4%BD%9Cmysql/">08JDBC操作mysql</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-06-08T03:04:00.000Z">2020-06-08</time></div><div class="recent-post-content">08JDBC操作mysql
+！注意事项#编码问题：设置编译器编码为utf-8设置数据库编码为uft-8设置连接编码为utf-8jdbc的设置：characterEncoding=utf-8全部的设置：useUnicode=true&amp;amp;characterEncoding=UTF-8&amp;amp;serverTimezone=UTC&amp;amp;verifyServerCertificate=false&amp;amp;useSSL=false#基本操作流程//以查询为例引入数据库操作类：import java.sql.* #1.获取数据库操作对象：private Conne ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="mysql"> mysql</a></div><div class="read-more"><a class="more" href="/2020/06/08/08JDBC%E6%93%8D%E4%BD%9Cmysql/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/06/08/07%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AE%BE%E8%AE%A1/">07数据库设计</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-06-08T01:19:00.000Z">2020-06-08</time></div><div class="recent-post-content">07数据库设计
+#三大范式：##第一范式：确保每列的原子性//每一列都是不可再分的最小数据单元//比如“美国纽约市”，就能分成‘国家’和‘地区’##第二范式：每个表只描述一件事##第三范式：如果一个关系满足第二范式，除了主键以外的列都不依赖于主键列//列与列之间不能存在传递依赖！在实际中业务逻辑以及性能&gt;规范性
+</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="mysql"> mysql</a></div><div class="read-more"><a class="more" href="/2020/06/08/07%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AE%BE%E8%AE%A1/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/06/07/11%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/">11遇到的问题</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-06-07T01:31:00.000Z">2020-06-07</time></div><div class="recent-post-content">11遇到的问题
+使用分组查询，结果并没有分组？出现的情景：select department_id,from employeesorder by department_id结果和不使用分组，也就是：select department_idfrom employees一毛一样问题原因：分组是group by 不是 order by！
+</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="mysql"> mysql</a></div><div class="read-more"><a class="more" href="/2020/06/07/11%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/06/05/06%E5%AD%90%E6%9F%A5%E8%AF%A2%E7%9A%84%E9%AB%98%E7%BA%A7%E7%94%A8%E6%B3%95/">06子查询的高级用法</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-06-05T04:16:00.000Z">2020-06-05</time></div><div class="recent-post-content">06子查询的高级用法
+！不建议在select中使用子查询作为列，如果能使用关联查询替代，就尽量替代#一般子查询select employee_id from employees where employee_id in (子查询结果)#高级子查询//说白了就是子查询引用外部查询的值##exist关键字//exist就是替代in的//in中的子查询返回一个集合，而exist返回一个bool值//检查在子查询中是否有满足条件的记录（相当于将完成的字段值放入内层子查询进行查询处理）select employee_id,last_name,salary,department_id from emplo ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="mysql"> mysql</a></div><div class="read-more"><a class="more" href="/2020/06/05/06%E5%AD%90%E6%9F%A5%E8%AF%A2%E7%9A%84%E9%AB%98%E7%BA%A7%E7%94%A8%E6%B3%95/#more">ReadMore</a></div><hr></div></section><nav class="cxo-page-nav"><a class="extend prev" rel="prev" href="/page/8/">&lt; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><a class="extend next" rel="next" href="/page/10/">下一页 &gt;</a></nav></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

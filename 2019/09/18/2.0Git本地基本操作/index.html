@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="jacketzc"><meta name="renderer" content="webkit"><meta name="copyright" content="jacketzc"><meta name="keywords" content="jacketzc的blog"><meta name="description" content="java，分布式，vue，idea，多线程开发，mybatis，spring，ssm，SpringMVC"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>2.0Git本地基本操作 · jacketzc's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.0.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">jacketzc</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">Longlongyu</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">jacketzc's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">2.0Git本地基本操作</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2019-09-18</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="git"> git</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">1.1k</span> | Reading time: <span class="post-count">3</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><h1>2.0Git本地基本操作</h1>
+<span><div><span style="font-size: 14pt;">Git和GitHub不一样，Git是一种分布式的版本控制软件，而GitHub是远程代码仓库</span></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><span style="font-size: 14pt;">Git一般的模式是由一台共用的远程代码仓库（如GitHub），和多个独立工作的主机构成的。每个主机中都有代码的完整版本。</span></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><span style="font-size: 14pt;">每个主机都可以使用Git软件来1.控制本地源码的开发版本2.复制远程代码仓库的代码3.想远程仓库推送代码</span></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><span style="font-size: 14pt;">Git本地管理由三个部分组成</span></div><div><span style="font-size: 14pt;">1.工作区：就是写代码的区域</span></div><div><span style="font-size: 14pt;">2.暂存区：每次都可以将代码的改动提交到这里</span></div><div><span style="font-size: 14pt;">3.版本区：将所有的临时改动合并，推送到最终的版本区</span></div><div><span style="font-size: 14pt;">//Git仅支持对文本文件精准的版本控制（.txt文件、代码文件），至于二进制文件（如音乐文文件）就无能为力了</span></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><span style="font-size: 18.6667px;">git文件状态：</span></div><div><span style="font-size: 18.6667px;">U：尚未追踪</span></div><div><span style="font-size: 18.6667px;">//新添加的文件，但是还没有add</span></div><div><span style="font-size: 18.6667px;">M：已修改</span></div><div><span style="font-size: 18.6667px;">//修改了已追踪的文件，但是还没有add</span></div><div><span style="font-size: 18.6667px;">D：已在工作区删除</span></div><div><span style="font-size: 14pt;">//修改了已追踪的文件，但是还没有add</span></div><div><span style="font-size: 14pt;">A：已暂存</span></div><div><span style="font-size: 14pt;">//add完成，但是没有commit</span></div><div><span style="font-size: 14pt;">R：已经暂存删除的消息</span></div><div><span style="font-size: 14pt;"><br/></span></div><div><font style="font-size: 14pt;"><br/></font></div><div><font style="font-size: 14pt;"><br/></font></div><div><span style="font-size: 14pt;">OK，开始用了</span></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><span style="font-size: 14pt;">假如在工作区新建了一个文件“readme.txt”</span></div><div><span style="font-size: 14pt;">里面第一行有一句话：“Hello World”</span></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><span style="font-size: 14pt;">把它推送到暂存区：</span></div><div><span style="font-size: 14pt;">git add readme.txt</span></div><div><span style="font-size: 14pt;">//添加内容到下一次提交中</span></div><div><span style="font-size: 14pt;">//如果add之后修改了文件，需要重新add，因为commit只能提交暂存区的内容</span></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><span style="font-size: 14pt;">把它提交到版本仓库</span></div><div><span style="font-size: 14pt;">git commit -m “first version”</span></div><div><span style="font-size: 14pt;">//-m命令表示添加版本说明（建议每次推送都加）</span></div><div><span style="font-size: 14pt;">//-a可以跳过add步骤，将所有未暂存的文件一并提交</span></div><div><span style="font-size: 14pt;">//--amend将暂存区的文件全部提交并且替代上次提交的结果（用于在提交后发现还有文件没提交）</span></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><span style="font-size: 14pt;">查看工作状态</span></div><div><span style="font-size: 14pt;">git status</span></div><div><span style="font-size: 14pt;">//会显示当前状态出于“未暂存”、“未提交”的文件</span></div><div><span style="font-size: 14pt;">//-s命令可以简化输出格式</span></div><div><span style="font-size: 18.6667px;">例1：未暂存</span></div><div><span style="font-size: 14pt;">Changes not staged for commit:</span></div><div><span style="font-size: 14pt;">(use &quot;git add &lt;file&gt;...&quot; to update what will be committed)</span></div><div><span style="font-size: 14pt;">(use &quot;git restore &lt;file&gt;...&quot; to discard changes in working directory)</span></div><div><span style="font-size: 14pt;">modified: readme.txt</span></div><div><span style="font-size: 18.6667px;">例二：已暂存但未提交</span></div><div><span style="font-size: 14pt;">Changes to be committed:</span></div><div><span style="font-size: 14pt;">(use &quot;git restore --staged &lt;file&gt;...&quot; to unstage)</span></div><div><span style="font-size: 14pt;">modified: readme.txt</span></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><span style="font-size: 18.6667px;">查看具体修改的文件</span></div><div><span style="font-size: 14pt;">git diff</span></div><div><span style="font-size: 14pt;">//暂存区与工作区对比，会具体显示哪一行的数据发生变化</span></div><div><span style="font-size: 14pt;">//--staged参数将会对比暂存区与版本库（老版本是--cached）</span></div><div><font style="font-size: 14pt;"><br/></font></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><span style="font-size: 14pt;">查看工作区与暂存区差异</span></div><div><span style="font-size: 14pt;">git diff 文件名</span></div><div><span style="font-size: 14pt;">//将显示哪一行代码发生了改动</span></div><div><font style="font-size: 14pt;"><br clear="none"/></font></div><div><span style="font-size: 14pt;">删除文件</span></div><div><span style="font-size: 14pt;">使用git rm 文件名把工作区和暂存区的文件删除</span></div><div><span style="font-size: 14pt;">//rm操作相当于手动删除了文件并add了一次</span></div><div><span style="font-size: 14pt;">//--cached参数会将暂存区的内容删去，而不会删除本地的（commit后，此文件将不被版本管理监控）</span></div><div><span style="font-size: 14pt;">使用后需要commit来更新版本库</span></div><div><span style="font-size: 14pt;">使用此方法删除的文件不能通过checkout方法恢复</span></div><div><span style="font-size: 14pt;">只能通过</span></div><div><span style="font-size: 14pt;">1.git reset 版本回调</span></div><div><span style="font-size: 14pt;">2.git restore --staged 文件名撤销删除再使用git restore 文件名恢复文件</span></div><div><span style="font-size: 14pt;"><br/></span></div><div><span style="font-size: 14pt;"><br/></span></div><div><span style="font-size: 18.6667px;">重命名文件</span></div><div><span style="font-size: 18.6667px;">git mv a b</span></div><div><span style="font-size: 18.6667px;">//mv是移动命令，也可以用于换名</span></div><div><span style="font-size: 14pt;">//此命令相当于手动重命名文件并且add一次（和rm一样）</span></div><div><span style="font-size: 18.6667px;"><br/></span></div><div><span style="font-size: 14pt;">查看历史commit信息：</span></div><div><span style="font-size: 14pt;">git log</span></div><div><span style="font-size: 14pt;">//此方式查看的只有在版本库中的版本，如果发生过回退，则一直计算到回退的那一次commit</span></div><div><span style="font-size: 14pt;">//-数字 （-2表示显示最近的2次提交）</span></div><div><span style="font-size: 14pt;">//-p 显示每次提交的内容差异</span></div><div><span style="font-size: 14pt;">//--stat显示每次提交的内容差异（简略信息）</span></div><div><span style="font-size: 14pt;">//--pretty = oneline参数将输出简略信息</span></div><div><span style="font-size: 14pt;">//--author指定作者</span></div><div><span style="font-size: 14pt;">//--since指定时间限制（--since=2.weeks）</span></div><div><span style="font-size: 14pt;">查看全部的commit信息</span></div><div><span style="font-size: 14pt;"><br/></span></div><div><span style="font-size: 14pt;"><br/></span></div><div><span style="font-size: 18.6667px;">撤销暂存：</span></div><div><span style="font-size: 18.6667px;">git reset HEAD &lt;file&gt;</span></div><div><span style="font-size: 18.6667px;">//如果某个文件被add了，此操作相当于取消add</span></div><div><span style="font-size: 18.6667px;"><br/></span></div><div><span style="font-size: 18.6667px;">撤销修改</span></div><div><span style="font-size: 14pt;">git checkout -- 文件名</span></div><div><span style="font-size: 14pt;">//此操作将撤销对某文件的修改（依据版本库中最新的版本回滚）</span></div><div><span style="font-size: 14pt;">//此操作很危险！</span></div><div><span style="font-size: 14pt;">git revert</span></div><div><span style="font-size: 14pt;">//先commit一次，再将版本恢复到上个版本</span></div><div><span style="font-size: 14pt;"><br/></span></div><div><br/></div><div><span style="font-size: 14pt;"><br/></span></div></span>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://yoursite.com">jacketzc</a></p><p> <span>Link:  </span><a href="http://yoursite.com/2019/09/18/2.0Git%E6%9C%AC%E5%9C%B0%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/">http://yoursite.com/2019/09/18/2.0Git%E6%9C%AC%E5%9C%B0%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2019/09/18/10.%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" title="10.常用命令"><span>< PreviousPost</span><br><span class="prevTitle">10.常用命令</span></a><a class="nextSlogan" href="/2019/09/17/1.%E5%88%9D%E8%AF%86Git/" title="1.初识Git"><span>NextPost ></span><br><span class="nextTitle">1.初识Git</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">2.0Git本地基本操作</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

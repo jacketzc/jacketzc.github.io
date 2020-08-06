@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="jacketzc"><meta name="renderer" content="webkit"><meta name="copyright" content="jacketzc"><meta name="keywords" content="jacketzc的blog"><meta name="description" content="java，分布式，vue，idea，多线程开发，mybatis，spring，ssm，SpringMVC"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>3.0docker环境es同步mysql · jacketzc's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.0.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">jacketzc</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">Longlongyu</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">jacketzc's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">3.0docker环境es同步mysql</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2020-07-21</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="Elasticsearch"> Elasticsearch</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">381</span> | Reading time: <span class="post-count">1</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><h1>3.0docker环境es同步mysql</h1>
+<span><div><div><div>需要用到的容器：</div><div>elasticsearch:5.6.16</div><div>mysql:5.7.31</div><div>debian:9.12</div><div>//go-mysql-elasticsearch安装在该容器中</div><div>//该同步工具仅支持不超过5.x的mysql以及不超过5.x的es</div><div><br/></div><div>#将mysql容器、es容器、go容器放到一个自定义的桥接网络下</div><div>//在自定义网络下，容器之间可以通过容器名称进行访问</div><div><br/></div><div>#mysql开启biglog</div><ul><li><div>查看是否开启</div></li><ul><li><div>show variables like '%log_bin%';</div></li></ul><li><div>开启方式</div></li><ul><li><div>在mysql的主配置文件（/etc/mysql/my.cnf）中添加配置：</div></li></ul></ul><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 12pt;">[mysqld]</font></div><div><font style="font-size: 12pt;">log-bin=mysql-bin</font></div><div><font style="font-size: 12pt;">server-id=1</font></div><div><font style="font-size: 12pt;">binlog_format=&quot;ROW&quot;</font></div></div><div><br/></div><div>#es需要指定确定的ip</div><div>启动命令：</div><div>docker run -p 9200:9200 -p 9300:9300 -e  --ip 172.17.0.5 --name elasticsearch &quot;discovery.type=single-node&quot; elasticsearch:5.6.16</div><div><br/></div><div>#go-mysql-elasticsearch配置</div><div>//在debain容器中，可能需要使用apt安装git、make等工具</div><ul><li><div>安装go语言的环境</div></li><ul><li><div>参考 <a target="_blank" rel="noopener" href="https://blog.minirplus.com/14876/">https://blog.minirplus.com/14876/</a></div></li></ul><li><div>拷贝go-mysql-elasticsearch项目</div></li><ul><li><div>git clone <a target="_blank" rel="noopener" href="https://github.com/siddontang/go-mysql-elasticsearch.git">https://github.com/siddontang/go-mysql-elasticsearch.git</a></div></li></ul><li><div>进入go-mysql-elasticsearch项目根目录下编译</div></li><ul><li><div>make</div></li></ul><li><div>编译后进入go的工作目录</div></li><ul><li><div>cd $GOPATH/src/github.com/siddontang/go-mysql-elasticsearch</div></li></ul><li><div>修改/etc/river.toml（最好先备份）</div></li><ul><li><div>配置文件参考： <a target="_blank" rel="noopener" href="https://blog.fleeto.us/post/from-mysql-to-es/">https://blog.fleeto.us/post/from-mysql-to-es/</a></div></li><li><div>需要额外指定的参数：</div></li></ul></ul><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 12pt;">stat_addr = &quot;127.0.0.1:12800&quot;</font></div><div><font style="font-size: 12pt;">stat_path = &quot;/metrics&quot;</font></div></div><ul><ul><li><div>完整文档：</div></li></ul></ul><div><a href="3.0docker环境es同步mysql_files/river.toml"><img src="3.0docker环境es同步mysql_files/2d7325f8f1ff4d2e3a717855f858006d.png" alt="river.toml"></a></div><ul><li><div>执行同步命令：</div></li><ul><li><div>./bin/go-mysql-elasticsearch -config=./etc/river.toml</div></li><li><div>如果当前环境匹配了http代理，应该把它关掉</div></li></ul></ul><div><br/></div></div><div>可能出现的问题</div><ul><li><div>容器启动的时候，ip变更了，需要在river.toml中重新指定（通过自定义网络解决）</div></li></ul><div><br/></div><div><br/></div></div></span>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://yoursite.com">jacketzc</a></p><p> <span>Link:  </span><a href="http://yoursite.com/2020/07/21/3.0docker%E7%8E%AF%E5%A2%83es%E5%90%8C%E6%AD%A5mysql/">http://yoursite.com/2020/07/21/3.0docker%E7%8E%AF%E5%A2%83es%E5%90%8C%E6%AD%A5mysql/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2020/07/22/2.1javaAPI%E6%93%8D%E4%BD%9C%EF%BC%88%E6%9E%84%E5%BB%BA%E6%9F%A5%E8%AF%A2%E8%AF%B7%E6%B1%82%EF%BC%89/" title="2.1javaAPI操作（构建查询请求）"><span>< PreviousPost</span><br><span class="prevTitle">2.1javaAPI操作（构建查询请求）</span></a><a class="nextSlogan" href="/2020/07/21/2.1SSM%E6%95%B4%E5%90%88/" title="2.1SSM整合"><span>NextPost ></span><br><span class="nextTitle">2.1SSM整合</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">3.0docker环境es同步mysql</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

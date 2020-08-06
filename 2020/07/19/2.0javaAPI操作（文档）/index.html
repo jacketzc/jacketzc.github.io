@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="jacketzc"><meta name="renderer" content="webkit"><meta name="copyright" content="jacketzc"><meta name="keywords" content="jacketzc的blog"><meta name="description" content="java，分布式，vue，idea，多线程开发，mybatis，spring，ssm，SpringMVC"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>2.0javaAPI操作（文档） · jacketzc's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.0.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">jacketzc</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">Longlongyu</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">jacketzc's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">2.0javaAPI操作（文档）</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2020-07-19</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="Elasticsearch"> Elasticsearch</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">721</span> | Reading time: <span class="post-count">3</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><h1>2.0javaAPI操作（文档）</h1>
+<span><div><div>elasticsearch支持两种java客户端，一个是transport客户端（已经逐渐被淘汰）这里主要讲RESTful风格客户端的使用</div><ul><li><div>rest客户端也分low以及high两个版本，此处主要讲high版本</div></li><li><div><span style="color: rgb(255, 70, 53);">一定要及时释放资源</span>（client.close），不释放docker中的容器就关闭了</div></li></ul><div><br/></div><div>#需要的依赖</div><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 12pt;">//high版本客户端</font></div><div><font style="font-size: 12pt;">&lt;dependency&gt;</font></div><div><font style="font-size: 12pt;">  &lt;groupId&gt;org.elasticsearch.client&lt;/groupId&gt;</font></div><div><font style="font-size: 12pt;">  &lt;artifactId&gt;elasticsearch-rest-high-level-client&lt;/artifactId&gt;</font></div><div><font style="font-size: 12pt;">  &lt;version&gt;5.6.16&lt;/version&gt;</font></div><div><font style="font-size: 12pt;">&lt;/dependency&gt;</font></div><div><font style="font-size: 12pt;">//low版本依赖（high版本已经包括，不需要导入）</font></div><div><font style="font-size: 12pt;">&lt;dependency&gt;</font></div><div><font style="font-size: 12pt;">  &lt;groupId&gt;org.elasticsearch.client&lt;/groupId&gt;</font></div><div><font style="font-size: 12pt;">  &lt;artifactId&gt;elasticsearch-rest-client&lt;/artifactId&gt;</font></div><div><font style="font-size: 12pt;">  &lt;version&gt;5.6.16&lt;/version&gt;</font></div><div><font style="font-size: 12pt;">&lt;/dependency&gt;</font></div></div><div><br/></div><div><br/></div><div>#一次基本的使用（使用low版本）</div><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 12pt;">public static void main(String[] args) throws IOException {</font></div><div><font style="font-size: 12pt;">    //建立rest客户端，指定主机、端口、协议</font></div><div><font style="font-size: 12pt;">    RestClient restClient = RestClient.builder(</font></div><div><font style="font-size: 12pt;">            new HttpHost(&quot;localhost&quot;, 9200, &quot;http&quot;)).build();</font></div><div><font style="font-size: 12pt;">    try {</font></div><div><font style="font-size: 12pt;">        //获取查询返回值，此处使用简单查询，该方法可以有四个参数，可以额外指定json参数</font></div><div><font style="font-size: 12pt;">        Response response = restClient.performRequest(&quot;GET&quot;, &quot;/litemall/goods/1006014&quot;);</font></div><div><font style="font-size: 12pt;">        //获取查询结果</font></div><div><font style="font-size: 12pt;">        String responseBody = EntityUtils.toString(response.getEntity());</font></div><div><font style="font-size: 12pt;">        //将结果格式化转化为可读的字符串</font></div><div><font style="font-size: 12pt;">        System.out.println(JSONUtil.formatJsonStr(responseBody));</font></div><div><font style="font-size: 12pt;">    } catch (IOException e) {</font></div><div><font style="font-size: 12pt;">        e.printStackTrace();</font></div><div><font style="font-size: 12pt;">    }finally {</font></div><div><font style="font-size: 12pt;">        restClient.close();</font></div><div><font style="font-size: 12pt;">    }</font></div><div><font style="font-size: 12pt;">}</font></div></div><div><br/></div><div>#GET操作（简单，对确定的文档进行查询）：</div><ul><li><div>建立rest客户端</div></li></ul><div style="margin-left: 40px;">//该客户端有很多种配置（参考：），这里只使用默认配置</div><div style="margin-left: 40px;">//high版本执行请求依赖low版本的restClient</div><div style="margin-left: 40px;">//留着low的客户端是为了关闭资源</div><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 12pt;">RestClient restClient = RestClient.builder(</font></div><div><font style="font-size: 12pt;">            new HttpHost(&quot;localhost&quot;, 9200, &quot;http&quot;)).build();</font></div><div><font style="font-size: 12pt;">RestHighLevelClient client = new RestHighLevelClient(restClient);</font></div></div><ul><li><div>创建GetRequest对象</div></li><ul><li><div>构造参数为index、type、id</div></li></ul></ul><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 12pt;">GetRequest getRequest = new GetRequest(&quot;litemall&quot;, &quot;goods&quot;, &quot;1010000&quot;);</font></div></div><ul><ul><li><div>可以额外指定查询的版本</div></li></ul></ul><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 12pt;">GetRequest request = new GetRequest(&quot;posts&quot;, &quot;doc&quot;, &quot;1&quot;).version(2);</font></div></div><ul><li><div>获取GetResponse（所有返回数据都存在这个里面）</div></li><ul><li><div>不论根据这个条件有没有值，index、type、id都会包含在response中</div></li></ul></ul><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 12pt;">String index = getResponse.getIndex();</font></div><div><font style="font-size: 12pt;">String type = getResponse.getType();</font></div><div><font style="font-size: 12pt;">String id = getResponse.getId();</font></div></div><ul><li><div>获取response中的数据</div></li></ul><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 12pt;">String sourceAsString = getResponse.getSourceAsString(); // string 形式</font></div><div><font style="font-size: 12pt;">Map&lt;String, Object&gt; sourceAsMap = getResponse.getSourceAsMap(); // map</font></div><div><font style="font-size: 12pt;">byte[] sourceAsBytes = getResponse.getSourceAsBytes(); // 字节形式</font></div></div><ul><li><div>异步请求（多了一个回调函数）</div></li></ul><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 12pt;">client.getAsync(request, new ActionListener&lt;GetResponse&gt;() {</font></div><div><font style="font-size: 12pt;">    @Override</font></div><div><font style="font-size: 12pt;">    public void onResponse(GetResponse getResponse) {</font></div><div><font style="font-size: 12pt;">        </font></div><div><font style="font-size: 12pt;">    }</font></div><div><font style="font-size: 12pt;">    @Override</font></div><div><font style="font-size: 12pt;">    public void onFailure(Exception e) {</font></div><div><font style="font-size: 12pt;">        </font></div><div><font style="font-size: 12pt;">    }}</font></div><div><font style="font-size: 12pt;">);</font></div></div><div>一次完整的案例：</div><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 12pt;">public void test2() throws IOException {</font></div><div><font style="font-size: 12pt;">    RestClient restClient = RestClient.builder(new HttpHost(&quot;localhost&quot;, 9200, &quot;http&quot;)).build();</font></div><div><font style="font-size: 12pt;">    RestHighLevelClient client = new RestHighLevelClient(restClient);</font></div><div><font style="font-size: 12pt;">    GetRequest getRequest = new GetRequest(&quot;litemall&quot;, &quot;goods&quot;, &quot;1010000&quot;);</font></div><div><font style="font-size: 12pt;">    GetResponse getResponse = null;</font></div><div><font style="font-size: 12pt;">   </font></div><div><font style="font-size: 12pt;">    getResponse = client.get(getRequest);</font></div><div><font style="font-size: 12pt;">    </font></div><div><font style="font-size: 12pt;">    String index = getResponse.getIndex();</font></div><div><font style="font-size: 12pt;">    String type = getResponse.getType();</font></div><div><font style="font-size: 12pt;">    String id = getResponse.getId();</font></div><div><font style="font-size: 12pt;">    if (getResponse.isExists()) {</font></div><div><font style="font-size: 12pt;">        long version = getResponse.getVersion();</font></div><div><font style="font-size: 12pt;">        String sourceAsString = getResponse.getSourceAsString(); // string 形式</font></div><div><font style="font-size: 12pt;">        Map&lt;String, Object&gt; sourceAsMap = getResponse.getSourceAsMap(); // map</font></div><div><font style="font-size: 12pt;">        byte[] sourceAsBytes = getResponse.getSourceAsBytes(); // 字节形式</font></div><div><font style="font-size: 12pt;">        System.out.println(JSONUtil.toJsonPrettyStr(sourceAsString));</font></div><div><font style="font-size: 12pt;">        System.out.println(sourceAsMap);</font></div><div><font style="font-size: 12pt;">        System.out.println(new String(sourceAsBytes));</font></div><div><font style="font-size: 12pt;">    } else {</font></div><div><font style="font-size: 12pt;">        // 没有发现请求的文档</font></div><div><font style="font-size: 12pt;">        System.out.println(&quot;未找到文档&quot;);</font></div><div><font style="font-size: 12pt;">    }</font></div><div><font style="font-size: 12pt;">    restClient.close();</font></div><div><font style="font-size: 12pt;">}</font></div></div><div><br/></div><div>#Exist操作（验证是否存在）</div><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 12pt;">GetRequest getRequest = new GetRequest(&quot;litemall&quot;, &quot;goods&quot;, &quot;1010000&quot;);</font></div><div><font style="font-size: 12pt;">System.out.println(client.exists(getRequest));</font></div></div><div><br/></div><div><br/></div><div><br/></div></div><div><br/></div></span>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://yoursite.com">jacketzc</a></p><p> <span>Link:  </span><a href="http://yoursite.com/2020/07/19/2.0javaAPI%E6%93%8D%E4%BD%9C%EF%BC%88%E6%96%87%E6%A1%A3%EF%BC%89/">http://yoursite.com/2020/07/19/2.0javaAPI%E6%93%8D%E4%BD%9C%EF%BC%88%E6%96%87%E6%A1%A3%EF%BC%89/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2020/07/20/1.5SpringMVC%E5%AF%B9json%E7%9A%84%E5%A4%84%E7%90%86/" title="1.5SpringMVC对json的处理"><span>< PreviousPost</span><br><span class="prevTitle">1.5SpringMVC对json的处理</span></a><a class="nextSlogan" href="/2020/07/17/1.4%E6%90%9C%E7%B4%A2/" title="1.4搜索"><span>NextPost ></span><br><span class="nextTitle">1.4搜索</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">2.0javaAPI操作（文档）</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

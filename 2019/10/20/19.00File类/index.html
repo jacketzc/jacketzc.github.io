@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="jacketzc"><meta name="renderer" content="webkit"><meta name="copyright" content="jacketzc"><meta name="keywords" content="jacketzc的blog"><meta name="description" content="java，分布式，vue，idea，多线程开发，mybatis，spring，ssm，SpringMVC"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>19.00File类 · jacketzc's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.0.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">jacketzc</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">Longlongyu</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">jacketzc's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">19.00File类</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2019-10-20</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">721</span> | Reading time: <span class="post-count">2</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><h1>19.00File类</h1>
+<span><div>文件和目录路径名的抽象表示形式</div><div>//该类可以应用于任何的系统</div><div><br clear="none"/></div><div>成员变量（全部都是静态的）</div><div>//这是java为跨平台做出的设计，以后用到分隔符的地方尽量使用该成员变量</div><div>string pathSeparator</div><div>//路径分隔符 windows（；） linux（：）</div><div>string sepatator</div><div>//名称分隔符 windows（\） linux（/）</div><div><br clear="none"/></div><div>绝对路径和相对路径</div><div>绝对：从盘符或者根目录开始</div><div>相对：以当前目录为基准</div><div>//当前目录为c:\user，那么该目录下的文件夹可以直接写作123.txt</div><div>注意：</div><div>java使用两个‘\’代表一个普通的反斜杠</div><div><br clear="none"/></div><div>构造方法</div><div>File(String filename)</div><div>//路径可以是文件，也可以是文件夹</div><div>//可以使绝对路径，也可以是相对路径</div><div>//路径可以存在，也可以不存在</div><div>//不区分大小写</div><div>File(String parent,String child)</div><div>//将路径分割为两部分，便于灵活使用</div><div>//&quot;c:\\&quot;(parent)和&quot;123.txt&quot;可以组装成一个完整的路径</div><div>File(File parent,String child)</div><div>//父路径使用一个File对象</div><div>//还有一种不规范的写法File(File+&quot;\\chile&quot;)，因为是字符串拼接，所有中间的&quot;\\&quot;不可以省略</div><div><br clear="none"/></div><div>基本方法：</div><div>.getAbsolutePath()</div><div>//获取构造方法中传递路径的绝对路径</div><div>.getPath()</div><div>//获取构造方法中传递的路径</div><div>//toString方法调用的就是这个方法</div><div>.getName()</div><div>//获取构造方法传递路径的结尾</div><div>//这个结尾往往是一个文件夹或者文件名</div><div>.getLength()</div><div>//返回文件大小（以字节为单位）</div><div>//文件夹或者不存在的地址返回0</div><div><br clear="none"/></div><div>判断方法</div><div>bool exists()</div><div>//判断构参中的路径是否存在</div><div>bool isDirectory()</div><div>//判断是否是一个文件夹</div><div>bool isFile()</div><div>//判断是否是一个文件</div><div><br clear="none"/></div><div>增删方法</div><div>bool createNewFile()</div><div>//创建此File表示的文件（如果不存在）</div><div>//文件以及存在或者文件父级目录不存在都会抛出异常</div><div>//此方法不能创建文件夹（以路径创建仍然创建的是一个文件）</div><div>bool delete()</div><div>//删除此File表示的文件或者目录</div><div>//此方法无法删除一个非空的目录</div><div>//此方法删除的文件不会被回收且不可撤销！</div><div>bool mkdir()</div><div>//创建此File表示的<span style="color: #00ccff;">单级文件夹</span></div><div>//也就是说，不能创建该文件夹时同时创建它的父级文件夹</div><div><br clear="none"/></div><div>遍历方法</div><div>String[] list()</div><div>//返回该路径下所有的<span style="color: #00ccff;">直接</span>子目录或者文件所表示的String数组</div><div>//没有任何的子目录会返回一个空数组<br clear="none"/></div><div>//数组成员为文件或者文件夹的名称</div><div>//子目录的子目录不会被遍历</div><div>//路径不存在或者不是路径都会抛出空指针异常</div><div>File[] listFiles()</div><div>//返回File数组</div><div>//成员为文件或者文件夹的绝对路径</div></span>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://yoursite.com">jacketzc</a></p><p> <span>Link:  </span><a href="http://yoursite.com/2019/10/20/19.00File%E7%B1%BB/">http://yoursite.com/2019/10/20/19.00File%E7%B1%BB/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2019/10/21/19.01%E8%BF%87%E6%BB%A4%E5%99%A8/" title="19.01过滤器"><span>< PreviousPost</span><br><span class="prevTitle">19.01过滤器</span></a><a class="nextSlogan" href="/2019/10/14/18.%E5%B8%B8%E7%94%A8API/" title="18.常用API"><span>NextPost ></span><br><span class="nextTitle">18.常用API</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">19.00File类</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

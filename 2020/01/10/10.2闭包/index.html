@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="jacketzc"><meta name="renderer" content="webkit"><meta name="copyright" content="jacketzc"><meta name="keywords" content="jacketzc的blog"><meta name="description" content="java，分布式，vue，idea，多线程开发，mybatis，spring，ssm，SpringMVC"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>10.2闭包 · jacketzc's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.0.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">jacketzc</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">Longlongyu</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">jacketzc's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">10.2闭包</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2020-01-10</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">732</span> | Reading time: <span class="post-count">2</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><h1>10.2闭包</h1>
+<span><div><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;">定义：</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;">外部环境持有内部函数所依赖的自由变量，由此对内部函数形成了闭包</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"><span>//</span><span>自由变量：在方法作用域之外的变量</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"><span>//java</span><span>只是隐式支持了闭包，并不是完整支持</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"> </p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"><span>java</span><span>中的类就是闭包（面向对象语言习惯上不称呼闭包）</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;">class A{</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;">int i=0;</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;">void print(){</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;">syso(i);</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;">}</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"><span>}//</span><span>方法</span><span>print</span><span>调用了外部环境中的自由变量</span><span>i</span><span>，由此类</span><span>A</span><span>对方法</span><span>orint</span><span>构成闭包</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"><span>//java</span><span>的内部类更是典型的闭包，因为它包含了指向外部类的指针</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"> </p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;">闭包的含义：</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"><span>闭包表明，方法的执行依赖于外部环境的实例，依赖于自由变量“</span><span>this</span><span>”（变量</span><span>i</span><span>本质上是</span><span>this.i</span><span>）</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"> </p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;">闭包的两种实现形式：</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;">1.capture-by-value</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;">该形式仅仅只是将自由变量的副本拷贝给了方法，更改这个副本不会变动原始的值</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"><span>//java</span><span>编译器隐瞒了这一点，并且不允许修改外部变量的值</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"><span>匿名内部类就是通过这种方式实现的，因此凡是要想在匿名类中调用外部对象，编译器就要求其</span><span style="background: yellow;">参数引用</span><span>是</span><span>final</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"><span>//java</span><span>为了解决数据不同步而采取该策略（外部方法修改引用导致内部方法获取变量不一致，内部方法修改引用导致外部方法获取变量不一致）</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"><span>//</span><span>其他的编程语言通过封装类来实现数据同步</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;">2.capture-by-reference</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;">该形式将变量的引用直接传递给方法</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"><br clear="none"/></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;">举个栗子：</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;">class Apple{</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"><span>int c</span><span>；</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"><span>public void test</span><span>（</span><span>final int i</span><span>）</span><span>{</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"><span>final int j</span><span>；</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"><span>Fruit fruit=new Fruit</span><span>（）</span><span>{</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"><span>//</span><span>假设</span><span>fruit</span><span>是一个接口</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"><span>public void add</span><span>（）</span><span>{</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"><span>c++</span><span>；</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"><span>//c</span><span>在类中，相对于内部类构成</span><span style="background: yellow;">完全闭包</span><span>（传递的是引用，想怎么用都行）</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;">sout(i+j)</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"><span>//i</span><span>和</span><span>j</span><span>属于“舶来品”，相对于内部类为</span><span style="background: yellow;">不完全闭包</span><span>，只能被指定为</span><span>final</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;">}</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"><span>public void del</span><span>（</span><span>int k</span><span>）</span><span>{</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"><span>//k</span><span>只是方法传递的一个参数，和闭包没什么关系</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;">}</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;">}</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"> </p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;">}</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;">}</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"> </p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;">新的发现：</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"><span>//</span><span>这与闭包没什么关系</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"><span>方法传递的参数如果是基本数据类型（如</span><span>int</span><span>、</span><span>char</span><span>）</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"><span>//Integer</span><span>等效于</span><span>int</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;">那么传递的只是副本，更改副本的值不会影响原本的值</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;">传递的如果是一个对象，那么传递的就是一个引用</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"><br clear="none"/></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"> </p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"><span style="background: yellow;">补充：</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;">匿名类中调用外部对象的几种情况：</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;">class Apple{</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;">int a=0;</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"><span>//</span><span>类中的自由变量</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;">public Runnabe create(int b=0){</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;">int c=0</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;">return new Runnable(){</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;">   @Override</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;">   public void run(){</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;">   int d=0;</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;">}}}}</p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"><span>//</span><span>以上所有的变量在</span><span>run</span><span>方法中都可以使用，都可以被打印，赋值给其他对象</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"><span>//a</span><span>为完全闭包，</span><span>d</span><span>为内部定义变量，可以更改该对象的值（</span><span>a++</span><span>之类的操作）</span></p><p style="margin: 0in; font-family: 微软雅黑; font-size: 11.0pt;"><span>//b,c</span><span>为不完全闭包，它们被</span><span style="background: yellow;">隐式地</span><span>指定了</span><span>final</span><span>类型，值不能被改变</span></p><br clear="none"/></div></span>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://yoursite.com">jacketzc</a></p><p> <span>Link:  </span><a href="http://yoursite.com/2020/01/10/10.2%E9%97%AD%E5%8C%85/">http://yoursite.com/2020/01/10/10.2%E9%97%AD%E5%8C%85/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2020/01/11/11%E5%AE%B9%E5%99%A8/" title="11容器"><span>< PreviousPost</span><br><span class="prevTitle">11容器</span></a><a class="nextSlogan" href="/2020/01/10/10.1%E5%B7%A5%E5%8E%82%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" title="10.1工厂设计模式"><span>NextPost ></span><br><span class="nextTitle">10.1工厂设计模式</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">10.2闭包</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

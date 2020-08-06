@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="jacketzc"><meta name="renderer" content="webkit"><meta name="copyright" content="jacketzc"><meta name="keywords" content="jacketzc的blog"><meta name="description" content="java，分布式，vue，idea，多线程开发，mybatis，spring，ssm，SpringMVC"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>20.2线程安全 · jacketzc's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.0.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">jacketzc</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">Longlongyu</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">jacketzc's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">20.2线程安全</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2019-10-31</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">729</span> | Reading time: <span class="post-count">2</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><h1>20.2线程安全</h1>
+<span><div><span style="font-size: 12pt;">当多个线程访问了共享数据时，就会产生线程安全问题</span></div><div><span style="font-size: 12pt;">//可能出现的问题：1.重复访问同一个时刻的值 2.访问了不存在的值</span></div><div><font style="font-size: 12pt;"><br clear="none"/></font></div><div><span style="font-size: 12pt;">出现的原因：</span></div><div><span style="font-size: 12pt;">1.多个线程同时访问同一个对象并且还没有来得及进行修改（重复的值）</span></div><div><span style="font-size: 12pt;">2.当前线程修改对象后满足条件已经退出，但是别的线程才刚刚访问该变量（不存在的值）</span></div><div><font style="font-size: 12pt;"><br clear="none"/></font></div><div><span style="color: rgb(0, 0, 0); font-size: 12pt;">线程同步机制</span></div><div><span style="color: rgb(0, 204, 255); font-size: 12pt;">//该机制主要提供两种功能</span></div><div><span style="color: rgb(0, 204, 255); font-size: 12pt;">//1.使得被同步的区域同一时间只能一个线程执行</span></div><div><span style="color: rgb(0, 204, 255); font-size: 12pt;">//2.提供锁机制</span></div><div><span style="color: rgb(0, 0, 0); font-size: 12pt;">﻿//上面的两种功能是独立的，有时候并没有访问冲突，只是需要锁机制来实现线程通信</span></div><div><span style="color: rgb(255, 0, 0); font-size: 12pt;">在使用线程同步时，需要先考虑有没有使用的必要？</span></div><div><span style="font-size: 12pt;">解决方式：</span></div><div><span style="font-size: 12pt;">1.同步代码块</span></div><div><span style="font-size: 12pt;">格式：</span></div><div><span style="font-size: 12pt;">    synchronized（锁对象）{</span></div><div><span style="font-size: 12pt;">         可能会出现线程安全问题的代码</span></div><div><span style="font-size: 12pt;">}</span></div><div><span style="font-size: 12pt;">//锁对象可以是任意的对象（比如Object.class）</span></div><div><span style="font-size: 12pt;">//需要同步的线程需要使用同一个锁对象</span></div><div><span style="font-size: 12pt;">//锁对象本身不能有线程安全问题</span></div><div><span style="font-size: 12pt;">//</span><span style="font-size: 12pt; color: rgb(0, 204, 255);">同步代码块只能出现在方法内，不能包裹方法</span></div><div><span style="font-size: 12pt;">原理：</span></div><div><span style="font-size: 12pt;">1.每个抢到cpu资源、执行中的线程访问同步代码块时，会占用锁对象</span></div><div><span style="font-size: 12pt;">2.另一个进程访问同步代码块时，如果发现锁对象被占用，就会进入阻塞状态，等待锁对象的释放</span></div><div><span style="font-size: 12pt;">//同步保证只有一个线程在同步中执行共享资源</span></div><div><span style="font-size: 12pt;">问题：</span></div><div><span style="font-size: 12pt;">程序会不断地判断锁资源是否被占用，程序的效率会降低</span></div><div><font style="font-size: 12pt;"><br clear="none"/></font></div><div><span style="font-size: 12pt;">2.同步方法</span></div><div><span style="font-size: 12pt;">格式：</span></div><div><span style="font-size: 12pt;">1.定义一个方法，并添加synchronized关键字</span></div><div><span style="font-size: 12pt;">原理：</span></div><div><span style="font-size: 12pt;">同步方法将.this对象设置为锁对象，同一时间只允许一个线程访问此方法</span></div><div><span style="font-size: 12pt;">//</span><span style="font-size: 12pt; color: rgb(255, 0, 0);">一个类中的所有同步方法共用一把锁</span></div><div><font style="font-size: 12pt;"><br clear="none"/></font></div><div><span style="font-size: 12pt;">3.静态同步方法：</span></div><div><span style="font-size: 12pt;">格式：</span></div><div><span style="font-size: 12pt;">1.定义一个方法，并添加synchronized关键字，在此基础上添加static关键字</span></div><div><span style="font-size: 12pt;">原理：</span></div><div><span style="font-size: 12pt;">同步方法将class对象设置为锁对象，同一时间只允许一个线程访问此方法</span></div><div><font style="font-size: 12pt;"><br clear="none"/></font></div><div><span style="font-size: 12pt;">4.</span><span style="font-size: 12pt; color: rgb(0, 204, 255);">添加lock锁</span></div><div><span style="font-size: 12pt;">//jdk5添加了此属性，它具有比synchronized关键字更为广泛的用法</span></div><div><span style="font-size: 12pt;">使用的接口：</span></div><div><span style="font-size: 12pt;">java.util.concurrent.locks.Lock</span></div><div><span style="font-size: 12pt;">实现的类：</span></div><div><span style="font-size: 12pt;">java.util.concurrent.locks.ReentrantLock</span></div><div><span style="font-size: 12pt;">使用方式</span></div><div><span style="font-size: 12pt;">1.在需要同步的地方调用.lock()方法</span></div><div><span style="font-size: 12pt;">2.在结束同步的地方调用.unlock()方法</span></div><div><span style="font-size: 12pt;">建议的格式：</span></div><div><span style="font-size: 12pt;">try{</span></div><div><span style="font-size: 12pt;">l.lock();</span></div><div><span style="font-size: 12pt;">sold();</span></div><div><span style="font-size: 12pt;">}finally{</span></div><div><span style="font-size: 12pt;">     unlock()</span></div><div><span style="font-size: 12pt;">//不论程序是否出现异常，都将锁释放</span></div><div><span style="font-size: 12pt;">}</span></div><div><span style="font-size: 12pt;">//如果两个线程只是交替地访问同一个方法的话，那么这不能叫并行执行</span></div><div><span style="font-size: 12pt;">//因为执行这个方法的时候，另一个线程</span><span style="font-size: 12pt; color: rgb(255, 0, 0);">总是空闲的</span></div></span>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://yoursite.com">jacketzc</a></p><p> <span>Link:  </span><a href="http://yoursite.com/2019/10/31/20.2%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/">http://yoursite.com/2019/10/31/20.2%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2019/11/01/20.3%E7%BA%BF%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E7%AD%89%E5%BE%85%E4%B8%8E%E5%94%A4%E9%86%92%E6%9C%BA%E5%88%B6%EF%BC%89/" title="20.3线程通信（等待与唤醒机制）"><span>< PreviousPost</span><br><span class="prevTitle">20.3线程通信（等待与唤醒机制）</span></a><a class="nextSlogan" href="/2019/10/30/20.1%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/" title="20.1多线程基本概念"><span>NextPost ></span><br><span class="nextTitle">20.1多线程基本概念</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">20.2线程安全</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

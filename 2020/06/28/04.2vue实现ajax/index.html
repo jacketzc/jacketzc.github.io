@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="jacketzc"><meta name="renderer" content="webkit"><meta name="copyright" content="jacketzc"><meta name="keywords" content="jacketzc的blog"><meta name="description" content="java，分布式，vue，idea，多线程开发，mybatis，spring，ssm，SpringMVC"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>04.2vue实现ajax · jacketzc's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.0.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">jacketzc</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">Longlongyu</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">jacketzc's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">04.2vue实现ajax</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2020-06-28</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="WEB"> WEB</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">289</span> | Reading time: <span class="post-count">1</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><h1>04.2vue实现ajax</h1>
+<span><div><span style="font-size: 14pt;">参考：<a target="_blank" rel="noopener" href="https://www.runoob.com/vue2/vuejs-ajax.html" style="font-size: 14pt;">https://www.runoob.com/vue2/vuejs-ajax.html</a></span></div><div><span style="font-size: 18.6667px;">如果需要实现异步的ajax请求，则需要使用vue-resource.js</span></div><div><span style="font-size: 14pt;">//</span><span style="font-size: 14pt;">&lt;script src=&quot;https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js&quot;&gt;&lt;/script&gt;</span></div><div><span style="font-size: 14pt;"><br/></span></div><div><span style="font-size: 18.6667px;"><br/></span></div><div><span style="font-size: 18.6667px;">处理post请求：</span></div><div><span style="font-size: 18.6667px;">this.$http.post(url,{},{emulataJSON:true}).then(function{res})</span></div><div><span style="font-size: 14pt;">//第二个参数为json对象，即要发送的参数（key-value形式）</span></div><div><span style="font-size: 14pt;">//指定第三个参数后，vue将会把json数据转化为表单数据提交</span></div><div><span style="font-size: 14pt;">//</span><span style="font-size: 14pt;">将request body以application/x-www-form-urlencoded content type发送</span></div><div><span style="font-size: 18.6667px;">与标准js不同，vue</span><span style="font-size: 18.6667px;">响应函数中的参数是一个响应对象（标准js为响应内容）</span></div><div><span style="font-size: 18.6667px;">#其中的属性有：</span></div><div><span style="font-size: 14pt;">res.body</span></div><div><span style="font-size: 14pt;">//响应的内容（相当于标准js写法中返回的数据）</span></div><div><span style="font-size: 14pt;">//如果返回的是json格式的字符串，一定要使用<span style="font-size: 14pt; color: rgb(255, 70, 53);">最严格json格式</span></span></div><div><span style="font-size: 14pt;">//{'user':'jac'}是错误的！，返回的字符串必须是</span><span style="font-size: 14pt; color: rgb(255, 70, 53);">{&quot;user&quot;:&quot;jac&quot;}这种形式</span><span style="font-size: 14pt;">的（javaweb中使用out打印在页面的内容）</span></div><div><span style="font-size: 14pt;">res.url</span></div><div><span style="font-size: 14pt;">//响应的URL源</span></div><div><span style="font-size: 14pt;">res.headers</span></div><div><span style="font-size: 14pt;">//请求的头部</span></div><div><span style="font-size: 14pt;">#其中的方法有：</span></div><div><span style="font-size: 14pt;">res.text()</span></div><div><span style="font-size: 14pt;">//以字符串形式返回响应体</span></div><div><span style="font-size: 14pt;">res.json()</span></div><div><span style="font-size: 14pt;">//以json格式返回响应体</span></div><div><span style="font-size: 14pt;"><br/></span></div><div><span style="font-size: 14pt;"><br/></span></div><div><span style="font-size: 14pt;"><br/></span></div><div><span style="font-size: 18.6667px;">vue实现ajax实战：</span></div><div><span style="font-size: 18.6667px;"><br/></span></div><div><span style="font-size: 14pt;"><a href="04.2vue实现ajax_files/list.html"><img src="04.2vue实现ajax_files/21d69b1249dd3cd2762974f2a04d9bfd.png" alt="list.html"></a></span></div><div><span style="font-size: 14pt;"><br/></span></div></span>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://yoursite.com">jacketzc</a></p><p> <span>Link:  </span><a href="http://yoursite.com/2020/06/28/04.2vue%E5%AE%9E%E7%8E%B0ajax/">http://yoursite.com/2020/06/28/04.2vue%E5%AE%9E%E7%8E%B0ajax/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2020/06/29/2.1Git%E6%9C%AC%E5%9C%B0%E9%AB%98%E7%BA%A7%E6%93%8D%E4%BD%9C/" title="2.1Git本地高级操作"><span>< PreviousPost</span><br><span class="prevTitle">2.1Git本地高级操作</span></a><a class="nextSlogan" href="/2020/06/24/04.4JSON%E4%B8%8Ejava%E5%AF%B9%E8%B1%A1%E8%BD%AC%E6%8D%A2/" title="04.4JSON与java对象转换"><span>NextPost ></span><br><span class="nextTitle">04.4JSON与java对象转换</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">04.2vue实现ajax</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

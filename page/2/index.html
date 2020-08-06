@@ -1,0 +1,111 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="jacketzc"><meta name="renderer" content="webkit"><meta name="copyright" content="jacketzc"><meta name="keywords" content="jacketzc的blog"><meta name="description" content="java，分布式，vue，idea，多线程开发，mybatis，spring，ssm，SpringMVC"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>jacketzc's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.0.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">jacketzc</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">Longlongyu</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">jacketzc's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1>jacketzc's Blog</h1><h5>Welcome to my Blog!</h5><div class="intro-social"><a class="fa fa-envelope" href="mailto://jacketzc@outlook.com" title="email"></a><a class="fa fa-github" href="//github.com/jacketzc" target="_blank" title="github"></a><a class="fa fa-twitter" href="//twitter.com/jacketzc" target="_blank" title="twitter"></a></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><section id="recent-posts"><div class="recent-post-item"><div class="post-title"><a href="/2020/07/20/1.9%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD%E5%92%8C%E4%B8%8A%E4%BC%A0/">1.9文件下载和上传</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-07-20T01:49:00.000Z">2020-07-20</time></div><div class="recent-post-content">1.9文件下载和上传
+#文件下载借助HttpMessageConveter实现下载原理：将发布到服务器上的文件，以流的方式写入到客户端ResponseEntity：可以将下载的文件的数据及相应信息进行封装，浏览器解析该对象，实现下载ServletContext：这个对象可以获取web应用上下文的对象（没法读取resources目录也就是项目上下文中的文件）//普通的InputStream比如XXX.class.getClassLoader().getResourceAsStream()只能读取项目上下文的文件，读取不到web应用上下文的文件@RequestMapping(&quot;image ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="SpringMVC"> SpringMVC</a></div><div class="read-more"><a class="more" href="/2020/07/20/1.9%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD%E5%92%8C%E4%B8%8A%E4%BC%A0/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/07/20/1.5SpringMVC%E5%AF%B9json%E7%9A%84%E5%A4%84%E7%90%86/">1.5SpringMVC对json的处理</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-07-20T00:52:00.000Z">2020-07-20</time></div><div class="recent-post-content">1.5SpringMVC对json的处理
+#返回json需要引入的依赖&lt;dependency&gt;  &lt;groupId&gt;com.fasterxml.jackson.core&lt;/groupId&gt;  &lt;artifactId&gt;jackson-databind&lt;/artifactId&gt;  &lt;version&gt;${jackson}&lt;/version&gt;&lt;/dependency&gt;&lt;dependency&gt;  &lt;groupId&gt;com.fasterxml.jackson.core&lt;/group ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="SpringMVC"> SpringMVC</a></div><div class="read-more"><a class="more" href="/2020/07/20/1.5SpringMVC%E5%AF%B9json%E7%9A%84%E5%A4%84%E7%90%86/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/07/19/2.0javaAPI%E6%93%8D%E4%BD%9C%EF%BC%88%E6%96%87%E6%A1%A3%EF%BC%89/">2.0javaAPI操作（文档）</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-07-19T12:13:00.000Z">2020-07-19</time></div><div class="recent-post-content">2.0javaAPI操作（文档）
+elasticsearch支持两种java客户端，一个是transport客户端（已经逐渐被淘汰）这里主要讲RESTful风格客户端的使用rest客户端也分low以及high两个版本，此处主要讲high版本一定要及时释放资源（client.close），不释放docker中的容器就关闭了#需要的依赖//high版本客户端&lt;dependency&gt;  &lt;groupId&gt;org.elasticsearch.client&lt;/groupId&gt;  &lt;artifactId&gt;elasticsearch-rest-high-lev ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="Elasticsearch"> Elasticsearch</a></div><div class="read-more"><a class="more" href="/2020/07/19/2.0javaAPI%E6%93%8D%E4%BD%9C%EF%BC%88%E6%96%87%E6%A1%A3%EF%BC%89/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/07/17/1.4%E6%90%9C%E7%B4%A2/">1.4搜索</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-07-17T06:17:00.000Z">2020-07-17</time></div><div class="recent-post-content">1.4搜索
+#空搜索GET /_searchhits：命中的文档total：匹配的文档总数_score：匹配程度shards：使用的分片took：花费时间time_out：是否超时#多索引，多类型/search：在所有的所有中搜索所有的类型/gb/_search：在gb索引中搜索所有的类型/gb,us/_search：在gb和us索引中搜索所有的文档/g*,u*/_search/gb/user/_search：在gb索引中搜索user类型/gb,us/user,tweet/_search/_all/user,tweet/_search：在所有索引中搜索user和tweet类型#分页size：返 ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="Elasticsearch"> Elasticsearch</a></div><div class="read-more"><a class="more" href="/2020/07/17/1.4%E6%90%9C%E7%B4%A2/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/07/17/1.8%E6%94%BE%E8%A1%8C%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90/">1.8放行静态资源</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-07-17T03:29:00.000Z">2020-07-17</time></div><div class="recent-post-content">1.8放行静态资源
+默认配置下，DispatcherServlet拦截除jsp外的所有请求，然后根据这些请求寻找映射，静态路径没有设置@RequestMapping，所以无法访问放行：在SpringMVC.xml中添加默认的servlet处理器（找不到映射就会访问该servlet，默认的servlet对所有静态资源放行）//SpringMVC的前端控制处理器优先级高于tomcat的defaultServlet//servlet处理器有个name属性，如果name的值为default，即可省略（tomcat的默认的servlet就是default）&lt;mvc:default-servlet- ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="SpringMVC"> SpringMVC</a></div><div class="read-more"><a class="more" href="/2020/07/17/1.8%E6%94%BE%E8%A1%8C%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/07/17/1.3%E5%B9%B6%E5%8F%91%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6/">1.3并发访问控制</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-07-17T03:25:00.000Z">2020-07-17</time></div><div class="recent-post-content">1.3并发访问控制
+老生常谈， Elasticsearch 对此有两种控制策略#乐观并发控制Elasticsearch 确保文档的旧版本不会覆盖新的版本更新文档时，可以指定要修改的version，如果指定的verison低于当前version，则更新失败#悲观并发控制阻塞策略，当读取某个文档时，对其加锁，只有持有锁的线程才能操作
+</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="Elasticsearch"> Elasticsearch</a></div><div class="read-more"><a class="more" href="/2020/07/17/1.3%E5%B9%B6%E5%8F%91%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/07/17/1.7SpringMVC%E8%A1%A8%E5%8D%95%EF%BC%88%E4%BA%86%E8%A7%A3%EF%BC%89/">1.7SpringMVC表单（了解）</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-07-17T00:50:00.000Z">2020-07-17</time></div><div class="recent-post-content">1.7SpringMVC表单（了解）
+提交路径中被放入request中的属性都可以在页面实现回显这些属性包括：入参的Map入参的Model入参的POJO类型//POJO类型会被自动写入request，默认该属性的key为POJO类型名首字母小写//如果不想用默认的名称，那么可以在POJO入参前使用@ModelAttribute(&quot;key&quot;)指定一个key&lt;form:form action=&quot;${pageContext.request.contextPath}/emp&quot;&gt;&lt;%--    path相当于name属性--%&gt;&lt;%- ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="SpringMVC"> SpringMVC</a></div><div class="read-more"><a class="more" href="/2020/07/17/1.7SpringMVC%E8%A1%A8%E5%8D%95%EF%BC%88%E4%BA%86%E8%A7%A3%EF%BC%89/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/07/16/1.3.1%E4%B8%8D%E5%90%8C%E8%AF%B7%E6%B1%82%EF%BC%88content-type%EF%BC%89%E7%9A%84%E5%A4%84%E7%90%86/">1.3.1不同请求（content-type）的处理</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-07-16T12:07:00.000Z">2020-07-16</time></div><div class="recent-post-content">1.3.1不同请求（content-type）的处理
+SpringMVC对指定了不同的Content-Type的数据需要不同的处理#application/x-www-form-urlencoded//表单数据、jQuery的ajax默认格式（未指定contentType）、get请求此时直接发送的json对象会被修改为表单数据处理方式：使用@RequestParam    //这个注解一点用都没有，省略的效果和加上它完全一致使用POJO对象使用参数直接接收（也就是不加@RequestParam注解，SpringMVC也能获取到该参数）@RequestMapping(&quot;testNoR ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="SpringMVC"> SpringMVC</a></div><div class="read-more"><a class="more" href="/2020/07/16/1.3.1%E4%B8%8D%E5%90%8C%E8%AF%B7%E6%B1%82%EF%BC%88content-type%EF%BC%89%E7%9A%84%E5%A4%84%E7%90%86/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/07/16/1.3.0%E5%A4%84%E7%90%86%E8%AF%B7%E6%B1%82%E6%95%B0%E6%8D%AE/">1.3.0处理请求数据</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-07-16T00:50:00.000Z">2020-07-16</time></div><div class="recent-post-content">1.3.0处理请求数据
+#获取url中的占位符//&quot;PATH/{}&quot;使用@PathVariable注解（略）#获取url后缀的属性//&quot;PATH?user=jac&quot;使用@RequestParameter和@PathVariable一样，需要使用在方法入参处value：属性名required：是否必须defaultValue：默认值@RequestMapping(&quot;testRequestParam&quot;)public String testRequestParam(@RequestParam(&quot;userName&quot;)Str ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="SpringMVC"> SpringMVC</a></div><div class="read-more"><a class="more" href="/2020/07/16/1.3.0%E5%A4%84%E7%90%86%E8%AF%B7%E6%B1%82%E6%95%B0%E6%8D%AE/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/07/15/1.2%E6%95%B0%E6%8D%AE%E8%BE%93%E5%85%A5%E5%92%8C%E8%BE%93%E5%87%BA%EF%BC%88%E6%96%87%E6%A1%A3%E6%93%8D%E4%BD%9C%EF%BC%89/">1.2数据输入和输出（文档操作）</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-07-15T08:26:00.000Z">2020-07-15</time></div><div class="recent-post-content">1.2数据输入和输出（文档操作）
+#文档指最顶层或者根对象, 这个根对象被序列化成 JSON 并存储到 Elasticsearch 中，指定了唯一 ID//相当于对象（hash、map、JSON），这些对象中可以包含另一些对象//Elasticsearch不允许字段的名字（key）包含英文句号(.)#文档元数据文档不仅仅包含数据，也包含元数据（有关文档的信息），包括_index：文档的存放位置（相当于一个数据库）一个索引应该是因共同特性被分组到一起的文档集合（参考数据库设计范式 07数据库设计）可以让Elasticsearch帮我们管理索引，但是有一些创建时的要求：必须小写不能以下划线开头不能 ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="Elasticsearch"> Elasticsearch</a></div><div class="read-more"><a class="more" href="/2020/07/15/1.2%E6%95%B0%E6%8D%AE%E8%BE%93%E5%85%A5%E5%92%8C%E8%BE%93%E5%87%BA%EF%BC%88%E6%96%87%E6%A1%A3%E6%93%8D%E4%BD%9C%EF%BC%89/#more">ReadMore</a></div><hr></div></section><nav class="cxo-page-nav"><a class="extend prev" rel="prev" href="/">&lt; 上一页</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><a class="extend next" rel="next" href="/page/3/">下一页 &gt;</a></nav></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

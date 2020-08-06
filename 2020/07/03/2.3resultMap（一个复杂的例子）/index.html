@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="jacketzc"><meta name="renderer" content="webkit"><meta name="copyright" content="jacketzc"><meta name="keywords" content="jacketzc的blog"><meta name="description" content="java，分布式，vue，idea，多线程开发，mybatis，spring，ssm，SpringMVC"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>2.3resultMap（一个复杂的例子） · jacketzc's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.0.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">jacketzc</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">Longlongyu</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">jacketzc's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">2.3resultMap（一个复杂的例子）</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2020-07-03</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="mybatis"> mybatis</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">758</span> | Reading time: <span class="post-count">3</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><h1>2.3resultMap（一个复杂的例子）</h1>
+<span><div><div><br/></div><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 12pt;">&lt;!-- 非常复杂的语句 --&gt;</font></div><div><font style="font-size: 12pt;">&lt;select id=&quot;selectBlogDetails&quot; resultMap=&quot;detailedBlogResultMap&quot;&gt;</font></div><div><font style="font-size: 12pt;">  select</font></div><div><font style="font-size: 12pt;">       B.id as blog_id,</font></div><div><font style="font-size: 12pt;">       B.title as blog_title,</font></div><div><font style="font-size: 12pt;">       B.author_id as blog_author_id,</font></div><div><font style="font-size: 12pt;">       A.id as author_id,</font></div><div><font style="font-size: 12pt;">       A.username as author_username,</font></div><div><font style="font-size: 12pt;">       A.password as author_password,</font></div><div><font style="font-size: 12pt;">       A.email as author_email,</font></div><div><font style="font-size: 12pt;">       A.bio as author_bio,</font></div><div><font style="font-size: 12pt;">       A.favourite_section as author_favourite_section,</font></div><div><font style="font-size: 12pt;">       P.id as post_id,</font></div><div><font style="font-size: 12pt;">       P.blog_id as post_blog_id,</font></div><div><font style="font-size: 12pt;">       P.author_id as post_author_id,</font></div><div><font style="font-size: 12pt;">       P.created_on as post_created_on,</font></div><div><font style="font-size: 12pt;">       P.section as post_section,</font></div><div><font style="font-size: 12pt;">       P.subject as post_subject,</font></div><div><font style="font-size: 12pt;">       P.draft as draft,</font></div><div><font style="font-size: 12pt;">       P.body as post_body,</font></div><div><font style="font-size: 12pt;">       C.id as comment_id,</font></div><div><font style="font-size: 12pt;">       C.post_id as comment_post_id,</font></div><div><font style="font-size: 12pt;">       C.name as comment_name,</font></div><div><font style="font-size: 12pt;">       C.comment as comment_text,</font></div><div><font style="font-size: 12pt;">       T.id as tag_id,</font></div><div><font style="font-size: 12pt;">       T.name as tag_name</font></div><div><font style="font-size: 12pt;">  from Blog B</font></div><div><font style="font-size: 12pt;">       left outer join Author A on B.author_id = A.id</font></div><div><font style="font-size: 12pt;">       left outer join Post P on B.id = P.blog_id</font></div><div><font style="font-size: 12pt;">       left outer join Comment C on P.id = C.post_id</font></div><div><font style="font-size: 12pt;">       left outer join Post_Tag PT on PT.post_id = P.id</font></div><div><font style="font-size: 12pt;">       left outer join Tag T on PT.tag_id = T.id</font></div><div><font style="font-size: 12pt;">  where B.id = #{id}</font></div><div><font style="font-size: 12pt;">&lt;/select&gt;</font></div></div><div><br/></div><div><span style="font-size: 14pt;"># resultMap写法 ：</span></div><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 12pt;">&lt;!-- 非常复杂的结果映射 --&gt;</font></div><div><font style="font-size: 12pt;">&lt;resultMap id=&quot;detailedBlogResultMap&quot; type=&quot;Blog&quot;&gt;</font></div><div><font style="font-size: 12pt;">  &lt;constructor&gt;</font></div><div><font style="font-size: 12pt;">    &lt;idArg column=&quot;blog_id&quot; javaType=&quot;int&quot;/&gt;</font></div><div><font style="font-size: 12pt;">  &lt;/constructor&gt;</font></div><div><font style="font-size: 12pt;">  &lt;result property=&quot;title&quot; column=&quot;blog_title&quot;/&gt;</font></div><div><font style="font-size: 12pt;">  &lt;association property=&quot;author&quot; javaType=&quot;Author&quot;&gt;</font></div><div><font style="font-size: 12pt;">    &lt;id property=&quot;id&quot; column=&quot;author_id&quot;/&gt;</font></div><div><font style="font-size: 12pt;">    &lt;result property=&quot;username&quot; column=&quot;author_username&quot;/&gt;</font></div><div><font style="font-size: 12pt;">    &lt;result property=&quot;password&quot; column=&quot;author_password&quot;/&gt;</font></div><div><font style="font-size: 12pt;">    &lt;result property=&quot;email&quot; column=&quot;author_email&quot;/&gt;</font></div><div><font style="font-size: 12pt;">    &lt;result property=&quot;bio&quot; column=&quot;author_bio&quot;/&gt;</font></div><div><font style="font-size: 12pt;">    &lt;result property=&quot;favouriteSection&quot; column=&quot;author_favourite_section&quot;/&gt;</font></div><div><font style="font-size: 12pt;">  &lt;/association&gt;</font></div><div><font style="font-size: 12pt;">  &lt;collection property=&quot;posts&quot; ofType=&quot;Post&quot;&gt;</font></div><div><font style="font-size: 12pt;">    &lt;id property=&quot;id&quot; column=&quot;post_id&quot;/&gt;</font></div><div><font style="font-size: 12pt;">    &lt;result property=&quot;subject&quot; column=&quot;post_subject&quot;/&gt;</font></div><div><font style="font-size: 12pt;">    &lt;association property=&quot;author&quot; javaType=&quot;Author&quot;/&gt;</font></div><div><font style="font-size: 12pt;">    &lt;collection property=&quot;comments&quot; ofType=&quot;Comment&quot;&gt;</font></div><div><font style="font-size: 12pt;">      &lt;id property=&quot;id&quot; column=&quot;comment_id&quot;/&gt;</font></div><div><font style="font-size: 12pt;">    &lt;/collection&gt;</font></div><div><font style="font-size: 12pt;">    &lt;collection property=&quot;tags&quot; ofType=&quot;Tag&quot; &gt;</font></div><div><font style="font-size: 12pt;">      &lt;id property=&quot;id&quot; column=&quot;tag_id&quot;/&gt;</font></div><div><font style="font-size: 12pt;">    &lt;/collection&gt;</font></div><div><font style="font-size: 12pt;">    &lt;discriminator javaType=&quot;int&quot; column=&quot;draft&quot;&gt;</font></div><div><font style="font-size: 12pt;">      &lt;case value=&quot;1&quot; resultType=&quot;DraftPost&quot;/&gt;</font></div><div><font style="font-size: 12pt;">    &lt;/discriminator&gt;</font></div><div><font style="font-size: 12pt;">  &lt;/collection&gt;</font></div><div><font style="font-size: 12pt;">&lt;/resultMap&gt;</font></div></div><div><span style="font-size: 14pt;"># 结果映射</span></div><ul><li><div><span style="font-size: 18.6667px;">constructor-用于在实例化类是，注入结果到构造方法中</span></div></li><ul><li><div><span style="font-size: 18.6667px;">idArg-ID参数；标记作为ID的结果可以帮助提高整体性能</span></div></li><li><div><span style="font-size: 18.6667px;">arg-将被注入到构造方法的一个普通结果</span></div></li></ul><li><div><span style="font-size: 18.6667px;">id-一个ID结果；</span><span style="font-size: 18.6667px;">标记作为ID的结果可以帮助提高整体性能</span></div></li></ul><div style="margin-left: 40px;"><span style="font-size: 14pt;">//和result是并列的，但是被单独提出来的标签</span></div><ul><li><div><span style="font-size: 18.6667px;">result-注入到字段画着JavaBean属性的普通结果</span></div></li></ul><div style="margin-left: 40px;"><span style="font-size: 14pt;">//一个result表示一个结果中的字段对应一个Bean中的一个不可分割的属性，它不能对应一个对象</span></div><ul><li><div><span style="font-size: 18.6667px;">association-一个复杂类型的关联；许多结果将包装为这种类型</span></div></li><ul><li><div><span style="font-size: 18.6667px;">嵌套结果映射-关联可以是resultMap，或者是对其他结果映射的引用</span></div></li></ul></ul><div style="margin-left: 40px;"><span style="font-size: 14pt;">//说白了，association相当于一个resultMap，可以在里面写id或者result</span></div><ul><li><div><span style="font-size: 18.6667px;">collection-一个复杂类型的集合；</span></div></li><ul><li><div><span style="font-size: 14pt;">嵌套结果映射-关联可以是resultMap，或者是对其他结果映射的引用</span></div></li></ul></ul><div style="margin-left: 40px;"><span style="font-size: 14pt;">//可以在里面写id或者result，或者引用已经写好的association，还可以在内部定义collection或者discriminatior</span></div><ul><li><div><span style="font-size: 18.6667px;">discriminatior-根据查询的结果决定使用哪一个resultMap</span></div></li><ul><li><div><span style="font-size: 18.6667px;">case-判断标准</span></div></li><ul><li><div><span style="font-size: 18.6667px;">嵌套结果映射-case也是一个结果映射</span></div></li></ul></ul></ul><div style="margin-left: 40px;"><span style="font-size: 14pt;"><br/></span></div></div></span>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://yoursite.com">jacketzc</a></p><p> <span>Link:  </span><a href="http://yoursite.com/2020/07/03/2.3resultMap%EF%BC%88%E4%B8%80%E4%B8%AA%E5%A4%8D%E6%9D%82%E7%9A%84%E4%BE%8B%E5%AD%90%EF%BC%89/">http://yoursite.com/2020/07/03/2.3resultMap%EF%BC%88%E4%B8%80%E4%B8%AA%E5%A4%8D%E6%9D%82%E7%9A%84%E4%BE%8B%E5%AD%90%EF%BC%89/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2020/07/03/2.2resultMap/" title="2.2resultMap"><span>< PreviousPost</span><br><span class="prevTitle">2.2resultMap</span></a><a class="nextSlogan" href="/2020/07/03/13%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB/" title="13数据库事务隔离级别"><span>NextPost ></span><br><span class="nextTitle">13数据库事务隔离级别</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">2.3resultMap（一个复杂的例子）</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

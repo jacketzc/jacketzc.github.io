@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="jacketzc"><meta name="renderer" content="webkit"><meta name="copyright" content="jacketzc"><meta name="keywords" content="jacketzc的blog"><meta name="description" content="java，分布式，vue，idea，多线程开发，mybatis，spring，ssm，SpringMVC"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>05.2websocket通信（服务端） · jacketzc's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.0.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">jacketzc</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">Longlongyu</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">jacketzc's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">05.2websocket通信（服务端）</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2020-07-23</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="WEB"> WEB</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">635</span> | Reading time: <span class="post-count">2</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><h1>05.2websocket通信（服务端）</h1>
+<span><div><div><div>聊天室案例（发送一条消息，所有其他用户全都能看见）</div><div>//每一个用户建立连接都会创建一个新的webSocket</div><div>//每一个请求路径目前只能对应一个连接池</div><div>//暂时一对一的方案是在连接池中寻找目标用户的id</div><div><br/></div><div>#步骤</div><ul><li><div>在作为处理请求的类上添加@ServerEndpoint注解，让其成为webSocket</div></li></ul><div style="margin-left: 40px;">//此功能由tomcat提供</div><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 12pt;">@Slf4j</font></div><div><font style="font-size: 12pt;">@ServerEndpoint(&quot;/websocket/{userId}&quot;)</font></div><div><font style="font-size: 12pt;">public class ChatSocket {}</font></div></div><ul><li><div>添加相关域：</div></li><ul><li><div>添加当前用户的id（使用当前socket的hashcode，并且发送给map）</div></li><li><div>添加统计在线数的计数器（可选）</div></li><li><div>添加连接池（存放所有用户连接的map）</div></li></ul></ul><div style="margin-left: 80px;">//作者使用set存放连接，我将其修改为map，以提供一对一聊天的支持</div><ul><ul><li><div>添加发信息用的session</div></li></ul></ul><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 12pt;">//静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。</font></div><div><font style="font-size: 12pt;">private static int onlineCount = 0;</font></div><div><font style="font-size: 12pt;">//    concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象。若要实现服务端与单一客户端通信的话，可以使用Map来存放，其中Key可以为用户标识</font></div><div><font style="font-size: 12pt;">//    private static final CopyOnWriteArraySet&lt;ChatSocket&gt; chatSocket = new CopyOnWriteArraySet&lt;&gt;();</font></div><div><font style="font-size: 12pt;">//    concurrent包的线程安全Map，以提供一对一聊天的开箱即用</font></div><div><font style="font-size: 12pt;">private static final ConcurrentMap&lt;String, ChatSocket&gt; chatSocket = new ConcurrentHashMap&lt;&gt;();</font></div><div><font style="font-size: 12pt;">//与某个客户端的连接会话，需要通过它来给客户端发送数据</font></div><div><font style="font-size: 12pt;">private Session session;</font></div></div><ul><li><div>连接建立成功调用的方法</div></li></ul><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 12pt;">@OnOpen</font></div><div><font style="font-size: 12pt;">public void onOpen(Session session){</font></div><div><font style="font-size: 12pt;">    this.userId = this.hashCode();</font></div><div><font style="font-size: 12pt;">    log.info(&quot;当前用户的id：&quot;+userId.toString());</font></div><div><font style="font-size: 12pt;">    this.session = session;</font></div><div><font style="font-size: 12pt;">    chatSocket.put(userId,this); //加入map中</font></div><div><font style="font-size: 12pt;">    addOnlineCount(); //在线数加</font></div><div><font style="font-size: 12pt;">    log.info(&quot;有新连接加入！当前在线人数为&quot; + getOnlineCount().toString());</font></div><div><font style="font-size: 12pt;">}</font></div></div></div><ul><li><div>连接错误调用方法</div></li></ul><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 12pt;">@OnError</font></div><div><font style="font-size: 12pt;">public void onError(Session session, Throwable error){</font></div><div><font style="font-size: 12pt;">    log.error(&quot;发生错误:&quot;,error);</font></div><div><font style="font-size: 12pt;">}</font></div></div><ul><li><div>连接关闭调用方法</div></li></ul><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 12pt;">@OnClose</font></div><div><font style="font-size: 12pt;">public void onClose(){</font></div><div><font style="font-size: 12pt;">    chatSocket.remove(userId); //从set中删除</font></div><div><font style="font-size: 12pt;">    subOnlineCount(); //在线数减</font></div><div><font style="font-size: 12pt;">    log.info(&quot;有一连接关闭！当前在线人数为&quot; + getOnlineCount().toString());</font></div><div><font style="font-size: 12pt;">}</font></div></div><ul><li><div>获取到客户端信息调用的方法</div></li></ul><div style="margin-left: 40px;">//<span style="color: rgb(255, 70, 53);">再次强调，浏览器只能和它自己的socket通信</span></div><div style="margin-left: 40px;">//此处将信息发送给连接池中的所有用户</div><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 12pt;">@OnMessage</font></div><div><font style="font-size: 12pt;">public void onMessage(String message) {</font></div><div><font style="font-size: 12pt;">    log.info(&quot;来自客户端&quot;+userId+&quot;的消息:&quot; + message);</font></div><div><font style="font-size: 12pt;">    //群发消息</font></div><div><font style="font-size: 12pt;">    for(ChatSocket item: chatSocket.values()){</font></div><div><font style="font-size: 12pt;">        try {</font></div><div><font style="font-size: 12pt;">            item.sendMessage(message);</font></div><div><font style="font-size: 12pt;">        } catch (IOException e) {</font></div><div><font style="font-size: 12pt;">            e.printStackTrace();</font></div><div><font style="font-size: 12pt;">        }</font></div><div><font style="font-size: 12pt;">    }</font></div><div><font style="font-size: 12pt;">}</font></div></div><ul><li><div>发送信息（没有添加注解，不属于被监听的方法）</div></li></ul><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 12pt;">public void sendMessage(String message) throws IOException{</font></div><div><font style="font-size: 12pt;">    this.session.getBasicRemote().sendText(message);</font></div><div><font style="font-size: 12pt;">    //this.session.getAsyncRemote().sendText(message);</font></div><div><font style="font-size: 12pt;">}</font></div></div><div><br/></div></div><div><br/></div><div>完整实例：</div><div><a href="05.2websocket通信（服务端）_files/ChatSocket.java"><img src="05.2websocket通信（服务端）_files/b43a2ce316f6910bf82a2686c16b63c3.png" alt="ChatSocket.java"></a></div><div><br/></div></span>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://yoursite.com">jacketzc</a></p><p> <span>Link:  </span><a href="http://yoursite.com/2020/07/23/05.2websocket%E9%80%9A%E4%BF%A1%EF%BC%88%E6%9C%8D%E5%8A%A1%E7%AB%AF%EF%BC%89/">http://yoursite.com/2020/07/23/05.2websocket%E9%80%9A%E4%BF%A1%EF%BC%88%E6%9C%8D%E5%8A%A1%E7%AB%AF%EF%BC%89/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2020/07/27/3.1%E5%88%9B%E5%BB%BA%E5%A4%9A%E6%A8%A1%E5%9D%97%E9%A1%B9%E7%9B%AE/" title="3.1创建多模块项目"><span>< PreviousPost</span><br><span class="prevTitle">3.1创建多模块项目</span></a><a class="nextSlogan" href="/2020/07/23/05.1websocket%E9%80%9A%E4%BF%A1%EF%BC%88%E6%B5%8F%E8%A7%88%E5%99%A8%E7%AB%AF%EF%BC%89/" title="05.1websocket通信（浏览器端）"><span>NextPost ></span><br><span class="nextTitle">05.1websocket通信（浏览器端）</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">05.2websocket通信（服务端）</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="jacketzc"><meta name="renderer" content="webkit"><meta name="copyright" content="jacketzc"><meta name="keywords" content="jacketzc的blog"><meta name="description" content="java，分布式，vue，idea，多线程开发，mybatis，spring，ssm，SpringMVC"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>jacketzc's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.0.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">jacketzc</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">Longlongyu</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">jacketzc's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1>jacketzc's Blog</h1><h5>Welcome to my Blog!</h5><div class="intro-social"><a class="fa fa-envelope" href="mailto://jacketzc@outlook.com" title="email"></a><a class="fa fa-github" href="//github.com/jacketzc" target="_blank" title="github"></a><a class="fa fa-twitter" href="//twitter.com/jacketzc" target="_blank" title="twitter"></a></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><section id="recent-posts"><div class="recent-post-item"><div class="post-title"><a href="/2020/07/08/1.2%E6%B3%A8%E5%85%A5bean%E5%B1%9E%E6%80%A7%E7%9A%84%E6%96%B9%E5%BC%8F/">1.2注入bean属性的方式</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-07-08T02:43:00.000Z">2020-07-08</time></div><div class="recent-post-content">1.2注入bean属性的方式
+1.通过property注入普通属性（未封装类型，如String、int）以及一个对象（封装类型）&lt;bean id=&quot;person&quot; class=&quot;com.jac.bean.Person&quot;&gt;    &lt;!--        给实例对象的属性赋值，实际调用setter方法--&gt;    &lt;!--        &lt;property name=&quot;who&quot; value=&quot;hello_world&quot;/&gt;--&gt;    &lt;property name=& ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="spring"> spring</a></div><div class="read-more"><a class="more" href="/2020/07/08/1.2%E6%B3%A8%E5%85%A5bean%E5%B1%9E%E6%80%A7%E7%9A%84%E6%96%B9%E5%BC%8F/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/07/08/1.1Spring%E7%9A%84%E6%80%9D%E6%83%B3/">1.1Spring的思想</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-07-08T01:40:00.000Z">2020-07-08</time></div><div class="recent-post-content">1.1Spring的思想
+#控制反转（IOC）控制：创建对象的过程反转：由原来的主动获取对象反转为容器创建对象后装填到引用上
+</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="spring"> spring</a></div><div class="read-more"><a class="more" href="/2020/07/08/1.1Spring%E7%9A%84%E6%80%9D%E6%83%B3/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/07/08/1.0%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B/">1.0基本流程</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-07-08T01:05:00.000Z">2020-07-08</time></div><div class="recent-post-content">1.0基本流程
+创建一个bean.xml&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="spring"> spring</a></div><div class="read-more"><a class="more" href="/2020/07/08/1.0%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/07/07/5.0%E5%85%B3%E4%BA%8Ehead%E7%9A%84%E7%90%86%E8%A7%A3/">5.0关于head的理解</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-07-07T09:26:00.000Z">2020-07-07</time></div><div class="recent-post-content">5.0关于head的理解
+head是一个指向当前commit版本的指针head先指向某个分支，再通过这个分支指向最新的commit（或者回退后的commit）//如果head直接指向commit，那么在开辟新的分支时，再commit就不知道怎么提交了游离的head指针：使用git checkout &lt;commit id&gt;即可将head直接指向一个commit//在游离的head上commit不会影响原来的分支，这个特性对测试很有用//使用git checkout -b &lt;new-branch-name&gt;将游离的head指针指向一个新的分支来保存
+</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="git"> git</a></div><div class="read-more"><a class="more" href="/2020/07/07/5.0%E5%85%B3%E4%BA%8Ehead%E7%9A%84%E7%90%86%E8%A7%A3/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/07/07/0.0git%E8%89%AF%E5%A5%BD%E4%BD%BF%E7%94%A8%E4%B9%A0%E6%83%AF/">0.0git良好使用习惯</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-07-07T08:35:00.000Z">2020-07-07</time></div><div class="recent-post-content">0.0git良好使用习惯
+1.每次打开项目时，先pull一次合并远程仓库的更新2.每次结束项目时，commit一次，并且push一次
+</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="git"> git</a></div><div class="read-more"><a class="more" href="/2020/07/07/0.0git%E8%89%AF%E5%A5%BD%E4%BD%BF%E7%94%A8%E4%B9%A0%E6%83%AF/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/07/07/4.2%E5%86%B2%E7%AA%81%E8%A7%A3%E5%86%B3/">4.2冲突解决</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-07-07T08:34:00.000Z">2020-07-07</time></div><div class="recent-post-content">4.2冲突解决
+有几种情况可能会出现冲突1.pull的时候冲突2.commit时的冲突（本质上还是pull的冲突）3.merge时的冲突#pull冲突本地的内容没有价值或者修改非常轻微，强拉// 从远程拉取所有内容 git fetch --all // reset 本地代码 git reset --hard origin/master // 重启拉取对齐 git pull还没有commit本地代码少量修改1.取消本次操作：git revert2.git pull本地代码大量修改1.暂存本地：git stash2.git pull3.还原暂存：git stash pop//使用上一次的暂存4.g ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="git"> git</a></div><div class="read-more"><a class="more" href="/2020/07/07/4.2%E5%86%B2%E7%AA%81%E8%A7%A3%E5%86%B3/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/07/07/3.1%E6%A1%88%E4%BE%8B%EF%BC%9Aidea%E9%85%8D%E5%90%88%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93%E4%BD%BF%E7%94%A8/">3.1案例：idea配合远程仓库使用</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-07-07T07:22:00.000Z">2020-07-07</time></div><div class="recent-post-content">3.1案例：idea配合远程仓库使用
+1.在码云创建一个仓库（添加.gitignore、README.MD）2.clone到本地3.idea创建项目时，选中该文件夹作为项目的根目录4.项目建好后，将.idea、target这些目录添加到.gitignore中
+</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="git"> git</a></div><div class="read-more"><a class="more" href="/2020/07/07/3.1%E6%A1%88%E4%BE%8B%EF%BC%9Aidea%E9%85%8D%E5%90%88%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93%E4%BD%BF%E7%94%A8/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/07/06/3.0%E5%8A%A8%E6%80%81sql/">3.0动态sql</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-07-06T00:38:00.000Z">2020-07-06</time></div><div class="recent-post-content">3.0动态sql
+动态sql就是根据需要动态生成SQL！任何没有使用动态SQL标签的语句都需要当心它潜在的问题#if如果满足if中的条件，则添加标签中的SQL//if中的条件，默认获取对象中的属性，比如在入参对象user中的name属性//如果入参是一个基本类型，比如说String，那么必须指定别名&lt;select id=&quot;queryStuByConditionIfWhere&quot; resultType=&quot;student&quot;&gt;    select &lt;include refid=&quot;prStu&quot;/&gt;    from stu ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="mybatis"> mybatis</a></div><div class="read-more"><a class="more" href="/2020/07/06/3.0%E5%8A%A8%E6%80%81sql/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/07/03/2.2resultMap/">2.2resultMap</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-07-03T06:10:00.000Z">2020-07-03</time></div><div class="recent-post-content">2.2resultMap
+自定义结果集映射为啥要resultMap？1.解决列名与实体名不一致2.查询的结果是平铺的，需要的结果可能是非常立体的//使用resultType可以将查询的结果映射到一个POJO对象（以各种基本类型为属性）中，如果出现一个实体中包含一个实体的情况，就需要resultMap一次最简单的使用&lt;select id=&quot;queryStuByStuNOMap&quot; resultMap=&quot;studentDetail&quot;&gt;    select * from students where stu_no = #{stu_no}&lt;/se ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="mybatis"> mybatis</a></div><div class="read-more"><a class="more" href="/2020/07/03/2.2resultMap/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/07/03/2.3resultMap%EF%BC%88%E4%B8%80%E4%B8%AA%E5%A4%8D%E6%9D%82%E7%9A%84%E4%BE%8B%E5%AD%90%EF%BC%89/">2.3resultMap（一个复杂的例子）</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-07-03T03:11:00.000Z">2020-07-03</time></div><div class="recent-post-content">2.3resultMap（一个复杂的例子）
+&lt;!-- 非常复杂的语句 --&gt;&lt;select id=&quot;selectBlogDetails&quot; resultMap=&quot;detailedBlogResultMap&quot;&gt;  select       B.id as blog_id,       B.title as blog_title,       B.author_id as blog_author_id,       A.id as author_id,       A.username as author_username,       ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="mybatis"> mybatis</a></div><div class="read-more"><a class="more" href="/2020/07/03/2.3resultMap%EF%BC%88%E4%B8%80%E4%B8%AA%E5%A4%8D%E6%9D%82%E7%9A%84%E4%BE%8B%E5%AD%90%EF%BC%89/#more">ReadMore</a></div><hr></div></section><nav class="cxo-page-nav"><a class="extend prev" rel="prev" href="/page/4/">&lt; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><a class="extend next" rel="next" href="/page/6/">下一页 &gt;</a></nav></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

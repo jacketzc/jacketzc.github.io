@@ -1,0 +1,112 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="jacketzc"><meta name="renderer" content="webkit"><meta name="copyright" content="jacketzc"><meta name="keywords" content="jacketzc的blog"><meta name="description" content="java，分布式，vue，idea，多线程开发，mybatis，spring，ssm，SpringMVC"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>jacketzc's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.0.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">jacketzc</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">Longlongyu</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">jacketzc's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1>jacketzc's Blog</h1><h5>Welcome to my Blog!</h5><div class="intro-social"><a class="fa fa-envelope" href="mailto://jacketzc@outlook.com" title="email"></a><a class="fa fa-github" href="//github.com/jacketzc" target="_blank" title="github"></a><a class="fa fa-twitter" href="//twitter.com/jacketzc" target="_blank" title="twitter"></a></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><section id="recent-posts"><div class="recent-post-item"><div class="post-title"><a href="/2020/06/30/1.1%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE%EF%BC%88%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%BF%90%E8%A1%8C%EF%BC%89/">1.1安装与配置（第一次运行）</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-06-30T02:10:00.000Z">2020-06-30</time></div><div class="recent-post-content">1.1安装与配置（第一次运行）
+官方教程：#1.在resources目录下创建mybatis-config.xml&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;&lt;!DOCTYPE configuration  PUBLIC &quot;-//mybatis.org//DTD Config 3.0//EN&quot;  &quot;http://mybatis.org/dtd/mybatis-3-config.dtd&quot;&gt;&lt;configuration&gt;  &lt;environme ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="mybatis"> mybatis</a></div><div class="read-more"><a class="more" href="/2020/06/30/1.1%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE%EF%BC%88%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%BF%90%E8%A1%8C%EF%BC%89/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/06/29/2.1Git%E6%9C%AC%E5%9C%B0%E9%AB%98%E7%BA%A7%E6%93%8D%E4%BD%9C/">2.1Git本地高级操作</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-06-29T02:12:00.000Z">2020-06-29</time></div><div class="recent-post-content">2.1Git本地高级操作
+git reflog//此方式能看到所有的commit、回退记录 git reset 用法：1.git reset --soft 版本号将HEAD引用指向给定提交。索引（暂存区）和工作目录的内容是不变的//每次commit都会生成一个版本号（一般是开头的7位，版本号不一定需要完整输入，输入4-5位足够软件判断即可）2.git reset --mixed（默认） 版本号HEAD引用指向给定提交，并且索引（暂存区）内容也跟着改变，工作目录内容不变。3.git reset --hard 版本号回退版本，HEAD引用指向给定提交，索引（暂存区）内容和工作目录内容都会变给定提交 ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="git"> git</a></div><div class="read-more"><a class="more" href="/2020/06/29/2.1Git%E6%9C%AC%E5%9C%B0%E9%AB%98%E7%BA%A7%E6%93%8D%E4%BD%9C/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/06/28/04.2vue%E5%AE%9E%E7%8E%B0ajax/">04.2vue实现ajax</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-06-28T02:20:00.000Z">2020-06-28</time></div><div class="recent-post-content">04.2vue实现ajax
+参考：https://www.runoob.com/vue2/vuejs-ajax.html如果需要实现异步的ajax请求，则需要使用vue-resource.js//&lt;script src=&quot;https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js&quot;&gt;&lt;/script&gt;处理post请求：this.$http.post(url,{},{emulataJSON:true}).then(function{res})//第二个参数为json对象，即要发送的 ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="WEB"> WEB</a></div><div class="read-more"><a class="more" href="/2020/06/28/04.2vue%E5%AE%9E%E7%8E%B0ajax/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/06/24/04.4JSON%E4%B8%8Ejava%E5%AF%B9%E8%B1%A1%E8%BD%AC%E6%8D%A2/">04.4JSON与java对象转换</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-06-24T09:28:00.000Z">2020-06-24</time></div><div class="recent-post-content">04.4JSON与java对象转换
+使用的Hutool-json包中的方法（其他的实现方案比如fastJson大同小异）#JSONObjectmap形式的单个json对象JSONObject（Object）//构造函数，将bean对象转化为JSONObject.getInt(&quot;key&quot;).getStr(&quot;key&quot;).getLong(&quot;key&quot;)void toString（）//以json格式打印，无缩进#JSONArraylist形式的数组（可以存放json数组和json对象数组）//括号中的json数组指的是['a','b','c' ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="WEB"> WEB</a></div><div class="read-more"><a class="more" href="/2020/06/24/04.4JSON%E4%B8%8Ejava%E5%AF%B9%E8%B1%A1%E8%BD%AC%E6%8D%A2/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/06/24/04.3JSON%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F/">04.3JSON数据格式</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-06-24T08:58:00.000Z">2020-06-24</time></div><div class="recent-post-content">04.3JSON数据格式
+JavaScript对象表示法客户端和服务端通信的数据形式（用于取代xml）//js处理不了request对象中的数据#JSON对象var person = {&quot;name&quot;:&quot;jac&quot;,&quot;sex&quot;:&quot;man&quot;，age:15}#JSON数组：var jsonArray = [&quot;123&quot;,&quot;456&quot;,789]#JSON对象数组var human = [{}，{}，{}]#获取json中的元素：对象.属性名let name = person.name//和 ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="WEB"> WEB</a></div><div class="read-more"><a class="more" href="/2020/06/24/04.3JSON%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/06/24/04.1jQuery%E5%AE%9E%E7%8E%B0Ajax/">04.1jQuery实现Ajax</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-06-24T05:44:00.000Z">2020-06-24</time></div><div class="recent-post-content">04.1jQuery实现Ajax
+在很多情况下，使用该ajax只是想从服务器获取一个响应数据而已，那么用原生js操作就会显得很繁琐，因此，jQuery提供了很多便利的方法.load(url)//从服务器发送请求，并且将返回的数据填入指定的元素$(&quot;button&quot;).click(function(){  $(&quot;div&quot;).load('demo_ajax_load.txt');});$.get(url,function(data){})//使用get方式向服务器发送请求，如果成功获取数据，则执行回调函数$(&quot;button&quot;).click( ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="WEB"> WEB</a></div><div class="read-more"><a class="more" href="/2020/06/24/04.1jQuery%E5%AE%9E%E7%8E%B0Ajax/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/06/24/03.1%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%EF%BC%88%E5%8E%9F%E5%AD%90%E6%80%A7%EF%BC%89/">03.1线程安全（原子性）</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-06-24T03:03:00.000Z">2020-06-24</time></div><div class="recent-post-content">03.1线程安全（原子性）
+在 02.3并发模拟4（代码工具）的模拟基础上，将用于计数的count（int）更换为AtomicInteger类型//来自java.util.concurrent.atomic.AtomicInteger;#AtomicInteger可以原子更新的int类型AtomicInteger（int）//构造函数，用于指定初始值（默认为0）int getAntIncrement()//获取当前值并且将当前值+1//该方法底层使用unsafe.getAndAddInt(obj，long，int)方法public final int getAndAddInt(Object o ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="多线程"> 多线程</a></div><div class="read-more"><a class="more" href="/2020/06/24/03.1%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%EF%BC%88%E5%8E%9F%E5%AD%90%E6%80%A7%EF%BC%89/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/06/24/03.0%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/">03.0线程安全</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-06-24T02:57:00.000Z">2020-06-24</time></div><div class="recent-post-content">03.0线程安全
+#定义当多个线程访问同一个类时，不管运行时采用哪种调度方式，或者这些进程将如何交替执行，并且在主调代码中不需要任何额外的同步，这个类都能表现出正确的行为#原子性互斥访问，同一时刻只能有一个线程对它进行操作#可见性一个线程对主存的修改能及时被其他线程观察到#有序性一个线程会观察其他线程中指令的执行顺序//犹豫指令重排序的存在，该观察结果一般杂乱无序
+</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="多线程"> 多线程</a></div><div class="read-more"><a class="more" href="/2020/06/24/03.0%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/06/23/02.2%E5%B9%B6%E5%8F%91%E6%A8%A1%E6%8B%9F3%EF%BC%88JMeter%EF%BC%9A%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%EF%BC%89/">02.2并发模拟3（JMeter：压力测试工具）</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-06-23T11:36:00.000Z">2020-06-23</time></div><div class="recent-post-content">02.2并发模拟3（JMeter：压力测试工具）
+点击jmeter.bat来启动jmeter右击testplan添加一次测试任务//ramp-up时间表示所有线程启动的间隔的总和（5个线程10s表示每隔2s启动一个新的线程）//循环次数表示单个线程重复任务的次数右击测试任务
+</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="多线程"> 多线程</a></div><div class="read-more"><a class="more" href="/2020/06/23/02.2%E5%B9%B6%E5%8F%91%E6%A8%A1%E6%8B%9F3%EF%BC%88JMeter%EF%BC%9A%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%EF%BC%89/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/06/23/02.3%E5%B9%B6%E5%8F%91%E6%A8%A1%E6%8B%9F4%EF%BC%88%E4%BB%A3%E7%A0%81%E5%B7%A5%E5%85%B7%EF%BC%89/">02.3并发模拟4（代码工具）</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-06-23T11:36:00.000Z">2020-06-23</time></div><div class="recent-post-content">02.3并发模拟4（代码工具）
+#Semaphore信号量，用于限制同时执行线程的个数Semaphore(int，[bool])//构造函数，第一个参数为许可证的数量，第二个参数为线程获取模式，默认为unfair（在fair的情况下，下一个执行的线程是等待时间最久的线程）void acquire()//为当前线程发放许可证（一般放到该线程需要执行的操作前）//此方法有阻塞效果，如果当前线程无法获取许可证，它将会wait，直到有其他线程释放许可void release()//收回当前线程的许可（一般放到线程执行的操作后方）#CountDownLatch用于阻塞线程，使得所有的线程全部完成任务后再 ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="多线程"> 多线程</a></div><div class="read-more"><a class="more" href="/2020/06/23/02.3%E5%B9%B6%E5%8F%91%E6%A8%A1%E6%8B%9F4%EF%BC%88%E4%BB%A3%E7%A0%81%E5%B7%A5%E5%85%B7%EF%BC%89/#more">ReadMore</a></div><hr></div></section><nav class="cxo-page-nav"><a class="extend prev" rel="prev" href="/page/6/">&lt; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><a class="extend next" rel="next" href="/page/8/">下一页 &gt;</a></nav></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

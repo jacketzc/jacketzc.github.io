@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="jacketzc"><meta name="renderer" content="webkit"><meta name="copyright" content="jacketzc"><meta name="keywords" content="jacketzc的blog"><meta name="description" content="java，分布式，vue，idea，多线程开发，mybatis，spring，ssm，SpringMVC"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>1.5视图和视图解析器 · jacketzc's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.0.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">jacketzc</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">Longlongyu</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">jacketzc's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">1.5视图和视图解析器</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2020-07-15</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="SpringMVC"> SpringMVC</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">570</span> | Reading time: <span class="post-count">2</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><h1>1.5视图和视图解析器</h1>
+<span><div><div>#视图解析器（Interface ViewResolver）</div><div>唯一作用就是逻辑视图解析为一个具体的视图对象</div><div>//controller装填数据后，return给视图解析器，视图解析器解析出请求的视图路径以及视图</div><div>//SpringMVC 为逻辑视图名的解析提供了不同的策略，可 以在 Spring WEB 上下文中配置一种或多种解析策略，并 指定他们之间的先后顺序。每一种映射策略对应一个具体 的视图解析器实现类</div><div>常见视图解析器（实现类）：</div><ul><li><div>InternalResourceViewResolver</div></li></ul><div style="margin-left: 40px;">将视图名解析为一个URL文件、一般使用该视图解析器将视图名映射为一个保存在WEB-INF目录下的程序文件（如JSP）</div><ul><li><div>BeanNameViewResolver</div></li></ul><div style="margin-left: 40px;">将逻辑视图名解析为一个Bean，Bean的id等于逻辑视图名</div><div><br/></div><div>#视图（Interface View）</div><ul><li><div>作用：</div></li><ul><li><div>将模型里的数据存放到request</div></li><li><div>转发、重定向</div></li></ul></ul><div style="margin-left: 80px;">//虽然SpringMVC定义了这么多的视图，但是它的作用就是上面这两个</div><ul><li><div>常用的视图实现类</div></li><ul><li><div>InterResourcesView</div></li></ul></ul><div style="margin-left: 80px;">//JSP或其他资源封装成一个视图，是InterResourcesViewResolver默认使用的视图实现类</div><ul><ul><li><div>JstlView</div></li></ul></ul><div style="margin-left: 80px;">//如果JSP文件中使用了JSTL标签，则会使用该视图</div><ul><ul><li><div>AbstractXlsView</div></li></ul></ul><div style="margin-left: 80px;">//Excel文档视图的抽象类。该视图类基于POI构造Excel文档</div><div style="margin-left: 80px;">//可以自定义该抽象类的实现类（实现构建Excel的方法），并且在Controller层将该视图直接传递给ModelAndView，返回给mav时，SpringMVC会交给相应的视图解析器处理</div><div><br/></div><div>#直接转发</div><div>//相当于一个轻量级的@RequestMapping，对请求不作任何处理，直接转发</div><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 12pt;">//SpringMVC.xml</font></div><div><font style="font-size: 12pt;">&lt;!--    使用此配置会使得@RequestMapping注解映射失效--&gt;</font></div><div><font style="font-size: 12pt;">    &lt;mvc:view-controller path=&quot;testViewController&quot; view-name=&quot;success&quot;/&gt;</font></div><div><font style="font-size: 12pt;">//添加此额外的配置使得映射重新生效</font></div><div><font style="font-size: 12pt;">    &lt;mvc:annotation-driven/&gt;</font></div></div><div><br/></div></div><div><br/></div><div>#重定向</div><div>一般情况下，controller返回的字符串会被当做逻辑视图名（也就是还没处理的转发地址）处理</div><div>当该字串以“redirect:”字样开头，如“redirect:success.jsp”，SpringMVC会执行重定向方法</div><div>//此方法不走视图解析器，需要指定重定向的URL路径</div><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 12pt;">@RequestMapping(&quot;testRedirect&quot;)</font></div><div><font style="font-size: 12pt;">public String testRedirect() {</font></div><div><font style="font-size: 12pt;">    return &quot;redirect:<font color="#FF4635">index.jsp</font>&quot;;</font></div><div><font style="font-size: 12pt;">}</font></div></div><div><br/></div><div><br/></div></span>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://yoursite.com">jacketzc</a></p><p> <span>Link:  </span><a href="http://yoursite.com/2020/07/15/1.5%E8%A7%86%E5%9B%BE%E5%92%8C%E8%A7%86%E5%9B%BE%E8%A7%A3%E6%9E%90%E5%99%A8/">http://yoursite.com/2020/07/15/1.5%E8%A7%86%E5%9B%BE%E5%92%8C%E8%A7%86%E5%9B%BE%E8%A7%A3%E6%9E%90%E5%99%A8/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2020/07/15/1.6SpringMVC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="1.6SpringMVC工作原理"><span>< PreviousPost</span><br><span class="prevTitle">1.6SpringMVC工作原理</span></a><a class="nextSlogan" href="/2020/07/15/1.4ModelAndView/" title="1.4ModelAndView"><span>NextPost ></span><br><span class="nextTitle">1.4ModelAndView</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">1.5视图和视图解析器</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>
