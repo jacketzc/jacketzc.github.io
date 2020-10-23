@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="jacketzc"><meta name="renderer" content="webkit"><meta name="copyright" content="jacketzc"><meta name="keywords" content="jacketzc的blog"><meta name="description" content="java，分布式，vue，idea，多线程开发，mybatis，spring，ssm，SpringMVC,dubbox ,Spring Cloud"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>6.1springboot集成swagger · jacketzc's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.0.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">jacketzc</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">Longlongyu</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">jacketzc's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">6.1springboot集成swagger</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2020-09-03</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="分布式微服务"> 分布式微服务</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">538</span> | Reading time: <span class="post-count">2</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><h1>6.1springboot集成swagger</h1>
+<span><div><div>## 是啥</div><div>swagger提供文档生成接口，广泛用于前后台对接</div><div><br/></div><div>## 依赖</div><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 14pt;">&lt;dependency&gt;</font></div><div><font style="font-size: 14pt;">    &lt;groupId&gt;io.springfox&lt;/groupId&gt;</font></div><div><font style="font-size: 14pt;">    &lt;artifactId&gt;springfox-swagger2&lt;/artifactId&gt;</font></div><div><font style="font-size: 14pt;">    &lt;version&gt;2.9.2&lt;/version&gt;</font></div><div><font style="font-size: 14pt;">&lt;/dependency&gt;</font></div></div><div><br/></div><div>## 配置</div><div>//开启swagger注解</div><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 14pt;">@EnableSwagger2</font></div><div><font style="font-size: 14pt;">@Configuration</font></div><div><font style="font-size: 14pt;">@EnableSwaggerBootstrapUI</font></div><div><font style="font-size: 14pt;">//这个bootstrapUI的注解是额外的，如果使用原生swagger则不需要</font></div><div><font style="font-size: 14pt;">public class SwaggerConfigure {}</font></div></div><div><br/></div><div><br/></div><div>## 使用</div><ul><li><div>在实体类中（vo）</div></li><ul><li><div>@ApiModel用于实体类</div></li><li><div>@ApiModelProperty用于指定属性别名</div></li></ul></ul><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 14pt;">@ApiModel(&quot;用户信息表&quot;)</font></div><div><font style="font-size: 14pt;">public class UserVo {</font></div><div><font style="font-size: 14pt;">    private Integer id;</font></div><div><font style="font-size: 14pt;">    @ApiModelProperty(&quot;用户姓名&quot;)</font></div><div><font style="font-size: 14pt;">    private String name;</font></div><div><font style="font-size: 14pt;">}</font></div></div><ul><li><div>在控制层</div></li><ul><li><div>@Api用于控制层的类</div></li><ul><li><div>tags相同的类会被同一目录收纳</div></li></ul><li><div>@ApiOperation用于方法</div></li><li><div>@ApiParam用于入参</div></li><li><div>@ApiIgnore 用于忽略此参数的文档</div></li><li><div>@ApiResponses用于指定返回code的说明</div></li><ul><li><div>@ApiResponse(code = 401, message = &quot;未经授权&quot;)</div></li></ul></ul></ul><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 14pt;">@Api(</font><font style="font-size: 14pt;">tags = &quot;1.0&quot;)</font></div><div><font style="font-size: 14pt;">@Controller</font></div><div><font style="font-size: 14pt;">public class UserController {</font></div><div><font style="font-size: 14pt;">    @ApiOperation(value = &quot;查询用户&quot;,notes = &quot;支持多查&quot;)</font></div><div><font style="font-size: 14pt;">    @GetMapping(&quot;/user&quot;)</font></div><div><font style="font-size: 14pt;">    public void queryUserInfo(@RequestParam @ApiParam String id) {</font></div><div><font style="font-size: 14pt;"><br/></font></div><div><font style="font-size: 14pt;">    }</font></div><div><font style="font-size: 14pt;">}</font></div></div><div><br/></div><div><br/></div><div>## swagger-ui</div><ul><li><div>原生swagger-ui（界面不太友好）</div></li><ul><li><div>依赖：</div></li></ul></ul><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 14pt;">&lt;dependency&gt;</font></div><div><font style="font-size: 14pt;">    &lt;groupId&gt;io.springfox&lt;/groupId&gt;</font></div><div><font style="font-size: 14pt;">    &lt;artifactId&gt;springfox-swagger-ui&lt;/artifactId&gt;</font></div><div><font style="font-size: 14pt;">    &lt;version&gt;2.9.2&lt;/version&gt;</font></div><div><font style="font-size: 14pt;">&lt;/dependency&gt;</font></div></div><ul><ul><li><div>地址：swagger-ui.html</div></li></ul></ul><div><br/></div><ul><li><div>bootstrap-ui</div></li><ul><li><div>依赖：</div></li></ul></ul><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 14pt;">&lt;dependency&gt;</font></div><div><font style="font-size: 14pt;">    &lt;groupId&gt;com.github.xiaoymin&lt;/groupId&gt;</font></div><div><font style="font-size: 14pt;">    &lt;artifactId&gt;swagger-bootstrap-ui&lt;/artifactId&gt;</font></div><div><font style="font-size: 14pt;">    &lt;version&gt;1.9.2&lt;/version&gt;</font></div><div><font style="font-size: 14pt;">&lt;/dependency&gt;</font></div></div><ul><ul><li><div>配置：在SwaggerConfigure上添加额外的依赖@EnableSwaggerBootstrapUI</div></li><ul><li><div>此处添加了很多额外的自定义配置</div></li></ul></ul></ul><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 14pt;">@EnableSwagger2</font></div><div><font style="font-size: 14pt;">@Configuration</font></div><div><font style="font-size: 14pt;">@EnableSwaggerBootstrapUI</font></div><div><font style="font-size: 14pt;">public class SwaggerConfigure {</font></div><div><font style="font-size: 14pt;"><span style="color: rgb(51, 51, 51); font-family: Monaco;"><span>    </span></span>@Bean</font></div><div><font style="font-size: 14pt;"><span>    </span>public Docket createRestApi(){</font></div><div><font style="font-size: 14pt;">    <span>    </span>return new <span>  </span> Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo())</font></div><div><font style="font-size: 14pt;">            .select()</font></div><div><font style="font-size: 14pt;">            .apis(RequestHandlerSelectors.any())</font></div><div><font style="font-size: 14pt;">            .paths(PathSelectors.any()).build();</font></div><div><font style="font-size: 14pt;">}</font></div><div><font style="font-size: 14pt;"><br/></font></div><div><font style="font-size: 14pt;"><br/></font></div><div><font style="font-size: 14pt;"><span>    </span>private ApiInfo apiInfo(){</font></div><div><font style="font-size: 14pt;">    <span>    </span>return new ApiInfoBuilder()</font></div><div><font style="font-size: 14pt;">            .title(&quot;SpringCloud Cry&quot;)</font></div><div><font style="font-size: 14pt;">            .description(&quot;This is a restful api document of Spring Boot.&quot;)</font></div><div><font style="font-size: 14pt;">            .version(&quot;1.0&quot;)</font></div><div><font style="font-size: 14pt;">            .build();</font></div><div><font style="font-size: 14pt;"><span>    </span>}</font></div><div><font style="font-size: 14pt;">}</font></div></div><ul><ul><li><div>地址：doc.html</div></li></ul></ul><div><br/></div></div><div>## 注意：如果使用SpringCloud微服务，需要添加额外的依赖，完整的依赖应该是这样：</div><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 14pt;">&lt;!--swagger2 --&gt;</font></div><div><font style="font-size: 14pt;">&lt;dependency&gt;</font></div><div><font style="font-size: 14pt;">    &lt;groupId&gt;io.springfox&lt;/groupId&gt;</font></div><div><font style="font-size: 14pt;">    &lt;artifactId&gt;springfox-swagger2&lt;/artifactId&gt;</font></div><div><font style="font-size: 14pt;">    &lt;version&gt;2.9.2&lt;/version&gt;</font></div><div><font style="font-size: 14pt;">&lt;/dependency&gt;</font></div><div><font style="font-size: 14pt;">&lt;dependency&gt;</font></div><div><font style="font-size: 14pt;">    &lt;groupId&gt;com.github.xiaoymin&lt;/groupId&gt;</font></div><div><font style="font-size: 14pt;">    &lt;artifactId&gt;swagger-bootstrap-ui&lt;/artifactId&gt;</font></div><div><font style="font-size: 14pt;">    &lt;version&gt;1.9.2&lt;/version&gt;</font></div><div><font style="font-size: 14pt;">&lt;/dependency&gt;</font></div><div><font style="font-size: 14pt;">&lt;dependency&gt;</font></div><div><font style="font-size: 14pt;">    &lt;groupId&gt;com.google.guava&lt;/groupId&gt;</font></div><div><font style="font-size: 14pt;">    &lt;artifactId&gt;guava&lt;/artifactId&gt;</font></div><div><font style="font-size: 14pt;">    &lt;version&gt;27.1-jre&lt;/version&gt;</font></div><div><font style="font-size: 14pt;">&lt;/dependency&gt;</font></div><div><font style="font-size: 14pt;">&lt;!--swagger2 --&gt;</font></div></div><div><br/></div></span>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://yoursite.com">jacketzc</a></p><p> <span>Link:  </span><a href="http://yoursite.com/2020/09/03/6.1springboot%E9%9B%86%E6%88%90swagger/">http://yoursite.com/2020/09/03/6.1springboot%E9%9B%86%E6%88%90swagger/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2020/09/03/1.4springboot%E9%85%8D%E7%BD%AE%E7%B1%BB/" title="1.4springboot配置类"><span>< PreviousPost</span><br><span class="prevTitle">1.4springboot配置类</span></a><a class="nextSlogan" href="/2020/09/02/5.1%20vo%E3%80%81dto%E3%80%81param%E3%80%81pageUtil%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" title="5.1 vo、dto、param、pageUtil设计模式"><span>NextPost ></span><br><span class="nextTitle">5.1 vo、dto、param、pageUtil设计模式</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">6.1springboot集成swagger</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

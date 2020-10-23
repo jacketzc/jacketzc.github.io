@@ -1,0 +1,110 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="jacketzc"><meta name="renderer" content="webkit"><meta name="copyright" content="jacketzc"><meta name="keywords" content="jacketzc的blog"><meta name="description" content="java，分布式，vue，idea，多线程开发，mybatis，spring，ssm，SpringMVC,dubbox ,Spring Cloud"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>jacketzc's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.0.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">jacketzc</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">Longlongyu</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">jacketzc's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1>jacketzc's Blog</h1><h5>Welcome to my Blog!</h5><div class="intro-social"><a class="fa fa-envelope" href="mailto://jacketzc@foxmail.com" title="email"></a><a class="fa fa-github" href="//gitee.com/BlackLighting/" target="_blank" title="github"></a><a class="fa fa-twitter" href="//twitter.com/jacketzc" target="_blank" title="twitter"></a></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><section id="recent-posts"><div class="recent-post-item"><div class="post-title"><a href="/2019/11/13/22.2Stream%E6%B5%81%E5%85%A5%E9%97%A8/">22.2Stream流入门</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2019-11-13T01:08:00.000Z">2019-11-13</time></div><div class="recent-post-content">22.2Stream流入门
+jdk8之后允许将list转化为stream流，优雅地敲代码实例：List&lt;String&gt; strings = Arrays.asList(&quot;hello&quot;, &quot;xiaoming&quot;, &quot;small&quot;, &quot;xiaojiji&quot;,&quot;xiaoxxxx&quot;);要求：1.将以开头为“x”的字符串筛选到另一个串2.在此基础上，将长度为8的字符串筛选到另一个串3.打印最终结果4.每个要求分别执行通常的解法：1.创建list1，list22.遍历list，将满足条件1的结果放入 ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2019/11/13/22.2Stream%E6%B5%81%E5%85%A5%E9%97%A8/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2019/11/11/22.1jdk1.8%E6%96%B0%E7%89%B9%E6%80%A7/">22.1jdk1.8新特性</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2019-11-11T01:27:00.000Z">2019-11-11</time></div><div class="recent-post-content">22.1jdk1.8新特性
+函数式接口：有且只有一个抽象方法的接口//其他方法可以有//最大的目的在于Lambda表达式函数式接口的魅力在于“及时需求，及时获取”，在需要的地方临时创建一个方法，并使用它（虽然它看起来借助了一个匿名类）语法糖：原理不变，使用更便捷的代码比如：forEach表达式（本质上是遍历器遍历），lambda表达式//lambda相对于匿名类原理还是有区别的（lambda不生成匿名类那样的class文件），只是可以被看作语法糖@FunctionalInterface//函数式接口注解，和@Override类似，此注解用于检测被标记接口是否为函数式接口常用函数式接口：1.in ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2019/11/11/22.1jdk1.8%E6%96%B0%E7%89%B9%E6%80%A7/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2019/11/09/21.1BS%E6%9C%8D%E5%8A%A1%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/">21.1BS服务实现原理</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2019-11-09T02:48:00.000Z">2019-11-09</time></div><div class="recent-post-content">21.1BS服务实现原理
+流程：创建服务端的ServerSocket，指定一个端口创建通信用的socket获取输入流读取客户端发送的信息获取输出流向客户端回写信息ServerSocket serverSocket = new ServerSocket(8848);while (true){//保持服务器挂起           //浏览器请求不是一次性的，图片之类的得加载好几次Socket socket = serverSocket.accept();InputStream inputStream = socket.getInputStream();/*byte[] bytes = new b ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2019/11/09/21.1BS%E6%9C%8D%E5%8A%A1%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2019/11/07/21TCP%E9%80%9A%E4%BF%A1/">21TCP通信</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2019-11-07T10:36:00.000Z">2019-11-07</time></div><div class="recent-post-content">21TCP通信
+java使用字节流IO对象进行TCP通信//TCP通信前需要经过三次握手以保证通信的稳定性//这种IO流有InputStream和OutputStream服务器端：ServerSocket类客户端：Socket类//服务端不提供IO流，使用客户端Socket中提供的输入流读取客户端的发送数据，使用输出流会写数据//服务端根据不同的Socket对象与客户端交互表示客户端的类：java.net.Socket//此类实现客户端套接字（包含IP地址和端口号的网络单位）构造方法：Socket（String host，int port）//host：目标主机的ip地址，port：目标程序的 ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2019/11/07/21TCP%E9%80%9A%E4%BF%A1/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2019/11/05/20.5Lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F/">20.5Lambda表达式</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2019-11-05T00:41:00.000Z">2019-11-05</time></div><div class="recent-post-content">20.5Lambda表达式
+jdk1.8的新特性，主要用于简化匿名类的使用//在方法的参数或者返回值处使用，偶尔也会出现在将new的对象赋值给引用处使用条件：1.必须具有上下文推断//在new Thread(new Runnable(){})这里，匿名类拥有唯一接口Runnable//只要满足上下文判断的地方，都可以使用lambda2.必须具有函数式接口//有且只有一个抽象方法的接口叫函数式接口//只有一个抽象方法的抽象类不行哦3.必须作为参数时才能使用，单纯使用new Runnable()无法转换成lambda标准格式：(参数)-&gt;{方法体}以Runnable接口为例：new Runn ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2019/11/05/20.5Lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2019/11/05/20.4%E7%BA%BF%E7%A8%8B%E6%B1%A0/">20.4线程池</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2019-11-05T00:08:00.000Z">2019-11-05</time></div><div class="recent-post-content">20.4线程池
+就是存放多个线程的容器（可以由Collection或者Map来实现）//线程池的作用在于复用线程，使用结束的线程不会直接销毁，而是归还给线程池，这样减少了频繁创建销毁线程带来的开销//当多个任务需要从线程池中获取线程，并且线程池中的线程余量不足时，当前任务会等待至线程被归还jdk1.5之后就内置了线程池java.util.concurrent.Excutors：线程池的工厂类常用方法：static ExecutorsService newFixedThreadPool(int nThreads)//创建指定容量的线程池java.util.concuttent.ExcutorsS ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2019/11/05/20.4%E7%BA%BF%E7%A8%8B%E6%B1%A0/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2019/11/01/20.3%E7%BA%BF%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E7%AD%89%E5%BE%85%E4%B8%8E%E5%94%A4%E9%86%92%E6%9C%BA%E5%88%B6%EF%BC%89/">20.3线程通信（等待与唤醒机制）</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2019-11-01T02:42:00.000Z">2019-11-01</time></div><div class="recent-post-content">20.3线程通信（等待与唤醒机制）
+概念：多个线程处理同一个资源，但是处理的动作（线程任务）不相同//假如程序执行包饺子的任务，线程1擀面皮，线程2包成饺子线程的几种状态：NEW：线程对象创建但是尚未启动RUNNABLE：可运行状态（就绪），可运行状态的线程正在Java虚拟机中执行，但它可能正在等待来自操作系统（例如处理器）的其他资源（比如锁对象）。RUNNING：正在运行，线程分配到了cpu资源，正在运行BLOCKED：一个线程的线程状态阻塞等待监视器锁定。 处于阻塞状态的线程正在等待监视器锁定进入同步块/方法，或者在调用Object.wait后重新输入同步的块/方法。//说的通俗一点，之前 ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2019/11/01/20.3%E7%BA%BF%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E7%AD%89%E5%BE%85%E4%B8%8E%E5%94%A4%E9%86%92%E6%9C%BA%E5%88%B6%EF%BC%89/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2019/10/31/20.2%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/">20.2线程安全</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2019-10-31T01:21:00.000Z">2019-10-31</time></div><div class="recent-post-content">20.2线程安全
+当多个线程访问了共享数据时，就会产生线程安全问题//可能出现的问题：1.重复访问同一个时刻的值 2.访问了不存在的值出现的原因：1.多个线程同时访问同一个对象并且还没有来得及进行修改（重复的值）2.当前线程修改对象后满足条件已经退出，但是别的线程才刚刚访问该变量（不存在的值）线程同步机制//该机制主要提供两种功能//1.使得被同步的区域同一时间只能一个线程执行//2.提供锁机制﻿//上面的两种功能是独立的，有时候并没有访问冲突，只是需要锁机制来实现线程通信在使用线程同步时，需要先考虑有没有使用的必要？解决方式：1.同步代码块格式：    synchronized（锁对象）{  ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2019/10/31/20.2%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2019/10/30/20.1%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/">20.1多线程基本概念</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2019-10-30T09:14:00.000Z">2019-10-30</time></div><div class="recent-post-content">20.1多线程基本概念
+并发：同一时段执行（cpu在两个任务之间交替进行）并行：同时执行（两个不同的cpu同时执行两个不同的任务）进程：进入到内存中的程序叫进程线程：进程中的执行单元，一个进程可以有多个线程java单线程程序：从main方法开始，自上而下执行创建线程的两种方式：1.创建thread对象（通常情况下是创建一个子类对象）Thread thread = new Thread(){@Overridepublic void run(){}};2.实现Runnable接口Runnable仅有一个方法：run()，并且该接口并没有什么特殊意义//由于此接口中没有start()方法，所以想创建 ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2019/10/30/20.1%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2019/10/30/19.13%E6%89%93%E5%8D%B0%E6%B5%81/">19.13打印流</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2019-10-30T00:57:00.000Z">2019-10-30</time></div><div class="recent-post-content">19.13打印流
+一个最常见的打印流就是System.out//打印流不会抛出IO异常class PrintStream extends FileOutputStream构造方法：PrintStream(File)PrintStream(String fileName)PrintStream(OutputStream)//以上的构造方法都可以额外指定一个String参数以标明需要提供的编码方式特殊方法：print(T...)//打印对象//与开始的认知不同，print方法的默认输出位置不是控制台，而是一个文件//该方法的输出是原样输出，（输出97，不会变成a）println(T...)//打印 ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="JAVA编程思想"> JAVA编程思想</a></div><div class="read-more"><a class="more" href="/2019/10/30/19.13%E6%89%93%E5%8D%B0%E6%B5%81/#more">ReadMore</a></div><hr></div></section><nav class="cxo-page-nav"><a class="extend prev" rel="prev" href="/page/19/">&lt; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><a class="page-number" href="/page/19/">19</a><span class="page-number current">20</span><a class="page-number" href="/page/21/">21</a><a class="page-number" href="/page/22/">22</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><a class="extend next" rel="next" href="/page/21/">下一页 &gt;</a></nav></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

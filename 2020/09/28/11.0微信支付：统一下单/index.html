@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="jacketzc"><meta name="renderer" content="webkit"><meta name="copyright" content="jacketzc"><meta name="keywords" content="jacketzc的blog"><meta name="description" content="java，分布式，vue，idea，多线程开发，mybatis，spring，ssm，SpringMVC,dubbox ,Spring Cloud"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>11.0微信支付：统一下单 · jacketzc's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.0.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">jacketzc</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">Longlongyu</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">jacketzc's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">11.0微信支付：统一下单</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2020-09-28</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="分布式微服务"> 分布式微服务</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">1.1k</span> | Reading time: <span class="post-count">4</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><h1>11.0微信支付：统一下单</h1>
+<span><div><div><div>## 参考</div><div><a target="_blank" rel="noopener" href="https://pay.weixin.qq.com/wiki/doc/api/native.php?chapter=9_1">https://pay.weixin.qq.com/wiki/doc/api/native.php?chapter=9_1</a></div><div><br/></div><div><br/></div><div>## 流程</div><ul><li><div>向微信支付api发送请求，返回一个用于生成支付二维码的链接</div></li><li><div>用户扫码支付</div></li><li><div>微信返回支付结果</div></li></ul><div><br/></div><div><br/></div><div>## 请求准备</div><ul><li><div>请求地址：https://api.mch.weixin.qq.com/pay/unifiedorder</div></li><li><div>请求参数：</div></li><ul><li><div>微信支付要求请求为post，并且在请求体中添加xml的格式的String</div></li><li><div>appid：微信支付分配的公众账号ID（企业号corpid即为此appId）</div></li><ul><li><div>不是开发者的appid哦，需要有一个企业的营业执照才能申请该appid</div></li></ul><li><div>mch_id：微信支付分配的商户号</div></li><li><div>nonce_str：随机字符串，长度要求在32位以内</div></li><ul><li><div>此处使用UUID，去除其中的“-”并且取32位长度</div></li></ul><li><div>sign：通过签名算法计算得出的签名值</div></li><li><div>body：商品简单描述</div></li><li><div>out_trade_no：商户系统内部订单号，要求32个字符内，只能是数字、大小写字母，且在同一个商户号下唯一</div></li><li><div>total_fee：订单总金额，单位为分</div></li><li><div>spbill_create_ip：用户的客户端IP</div></li><li><div>notify_url：异步接收微信支付结果通知的回调地址，通知url必须为外网可访问的url，不能携带参数</div></li><li><div>trade_type：</div></li><ul><li><div>JSAPI -JSAPI支付</div></li><li><div>NATIVE -Native支付</div></li><li><div>APP -APP支付</div></li></ul><li><div>product_id：trade_type=NATIVE时，此参数必传</div></li></ul></ul><div><br/></div><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 14pt;">//根据订单信息，创建用于支付的二维码</font></div><div><font style="font-size: 14pt;">public String unifiedOrder() throws Exception {</font></div><div><font style="font-size: 14pt;">    //微信支付要求拼接的 url后参数有序（自然顺序），故使用 TreeMap</font></div><div><font style="font-size: 14pt;">    SortedMap&lt;String, String&gt; param = new TreeMap&lt;&gt;();</font></div><div><font style="font-size: 14pt;">    //公众账号ID</font></div><div><font style="font-size: 14pt;">    param.put(&quot;appid&quot;, wxPayConfigure.getAppid());</font></div><div><font style="font-size: 14pt;">    //商户号</font></div><div><font style="font-size: 14pt;">    param.put(&quot;mch_id&quot;, wxPayConfigure.getMchId());</font></div><div><font style="font-size: 14pt;">    //随机字符串</font></div><div><font style="font-size: 14pt;">    param.put(&quot;nonce_str&quot;, UUIDUtils.createNonceStr());</font></div><div><font style="font-size: 14pt;">    //商品名称</font></div><div><font style="font-size: 14pt;">    param.put(&quot;body&quot;, &quot;五人小月饼&quot;);</font></div><div><font style="font-size: 14pt;">    //订单编号</font></div><div><font style="font-size: 14pt;">    int num = Math.abs(new Random().nextInt());</font></div><div><font style="font-size: 14pt;">    param.put(&quot;out_trade_no&quot;, SnowFlakeUtil.nextStringId());</font></div><div><font style="font-size: 14pt;">    //总价：1表示1分钱</font></div><div><font style="font-size: 14pt;">    param.put(&quot;total_fee&quot;, &quot;1&quot;);</font></div><div><font style="font-size: 14pt;">    //调用者的ip</font></div><div><font style="font-size: 14pt;">    param.put(&quot;spbill_create_ip&quot;, &quot;127.0.0.1&quot;);</font></div><div><font style="font-size: 14pt;">    //回调接口</font></div><div><font style="font-size: 14pt;">    param.put(&quot;notify_url&quot;, wxPayConfigure.getNotifyUrl());</font></div><div><font style="font-size: 14pt;">    //交易类型</font></div><div><font style="font-size: 14pt;">    param.put(&quot;trade_type&quot;, &quot;NATIVE &quot;);</font></div><div><font style="font-size: 14pt;">    //商品id</font></div><div><font style="font-size: 14pt;">    param.put(&quot;product_id&quot;, &quot;12235413214070356458058&quot;);</font></div><div><font style="font-size: 14pt;">    //生成签名</font></div><div><font style="font-size: 14pt;">    param.put(&quot;sign&quot;, WxPayUtils.generateSignature(param, wxPayConfigure.getKey()));</font></div><div><font style="font-size: 14pt;"><br/></font></div><div><font style="font-size: 14pt;">    //将map转换为xml</font></div><div><font style="font-size: 14pt;">    String paramXml = WxPayUtils.mapToXml(param);</font></div><div><font style="font-size: 14pt;"><br/></font></div><div><font style="font-size: 14pt;">    //发送请求（post）</font></div><div><font style="font-size: 14pt;">    String result = HttpClientUtils.doPost(wxPayConfigure.getUnifiedUrl(), paramXml, 5000);</font></div><div><font style="font-size: 14pt;">    //将返回的结果转换为map</font></div><div><font style="font-size: 14pt;">    Map&lt;String, String&gt; mapResult = WxPayUtils.xmlToMap(result);</font></div><div><font style="font-size: 14pt;">    //从返回结果中获取用于支付的url</font></div><div><font style="font-size: 14pt;">    String code_url = mapResult.get(&quot;code_url&quot;);</font></div><div><font style="font-size: 14pt;">    if (StringUtils.isEmpty(code_url)) {</font></div><div><font style="font-size: 14pt;">        throw new Exception(&quot;&quot;);</font></div><div><font style="font-size: 14pt;">    }</font></div><div><font style="font-size: 14pt;">    return code_url;</font></div><div><font style="font-size: 14pt;">}</font></div></div><div><br/></div><div>## 签名生成算法</div><div>//api文档的demo中已经提供了一个生成签名的算法</div><ul><li><div> 将所有其他元素组成一个集合M，M中的元素以参数名ASCll码从小到大排列（字典序），再使用URL键值对的形式（即key1=value1&amp;key2=value2…）拼接成字符串StringA</div></li><ul><li><div>集合可以使用Map，为了有序性，可以使用TreeMap（其实使用普通的HashMap即可，微信api提供的签名生成方法自带了排序处理）</div></li></ul><li><div>参数值为空，将不参与签名</div></li><li><div>参数名区分大小写</div></li></ul><div><br/></div><div>## 支付结果通知</div></div><ul><li><div>微信会通过回调主动通知支付的状态</div></li><ul><li><div>并且有可能会多次通知，需要作出额外的处理</div></li></ul><li><div>可以主动调用查询支付的结果</div></li><ul><li><div>如果长时间微信没有返回，可以<font style="color: rgb(255, 70, 53);">预先</font>通过<font style="color: rgb(30, 204, 255);">xxljob</font>来创立一个定时任务来主动查询</div></li><ul><li><div>该任务会定时执行某个接口中的任务来查询redis中预先设置的支付状态，凡是状态为0（未支付）的，就执行另一个主动查询结果的接口来查询微信支付的状态</div></li></ul></ul></ul><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 14pt;">@RequestMapping(&quot;/wxPayReturn&quot;)</font></div><div><font style="font-size: 14pt;">public String wxPayReturn(HttpServletRequest request) throws Exception {</font></div><div><font style="font-size: 14pt;">    // 设置用于向微信返回信息的map</font></div><div><font style="font-size: 14pt;">    HashMap&lt;String, String&gt; map = new HashMap&lt;&gt;();</font></div><div><font style="font-size: 14pt;">    log.info(&quot;微信支付回调&quot;);</font></div><div><font style="font-size: 14pt;">    //解析返回的信息（存储在流中）</font></div><div><font style="font-size: 14pt;">    ServletInputStream inputStream = request.getInputStream();</font></div><div><font style="font-size: 14pt;">    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));</font></div><div><font style="font-size: 14pt;">    String line;</font></div><div><font style="font-size: 14pt;">    StringBuilder builder = new StringBuilder();</font></div><div><font style="font-size: 14pt;">    while ((line = reader.readLine()) != null) {</font></div><div><font style="font-size: 14pt;">        builder.append(line);</font></div><div><font style="font-size: 14pt;">    }</font></div><div><font style="font-size: 14pt;">    reader.close();</font></div><div><font style="font-size: 14pt;">    inputStream.close();</font></div><div><font style="font-size: 14pt;">    Map&lt;String, String&gt; resultMap = WxPayUtils.xmlToMap(builder.toString());</font></div><div><font style="font-size: 14pt;">    //验证签名，<font color="#FF4635">微信返回的sign和我们发送的sign是不同的！，需要根据返回的map重新生成</font></font></div><div><font style="font-size: 14pt;">    if (WxPayUtils.checkSign(resultMap, wxPayConfigure.getKey())) {</font></div><div><font style="font-size: 14pt;">        String resultCode = resultMap.get(&quot;result_code&quot;);</font></div><div><font style="font-size: 14pt;">        if (&quot;SUCCESS&quot;.equals(resultCode)) {</font></div><div><font style="font-size: 14pt;">            //todo 支付成功后的业务</font></div><div><font style="font-size: 14pt;">            log.info(&quot;支付成功！&quot;);</font></div><div><font style="font-size: 14pt;">            //通知微信已经收到支付消息</font></div><div><font style="font-size: 14pt;">            map.put(&quot;return_code&quot;, &quot;SUCCESS&quot;);</font></div><div><font style="font-size: 14pt;">            return WxPayUtils.mapToXml(map);</font></div><div><font style="font-size: 14pt;">        }</font></div><div><font style="font-size: 14pt;">    }</font></div><div><font style="font-size: 14pt;">    map.put(&quot;return_code&quot;, &quot;FAIL&quot;);</font></div><div><font style="font-size: 14pt;">    return WxPayUtils.mapToXml(map);</font></div><div><font style="font-size: 14pt;">}</font></div></div><div><br/></div></div></span>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://yoursite.com">jacketzc</a></p><p> <span>Link:  </span><a href="http://yoursite.com/2020/09/28/11.0%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98%EF%BC%9A%E7%BB%9F%E4%B8%80%E4%B8%8B%E5%8D%95/">http://yoursite.com/2020/09/28/11.0%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98%EF%BC%9A%E7%BB%9F%E4%B8%80%E4%B8%8B%E5%8D%95/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2020/10/08/11.1%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98%EF%BC%9A%E6%9F%A5%E7%9C%8B%E6%96%87%E6%A1%A3/" title="11.1微信支付：查看文档"><span>< PreviousPost</span><br><span class="prevTitle">11.1微信支付：查看文档</span></a><a class="nextSlogan" href="/2020/09/28/10.3%20RabbitMQ/" title="10.3 RabbitMQ"><span>NextPost ></span><br><span class="nextTitle">10.3 RabbitMQ</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">11.0微信支付：统一下单</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="jacketzc"><meta name="renderer" content="webkit"><meta name="copyright" content="jacketzc"><meta name="keywords" content="jacketzc的blog"><meta name="description" content="java，分布式，vue，idea，多线程开发，mybatis，spring，ssm，SpringMVC,dubbox ,Spring Cloud"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>1.6配置自定义方法参数处理器 · jacketzc's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.0.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">jacketzc</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">Longlongyu</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">jacketzc's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">1.6配置自定义方法参数处理器</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2020-09-14</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="分布式微服务"> 分布式微服务</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">302</span> | Reading time: <span class="post-count">1</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><h1>1.6配置自定义方法参数处理器</h1>
+<span><div><div>## 作用</div><ul><li><div>用于在控制器接口入参的时候，处理参数</div></li><li><div>和拦截器类似，不过拦截的是入参</div></li></ul><div><br/></div><div>和拦截器配置的方法差不多</div><div><br/></div><div>## 设置实现该功能的类</div><ul><li><div>创建实现HandlerMethodArgumentResolver接口的类</div></li><ul><li><div>该类有两个重载方法</div></li><ul><li><div>boolean supportsParameter ：判断入参是否满足要求</div></li><ul><li><div>返回true将继续执行下一个方法，如果返回false，则跳过</div></li></ul><li><div>Object resolveArgument ：处理参数，并且视情况返回</div></li></ul><li><div>示范 ：从request中提取userVo添加到控制器接口入参</div></li></ul></ul><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 14pt;">public class CurrentUserComplete implements HandlerMethodArgumentResolver {</font></div><div><font style="font-size: 14pt;">    @Override</font></div><div><font style="font-size: 14pt;">    public boolean supportsParameter(MethodParameter parameter) {</font></div><div><font style="font-size: 14pt;">        /*</font></div><div><font style="font-size: 14pt;">         * 判断有没有添加 @CurrentUser注解</font></div><div><font style="font-size: 14pt;">         * 判断该参数是否为UserVo</font></div><div><font style="font-size: 14pt;">         */</font></div><div><font style="font-size: 14pt;">        return parameter.hasMethodAnnotation(CurrentUser.class)&amp;&amp;parameter.getParameterType().isAssignableFrom(UserVo.class);</font></div><div><font style="font-size: 14pt;">    }</font></div><div><font style="font-size: 14pt;">    @Override</font></div><div><font style="font-size: 14pt;">    public Object resolveArgument(MethodParameter methodParameter, ModelAndViewContainer modelAndViewContainer, NativeWebRequest nativeWebRequest, WebDataBinderFactory webDataBinderFactory) throws Exception {</font></div><div><font style="font-size: 14pt;">        /*</font></div><div><font style="font-size: 14pt;">         * 从 nativeWebRequest获取 LoginRequiredComplete中添加到 request的 userVo</font></div><div><font style="font-size: 14pt;">         * nativeWebRequest是增强版的request 第二个参数指定了作用域为request（还可以可以为 session）</font></div><div><font style="font-size: 14pt;">         */</font></div><div><font style="font-size: 14pt;">        UserVo loginUserVo = (UserVo) nativeWebRequest.getAttribute(&quot;loginUserVo&quot;, RequestAttributes.SCOPE_REQUEST);</font></div><div><font style="font-size: 14pt;">        if (!ObjectUtils.isEmpty(loginUserVo))</font></div><div><font style="font-size: 14pt;">            return loginUserVo;</font></div><div><font style="font-size: 14pt;">        return null;</font></div><div><font style="font-size: 14pt;">    }</font></div><div><font style="font-size: 14pt;">}</font></div></div><ul><li><div>将配置添加到springmvc中</div></li><ul><li><div>在实现WebMvcConfigurer接口的类中实现addArgumentResolvers方法</div></li></ul></ul><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 14pt;">@Configuration</font></div><div><font style="font-size: 14pt;">public class WebConfigure implements WebMvcConfigurer {</font></div><div><font style="font-size: 14pt;">    </font><font style="font-size: 14pt;">@Bean</font></div><div><font style="font-size: 14pt;">    public CurrentUserComplete currentUserComplete() {</font></div><div><font style="font-size: 14pt;">       return new CurrentUserComplete();</font></div><div><font style="font-size: 14pt;">    }</font></div><div><font style="font-size: 14pt;">    public void addArgumentResolvers(List&lt;HandlerMethodArgumentResolver&gt; argumentResolvers) {</font></div><div><font style="font-size: 14pt;">        argumentResolvers.add(currentUserComplete());</font></div><div><font style="font-size: 14pt;">    }</font></div><div><font style="font-size: 14pt;">}</font></div></div><div><br/></div></div><div><br/></div></span>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://yoursite.com">jacketzc</a></p><p> <span>Link:  </span><a href="http://yoursite.com/2020/09/14/1.6%E9%85%8D%E7%BD%AE%E8%87%AA%E5%AE%9A%E4%B9%89%E6%96%B9%E6%B3%95%E5%8F%82%E6%95%B0%E5%A4%84%E7%90%86%E5%99%A8/">http://yoursite.com/2020/09/14/1.6%E9%85%8D%E7%BD%AE%E8%87%AA%E5%AE%9A%E4%B9%89%E6%96%B9%E6%B3%95%E5%8F%82%E6%95%B0%E5%A4%84%E7%90%86%E5%99%A8/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2020/09/15/9.2%E5%BE%AE%E4%BF%A1%E7%99%BB%E5%BD%95api/" title="9.2微信登录api"><span>< PreviousPost</span><br><span class="prevTitle">9.2微信登录api</span></a><a class="nextSlogan" href="/2020/09/14/9.1%E7%99%BB%E5%BD%95token/" title="9.1登录token"><span>NextPost ></span><br><span class="nextTitle">9.1登录token</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">1.6配置自定义方法参数处理器</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

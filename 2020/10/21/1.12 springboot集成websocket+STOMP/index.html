@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="jacketzc"><meta name="renderer" content="webkit"><meta name="copyright" content="jacketzc"><meta name="keywords" content="jacketzc的blog"><meta name="description" content="java，分布式，vue，idea，多线程开发，mybatis，spring，ssm，SpringMVC,dubbox ,Spring Cloud"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>1.12 springboot集成websocket+STOMP · jacketzc's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.0.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">jacketzc</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">Longlongyu</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">jacketzc's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">1.12 springboot集成websocket+STOMP</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2020-10-21</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="分布式微服务"> 分布式微服务</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">871</span> | Reading time: <span class="post-count">3</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><h1>1.12 springboot集成websocket+STOMP</h1>
+<span><div><div><div>## 参考</div><div><a target="_blank" rel="noopener" href="https://juejin.im/post/6844903661231947784#heading-4">https://juejin.im/post/6844903661231947784#heading-4</a></div><div><br/></div><div>## 理解</div><div>&gt;    STOMP的工作原理有点像消息队列</div><ul><li><div>可以创建<span style="color: rgb(30, 204, 255);">消息代理</span>（broker，我这么说是为了区分消息队列）</div></li><li><div>可以创建<span style="color: rgb(30, 204, 255);">消息处理器</span>，接受消息，处理后发向指定的<span style="color: rgb(30, 204, 255);">消息代理</span></div></li></ul><div>&gt;    客户端要求连接websocket（和普通的websocket一样）</div><div>&gt;    连接成功后可以订阅<span style="color: rgb(30, 204, 255);">频道</span>，只接受来自该频道的消息</div><div>&gt;    客户端可以往指定的<span style="color: rgb(30, 204, 255);">消息处理器</span>发送消息</div><div><img src="1.12 springboot集成websocket+STOMP_files/STOMP.png" type="image/png" data-filename="STOMP.png"/></div><div><br/></div><div><br/></div><div>## 一次广播的流程：</div><div>&gt;    创建消息处理器</div><ul><li><div>该处理器将处理发送给“/hello”的消息</div></li><li><div>处理后将消息发往&quot;/topic/greetings&quot;这个消息代理</div></li></ul><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 14pt;">@Controller //使用Controller注解来标识这是一个控制器类</font></div><div><font style="font-size: 14pt;">public class GreetingController {</font></div><div><font style="font-size: 14pt;"><br/></font></div><div><font style="font-size: 14pt;">    <font color="#FF4635">@MessageMapping</font>(&quot;/hello&quot;) //使用MessageMapping注解来标识所有发送到“/hello”这个destination的消息，都会被路由到这个方法进行处理.</font></div><div><font style="font-size: 14pt;">    <font color="#FF4635">@SendTo</font>(&quot;/topic/greetings&quot;) //使用SendTo注解来标识这个方法返回的结果，都会被发送到它指定的destination，“/topic/greetings”.</font></div><div><font style="font-size: 14pt;">    //传入的参数HelloMessage为客户端发送过来的消息，是自动绑定的。</font></div><div><font style="font-size: 14pt;">    public Greeting greeting(HelloMessage message) throws Exception {</font></div><div><font style="font-size: 14pt;">        Thread.sleep(1000); // 模拟处理延时</font></div><div><font style="font-size: 14pt;">        return new Greeting(&quot;Hello, &quot; + HtmlUtils.htmlEscape(message.getName()) + &quot;!&quot;); //根据传入的信息，返回一个欢迎消息.</font></div><div><font style="font-size: 14pt;">    }</font></div><div><font style="font-size: 14pt;">}</font></div></div><div>&gt;    注册websocket服务，并且创建一个消息代理</div><ul><li><div>此处创建了一个叫&quot;/topic&quot;的消息代理，将接受发往&quot;/topic/*&quot;的所有消息</div></li><li><div>指定了消息处理器请求地址的<span style="color: rgb(255, 70, 53);">前缀</span>，比如上方的消息处理器的请求地址为“/app/hello”</div></li></ul><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 14pt;">@Configuration //使用Configuration注解标识这是一个Springboot的配置类.</font></div><div><font style="font-size: 14pt;">@EnableWebSocketMessageBroker //使用此注解来标识使能WebSocket的broker.即使用broker来处理消息.</font></div><div><font style="font-size: 14pt;">public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {</font></div><div><font style="font-size: 14pt;"><br/></font></div><div><font style="font-size: 14pt;">    @Override</font></div><div><font style="font-size: 14pt;">    //实现WebSocketMessageBrokerConfigurer中的此方法，配置消息代理（broker）</font></div><div><font style="font-size: 14pt;">    public void configureMessageBroker(MessageBrokerRegistry config) {</font></div><div><font style="font-size: 14pt;">        <font color="#FF4635">config.enableSimpleBroker(&quot;/topic&quot;)</font>; //启用SimpleBroker，使得订阅到此&quot;topic&quot;前缀的客户端可以收到greeting消息.</font></div><div><font style="font-size: 14pt;">        <font color="#FF4635">config.setApplicationDestinationPrefixes(&quot;/app&quot;)</font>; //将&quot;app&quot;前缀绑定到MessageMapping注解指定的方法上。如&quot;app/hello&quot;被指定用greeting()方法来处理.</font></div><div><font style="font-size: 14pt;">    }</font></div><div><font style="font-size: 14pt;"><br/></font></div><div><font style="font-size: 14pt;">    @Override</font></div><div><font style="font-size: 14pt;">    //用来注册Endpoint，“/char”即为客户端尝试建立连接的地址。</font></div><div><font style="font-size: 14pt;">    public void registerStompEndpoints(StompEndpointRegistry registry) {</font></div><div><font style="font-size: 14pt;">        registry.addEndpoint(&quot;/chat&quot;).withSockJS();</font></div><div><font style="font-size: 14pt;">    }</font></div><div><font style="font-size: 14pt;">}</font></div></div><div>&gt;    用于测试的js代码</div><ul><li><div>请求“gs-guide-websocket”这个地址来构建链接</div></li><li><div>订阅“/topic/greetings”频道的消息</div></li><li><div>向“/app/hello”发送消息，并且获取返回</div></li></ul><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 14pt;">//</font><font style="font-size: 14pt;">使用SockJS和stomp.js来打开“/chat”地址的连接，这也是我们使用Spring构建的SockJS服务。</font></div><div><font style="font-size: 14pt;">function connect() {</font></div><div><font style="font-size: 14pt;">    var socket = new SockJS('/chat');</font></div><div><font style="font-size: 14pt;">    stompClient = Stomp.over(socket);</font></div><div><font style="font-size: 14pt;">    stompClient.connect({}, function (frame) {</font></div><div><font style="font-size: 14pt;">        //连接成功后的回调方法</font></div><div><font style="font-size: 14pt;">        setConnected(true);</font></div><div><font style="font-size: 14pt;">        console.log('Connected: ' + frame);</font></div><div><font style="font-size: 14pt;">        //订阅/topic/greetings地址，当服务端向此地址发送消息时，客户端即可收到。</font></div><div><font style="font-size: 14pt;">        stompClient.subscribe('/topic/greetings', function (greeting) {</font></div><div><font style="font-size: 14pt;">            //收到消息时的回调方法，展示欢迎信息。</font></div><div><font style="font-size: 14pt;">            showGreeting(JSON.parse(greeting.body).content);</font></div><div><font style="font-size: 14pt;">        });</font></div><div><font style="font-size: 14pt;">    });</font></div><div><font style="font-size: 14pt;">}</font></div><div><font style="font-size: 14pt;">//断开连接的方法</font></div><div><font style="font-size: 14pt;">function disconnect() {</font></div><div><font style="font-size: 14pt;">    if (stompClient !== null) {</font></div><div><font style="font-size: 14pt;">        stompClient.disconnect();</font></div><div><font style="font-size: 14pt;">    }</font></div><div><font style="font-size: 14pt;">    setConnected(false);</font></div><div><font style="font-size: 14pt;">    console.log(&quot;Disconnected&quot;);</font></div><div><font style="font-size: 14pt;">}</font></div><div><font style="font-size: 14pt;">//将用户输入的名字信息,使用STOMP客户端发送到“/app/hello”地址。它正是我们在GreetingController中定义的greeting()方法所处理的地址.</font></div><div><font style="font-size: 14pt;">function sendName() {</font></div><div><font style="font-size: 14pt;">    stompClient.send(&quot;/app/hello&quot;, {}, JSON.stringify({'name': $(&quot;#name&quot;).val()}));</font></div><div><font style="font-size: 14pt;">}</font></div></div><div><br/></div><div><br/></div><div>## 一次点对点请求的流程：</div></div><div>!尚未完成</div><div>问题：</div><ul><li><div>怎么知道消息是哪个用户发过来的？（sessionid？）</div></li><li><div>如何持久化消息？（上线后自动将未接收的消息发送）</div></li></ul><div><br/></div></div></span>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://yoursite.com">jacketzc</a></p><p> <span>Link:  </span><a href="http://yoursite.com/2020/10/21/1.12%20springboot%E9%9B%86%E6%88%90websocket+STOMP/">http://yoursite.com/2020/10/21/1.12%20springboot%E9%9B%86%E6%88%90websocket+STOMP/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2020/10/21/1.13%20%E9%85%8D%E7%BD%AE%E7%BA%BF%E7%A8%8B%E6%B1%A0/" title="1.13 配置线程池"><span>< PreviousPost</span><br><span class="prevTitle">1.13 配置线程池</span></a><a class="nextSlogan" href="/2020/10/20/14.8.2%20jwt/" title="14.8.2 jwt"><span>NextPost ></span><br><span class="nextTitle">14.8.2 jwt</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">1.12 springboot集成websocket+STOMP</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

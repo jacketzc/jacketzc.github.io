@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="jacketzc"><meta name="renderer" content="webkit"><meta name="copyright" content="jacketzc"><meta name="keywords" content="jacketzc的blog"><meta name="description" content="java，分布式，vue，idea，多线程开发，mybatis，spring，ssm，SpringMVC,dubbox ,Spring Cloud"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>11.1微信支付：查看文档 · jacketzc's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.0.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">jacketzc</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">Longlongyu</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">jacketzc's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">11.1微信支付：查看文档</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2020-10-08</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="分布式微服务"> 分布式微服务</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">717</span> | Reading time: <span class="post-count">2</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><h1>11.1微信支付：查看文档</h1>
+<span><div><div>## 找到文档</div><ul><li><div>搜索“微信支付api”，选择微信官方文档</div></li><li><div>根据应用场景“扫码支付”，选择native支付</div></li><li><div>选择api列表-统一下单</div></li></ul><div><br/></div><div>## 查看规则</div><ul><li><div>在接口规则-协议规则中，先看能看懂的</div></li><ul><li><div>HTTPS传输，不谈</div></li><li><div>POST方法提交，有趣（我还没遇到过）</div></li><li><div>数据格式为XML，有趣（到底是什么样的xml）</div></li><li><div>编码，不谈</div></li></ul></ul><div><br/></div><div><br/></div><div>## 寻找调用接口的方式</div><ul><li><div>根据经验，调用这种api就是请求一个地址，然后给参数给它</div></li><li><div>罗列出所有必要的请求参数</div></li><ul><li><div>这里有一个坑，交易类型为“NATIVE ”时，商品ID变成必填项，所以要看清楚<font style="color: rgb(255, 70, 53);">参数说明</font></div></li></ul></ul><div><br/></div><div>## 发现并解决问题</div><ul><li><div>签名，也就是参数sign如何生成？</div></li><ul><li><div>点击签名生成算法，查看之前看不懂的内容，发现生成签名需要两步，并且有很多要求：</div></li><ul><li><div>要把参数的key-value拼成字符串，参数名ASCII码从小到大排序（字典序）</div></li><ul><li><div>有趣，这里可以使用TreeMap作为存放key-value的地方</div></li></ul></ul><li><div>这时候可以看看官方的demo中如何生成签名</div></li><ul><li><div>在Readme中，可以找到统一下单的示范：</div></li><ul><li><div>将参数存放到map中，然后调用unifiedOrder方法来实现下单</div></li><li><div>unifiedOrder方法中，返回respXml的requestWithoutCert方法看来就是调用接口的方法了</div></li><li><div>之前存参数使用的是普通的HashMap，并且参数也不齐全，fillRequestData(reqData)看来就是添加参数并且生成签名的方法了</div></li><li><div>在fillRequestData中调用了generateSignature方法，看来就是生成签名的方法</div></li><ul><li><div>先将map转换为keySet然后再转换为String[]，利用Arrays.sort来排序后使用foreach遍历来拼接字符串，最后添加上key后使用MD5加密返回</div></li></ul></ul></ul></ul><li><div>发送的xml是怎么来的？</div></li><ul><li><div>fillRequestData方法只是返回了一个携带所有参数的map，并没有转换为xml，那么发送请求的requestWithoutCert方法本身已经处理了map</div></li><li><div>果然，requestWithoutCert方法中调用了mapToXml，将map形式的数据转换为xml形式的数据，这个<font style="color: rgb(255, 70, 53);">xml格式的数据类型为String</font></div></li><li><div>让我们来看看mapToXml方法到底干了什么，好的，看不懂。。。</div></li></ul></ul><div><br/></div><div>## 发送请求</div><ul><li><div>使用预设好的HttpClientUtils向请求地址发送POST请求，返回的结果也是xml的String</div></li><li><div>既然有mapToXml，那肯定有xmlToMap，果不其然，那么就用这个方法将xml转换成map</div></li></ul><div><br/></div><div>## 结果处理</div><ul><li><div>突然发现一个问题，我们的目的是让用户扫码支付，那么二维码呢？</div></li><li><div>查看刚刚调用的接口返回值，里面有很多我们发送的值，也有很多不认识的值，有一个值我比较感兴趣：code_url，也就是所谓的“二维码链接”</div></li><li><div>我们根据这个链接生成二维码图片，大功告成！</div></li></ul><div><br/></div></div></span>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://yoursite.com">jacketzc</a></p><p> <span>Link:  </span><a href="http://yoursite.com/2020/10/08/11.1%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98%EF%BC%9A%E6%9F%A5%E7%9C%8B%E6%96%87%E6%A1%A3/">http://yoursite.com/2020/10/08/11.1%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98%EF%BC%9A%E6%9F%A5%E7%9C%8B%E6%96%87%E6%A1%A3/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2020/10/08/1.8springboot%E5%85%A8%E5%B1%80%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/" title="1.8springboot全局异常处理"><span>< PreviousPost</span><br><span class="prevTitle">1.8springboot全局异常处理</span></a><a class="nextSlogan" href="/2020/09/28/11.0%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98%EF%BC%9A%E7%BB%9F%E4%B8%80%E4%B8%8B%E5%8D%95/" title="11.0微信支付：统一下单"><span>NextPost ></span><br><span class="nextTitle">11.0微信支付：统一下单</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">11.1微信支付：查看文档</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

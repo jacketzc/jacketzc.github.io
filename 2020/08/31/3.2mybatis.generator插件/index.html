@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="jacketzc"><meta name="renderer" content="webkit"><meta name="copyright" content="jacketzc"><meta name="keywords" content="jacketzc的blog"><meta name="description" content="java，分布式，vue，idea，多线程开发，mybatis，spring，ssm，SpringMVC,dubbox ,Spring Cloud"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>3.2mybatis.generator插件 · jacketzc's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.0.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">jacketzc</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">Longlongyu</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">jacketzc's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">3.2mybatis.generator插件</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2020-08-31</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="分布式微服务"> 分布式微服务</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">920</span> | Reading time: <span class="post-count">4</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><h1>3.2mybatis.generator插件</h1>
+<span><div><div><div><span style="font-size: unset; color: unset; font-family: unset;">！注意：</span><span style="font-size: unset;"><span style="font-size: unset; color: rgb(255, 70, 53); font-family: unset;">插件和原来的项目是独立的</span></span></div><div><span style="font-size: unset;"><br/></span></div><div><span style="font-size: unset; color: unset; font-family: unset;">## 作用</span></div><ul><li><div>根据mysql中的字段自动生成一个实体类</div></li><ul><li><div>xxx</div></li><li><div>xxxExample</div></li></ul><li><div>自动生成mapper接口以及xml（包含常用的crud方法）</div></li></ul><div><br/></div><div>## 依赖：</div><div>！注意：添加一个插件依赖</div><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 14pt;">&lt;plugin&gt;</font></div><div><font style="font-size: 14pt;">    &lt;groupId&gt;org.mybatis.generator&lt;/groupId&gt;</font></div><div><font style="font-size: 14pt;">    &lt;artifactId&gt;mybatis-generator-maven-plugin&lt;/artifactId&gt;</font></div><div><font style="font-size: 14pt;">    &lt;version&gt;1.3.5&lt;/version&gt;</font></div><div><font style="font-size: 14pt;">    &lt;dependencies&gt;</font></div><div><font style="font-size: 14pt;">        &lt;dependency&gt;</font></div><div><font style="font-size: 14pt;">            &lt;groupId&gt;mysql&lt;/groupId&gt;</font></div><div><font style="font-size: 14pt;">            &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;</font></div><div><font style="font-size: 14pt;">            &lt;version&gt;5.1.44&lt;/version&gt;</font></div><div><font style="font-size: 14pt;">        &lt;/dependency&gt;</font></div><div><font style="font-size: 14pt;">    &lt;/dependencies&gt;</font></div><div><font style="font-size: 14pt;">    </font><font style="font-size: 14pt;">&lt;configuration&gt;</font></div><div><font style="font-size: 14pt;">        //指定生成文件的方式为覆盖</font></div><div><font style="font-size: 14pt;">        &lt;overwrite&gt;true&lt;/overwrite&gt;</font></div><div><font style="font-size: 14pt;">    &lt;/configuration&gt;</font></div><div><font style="font-size: 14pt;">&lt;/plugin&gt;</font></div></div><div><br/></div><div><br/></div><div>## 添加资源文件（mapper.xml）的引入</div></div><div>//插件自动生成的mapper.xml和mapper接口处于相同目录</div><div>//java目录中的xml文件默认不会被编译</div><div>//如果指定里的额外的resource，则<span style="color: rgb(255, 70, 53);">必须指定原本的resource目录</span></div><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 14pt;">&lt;!--添加在java包中xml文件的编译支持--&gt;</font></div><div><font style="font-size: 14pt;">&lt;resources&gt;</font></div><div><font style="font-size: 14pt;">    &lt;resource&gt;</font></div><div><font style="font-size: 14pt;">        &lt;directory&gt;src/mian/java&lt;/directory&gt;</font></div><div><font style="font-size: 14pt;">        &lt;includes&gt;</font></div><div><font style="font-size: 14pt;">            &lt;!--包含任意包下的任意名字的xml文件--&gt;</font></div><div><font style="font-size: 14pt;">            &lt;include&gt;**/*.xml&lt;/include&gt;</font></div><div><font style="font-size: 14pt;">        &lt;/includes&gt;</font></div><div><font style="font-size: 14pt;">    &lt;/resource&gt;</font></div><div><font style="font-size: 14pt;">    &lt;resource&gt;</font></div><div><font style="font-size: 14pt;">        &lt;!--<font color="#FF4635">将原本的资源目录引入</font>--&gt;</font></div><div><font style="font-size: 14pt;">        &lt;directory&gt;src/main/resources&lt;/directory&gt;</font></div><div><font style="font-size: 14pt;">    &lt;/resource&gt;</font></div><div><font style="font-size: 14pt;">&lt;/resources&gt;</font></div></div><div><br/></div><div><br/></div><div><br/></div><div>## 添加插件的配置文件generatorConfig.xml</div><div><a href="3.2mybatis.generator插件_files/generatorConfig.xml"><img src="3.2mybatis.generator插件_files/e1f83bf49cd1b56d990858f916cbb1ca.png" alt="generatorConfig.xml"></a></div><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 14pt;">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</font></div><div><font style="font-size: 14pt;">&lt;!DOCTYPE generatorConfiguration</font></div><div><font style="font-size: 14pt;">        PUBLIC &quot;-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN&quot;</font></div><div><font style="font-size: 14pt;">        &quot;http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd&quot;&gt;</font></div><div><font style="font-size: 14pt;">&lt;generatorConfiguration&gt;</font></div><div><font style="font-size: 14pt;"><br/></font></div><div><font style="font-size: 14pt;">    &lt;context id=&quot;DB2Tables&quot; targetRuntime=&quot;MyBatis3&quot;</font></div><div><font style="font-size: 14pt;">             defaultModelType=&quot;flat&quot;&gt;</font></div><div><font style="font-size: 14pt;"><br/></font></div><div><font style="font-size: 14pt;">        //为字段添加分解符“`”（防止与关键字冲突）</font></div><div><font style="font-size: 14pt;">        &lt;property name=&quot;autoDelimitKeywords&quot; value=&quot;true&quot;/&gt;</font></div><div><font style="font-size: 14pt;">        &lt;property name=&quot;beginningDelimiter&quot; value=&quot;`&quot;/&gt;</font></div><div><font style="font-size: 14pt;">        &lt;property name=&quot;endingDelimiter&quot; value=&quot;`&quot;/&gt;</font></div><div><font style="font-size: 14pt;"><br/></font></div><div><font style="font-size: 14pt;">        &lt;commentGenerator&gt;</font></div><div><font style="font-size: 14pt;">            &lt;property name=&quot;suppressDate&quot; value=&quot;true&quot;/&gt;</font></div><div><font style="font-size: 14pt;">            </font><font style="font-size: 14pt;">&lt;!--根据数据库中的注释生成java注释，true为生成--&gt;</font></div><div><font style="font-size: 14pt;">            &lt;property name=&quot;addRemarkComments&quot; value=&quot;false&quot;/&gt;</font></div><div><font style="font-size: 14pt;">            &lt;!-- 关闭自动生成的注释（可选），true为关闭 --&gt;</font></div><div><font style="font-size: 14pt;">            &lt;property name=&quot;suppressAllComments&quot; value=&quot;true&quot; /&gt;</font></div><div><font style="font-size: 14pt;">        &lt;/commentGenerator&gt;</font></div><div><font style="font-size: 14pt;"><br/></font></div><div><font style="font-size: 14pt;">        //这个插件使用单独的jdbc配置（不是properties中的配置）</font></div><div><font style="font-size: 14pt;">        &lt;jdbcConnection driverClass=&quot;com.mysql.jdbc.Driver&quot;</font></div><div><font style="font-size: 14pt;">                        connectionURL=&quot;jdbc:mysql://localhost:3306/vhr?useSSL=false&quot;</font></div><div><font style="font-size: 14pt;">                        userId=&quot;root&quot; password=&quot;123456&quot;&gt;</font></div><div><font style="font-size: 14pt;">        &lt;/jdbcConnection&gt;</font></div><div><font style="font-size: 14pt;"><br/></font></div><div><font style="font-size: 14pt;">        //强制类名首字母大写</font></div><div><font style="font-size: 14pt;">        &lt;javaTypeResolver&gt;</font></div><div><font style="font-size: 14pt;">            &lt;property name=&quot;forceBigDecimals&quot; value=&quot;false&quot;/&gt;</font></div><div><font style="font-size: 14pt;">        &lt;/javaTypeResolver&gt;</font></div><div><font style="font-size: 14pt;"><br/></font></div><div><font style="font-size: 14pt;">        //指定生成模板的包</font></div><div><font style="font-size: 14pt;">        &lt;javaModelGenerator targetPackage=&quot;com.kgc.cn.dto&quot;</font></div><div><font style="font-size: 14pt;">                            targetProject=&quot;./src/main/java&quot;&gt;</font></div><div><font style="font-size: 14pt;">            &lt;property name=&quot;enableSubPackages&quot; value=&quot;true&quot;/&gt;</font></div><div><font style="font-size: 14pt;">            &lt;property name=&quot;trimStrings&quot; value=&quot;false&quot;/&gt;</font></div><div><font style="font-size: 14pt;">        &lt;/javaModelGenerator&gt;</font></div><div><font style="font-size: 14pt;"><br/></font></div><div><font style="font-size: 14pt;">        //指定生成mapper接口的包</font></div><div><font style="font-size: 14pt;">        &lt;sqlMapGenerator targetPackage=&quot;com.kgc.cn.mapper&quot;</font></div><div><font style="font-size: 14pt;">                         targetProject=&quot;./src/main/java&quot;&gt;</font></div><div><font style="font-size: 14pt;">            &lt;property name=&quot;enableSubPackages&quot; value=&quot;true&quot;/&gt;</font></div><div><font style="font-size: 14pt;">        &lt;/sqlMapGenerator&gt;</font></div><div><font style="font-size: 14pt;"><br/></font></div><div><font style="font-size: 14pt;">        //指定生成mapper.xml的包，此处使用相同的路径</font></div><div><font style="font-size: 14pt;">        &lt;javaClientGenerator type=&quot;XMLMAPPER&quot;</font></div><div><font style="font-size: 14pt;">                             targetPackage=&quot;com.kgc.cn.mapper&quot;</font></div><div><font style="font-size: 14pt;">                             targetProject=&quot;./src/main/java&quot;&gt;</font></div><div><font style="font-size: 14pt;">            &lt;property name=&quot;enableSubPackages&quot; value=&quot;true&quot;/&gt;</font></div><div><font style="font-size: 14pt;">        &lt;/javaClientGenerator&gt;</font></div><div><font style="font-size: 14pt;"><br/></font></div><div><font style="font-size: 14pt;">        //指定自动生成依赖的表、以及自动生成的实体类的名称（可选）</font></div><div><font style="font-size: 14pt;">        &lt;table tableName=&quot;role&quot;</font> <font style="font-size: 14pt;">domainObjectName=&quot;Employee&quot;</font><font style="font-size: 14pt;">&gt;</font></div><div><font style="font-size: 14pt;">            &lt;!--默认不使用驼峰 写false才使用--&gt;</font></div><div><font style="font-size: 14pt;">            &lt;property name=&quot;useActualColumnNames&quot; value=&quot;false&quot;/&gt;</font></div><div><font style="font-size: 14pt;">            //注意jdbcType的对应类型！</font></div><div><font style="font-size: 14pt;">            &lt;columnOverride column=&quot;id&quot; jdbcType=&quot;INTEGER&quot; javaType=&quot;java.lang.Integer&quot;/&gt;</font></div><div><font style="font-size: 14pt;">        &lt;/table&gt;</font></div><div><font style="font-size: 14pt;"><br/></font></div><div><font style="font-size: 14pt;"><br/></font></div><div><font style="font-size: 14pt;">    &lt;/context&gt;</font></div><div><font style="font-size: 14pt;">&lt;/generatorConfiguration&gt;</font></div></div><ul><li><div>额外的配置</div></li><ul><li><div>不生成example：在table标签中添加属性：</div></li></ul></ul><div style="box-sizing: border-box; padding: 8px; font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; color: rgb(51, 51, 51); border-radius: 4px; background-color: rgb(251, 250, 248); border: 1px solid rgba(0, 0, 0, 0.15);-en-codeblock:true;"><div><font style="font-size: 14pt;">enableCountByExample=&quot;false&quot;</font></div><div><font style="font-size: 14pt;">enableUpdateByExample=&quot;false&quot;</font></div><div><font style="font-size: 14pt;">enableDeleteByExample=&quot;false&quot;</font></div><div><font style="font-size: 14pt;">enableSelectByExample=&quot;false&quot;</font></div><div><font style="font-size: 14pt;">selectByExampleQueryId=&quot;false&quot;</font></div><div><font style="font-size: 14pt;">//不仅如此，根据命名规律还可以禁用其他sql的生成，此处删除了和example相关的所有的sql，因此example实体类也不会生成了</font></div></div><div><br/></div><div><br/></div><div><br/></div><div><br/></div><div>## 点击maven插件生成对应的类以及配置文件</div><div><img src="3.2mybatis.generator插件_files/微信截图_20200901135301.png" type="image/png" data-filename="微信截图_20200901135301.png"/></div><div><br/></div></div><div><br/></div></span>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://yoursite.com">jacketzc</a></p><p> <span>Link:  </span><a href="http://yoursite.com/2020/08/31/3.2mybatis.generator%E6%8F%92%E4%BB%B6/">http://yoursite.com/2020/08/31/3.2mybatis.generator%E6%8F%92%E4%BB%B6/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2020/08/31/4.1%E9%9B%86%E6%88%90log4j2/" title="4.1集成log4j2"><span>< PreviousPost</span><br><span class="prevTitle">4.1集成log4j2</span></a><a class="nextSlogan" href="/2020/08/31/3.1%E5%9C%A8springboot%E4%B8%AD%E9%9B%86%E6%88%90mybatis/" title="3.1在springboot中集成mybatis"><span>NextPost ></span><br><span class="nextTitle">3.1在springboot中集成mybatis</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">3.2mybatis.generator插件</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>
